@@ -1,0 +1,17 @@
+{
+  "title": "Aragon Research - blog",
+  "relativePath": "",
+  "absoluteUrl": "https://research.aragon.com",
+  "postsDir": "posts",
+  "indexTemplate": "index.html",
+  "postThumbTemplate": "postThumbTemplate.html",
+  "metadescr": "Aragon Research blog",
+  "metaimg": "img/main-logo.svg",
+  "posts": [
+  ],
+  "copyRaw": [
+    "css",
+    "img",
+    "js"
+  ]
+}
