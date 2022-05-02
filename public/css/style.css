@@ -1,0 +1,88 @@
+@font-face {
+  font-family: 'Roboto', monospace;
+       url(Roboto-Regular.ttf) format('truetype');
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+.dark-theme { /* used for body class */
+  filter: invert(100%) hue-rotate(180deg);
+  background-color: #111;
+}
+
+.dark-theme img, .dark-theme video, .dark-theme iframe, .dark-theme .onoffswitch-label, .dark-theme code {
+    filter: invert(100%) hue-rotate(180deg);
+}
+
+a {
+  text-decoration:none!important;
+  color: #00c2ff;
+}
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 8px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+}
+
+
+h1,h2, h3, h4, h5 {
+  border-bottom: 1px solid #cccccc;
+  padding-top: 20px;
+}
+
+#mainNav {
+  height:60px;
+  font-size:14px;
+  background-image: linear-gradient(to right, #f0f2ff, #e8f6ff);
+  color: #3d4556;
+  text-transform:uppercase;
+  /* border-bottom: 3px solid; */
+  /* border-image: linear-gradient(to right, #0085ff, #01e1f8) 1; */
+}
+
+.postThumb {
+  color:#000000;
+  text-decoration:none;
+}
+.postThumb:hover {
+  background: #f9f9f9;
+}
+
+/* switch button */
+.onoffswitch {
+   position: relative; width: 46px;
+   -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+   display: none;
+}
+.onoffswitch-label {
+   display: block; overflow: hidden; cursor: pointer;
+   height: 20px; padding: 0; line-height: 20px;
+   border: 2px solid #FFFFFF; border-radius: 20px;
+   background-color: #9E9E9E;
+   transition: background-color 0.3s ease-in;
+   margin-bottom: 0;
+}
+.onoffswitch-label:before {
+   content: "";
+   display: block; width: 20px; margin: 0px;
+   background: #FFFFFF;
+   position: absolute; top: 0; bottom: 0;
+   right: 24px;
+   border: 2px solid #FFFFFF; border-radius: 20px;
+   transition: all 0.3s ease-in 0s;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label {
+   background-color: #00c9fd;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
+   border-color: #00c9fd;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label:before {
+   right: 0px;
+}

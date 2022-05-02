@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="Oblivious transfer (OT) is a cryptographical primitive that is fundamental for secure multiparty computation. We give a brief introduction to the Bellare-Micali OT protocol, which is particularly simple and elegant." />
+    <meta charset="utf-8">
+    <title> The Bellare-Micali Oblivious Transfer - Aragon Research - blog</title>
+    <meta name="title" content=" The Bellare-Micali Oblivious Transfer - Aragon Research - blog">
+    <meta name="description" content="Oblivious transfer (OT) is a cryptographical primitive that is fundamental for secure multiparty computation. We give a brief introduction to the Bellare-Micali OT protocol, which is particularly simple and elegant.">
+
+    <meta property="og:title" content=" The Bellare-Micali Oblivious Transfer - Aragon Research - blog" />
+    <meta property="og:description" content="Oblivious transfer (OT) is a cryptographical primitive that is fundamental for secure multiparty computation. We give a brief introduction to the Bellare-Micali OT protocol, which is particularly simple and elegant." />
+    <meta property="og:url" content="https://research.aragon.com/oblivious-transfer.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.com/" />
+    <meta name="twitter:title" content=" The Bellare-Micali Oblivious Transfer - Aragon Research - blog">
+    <meta name="twitter:description" content="Oblivious transfer (OT) is a cryptographical primitive that is fundamental for secure multiparty computation. We give a brief introduction to the Bellare-Micali OT protocol, which is particularly simple and elegant.">
+    <meta name="twitter:image" content="https://research.aragon.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3d4556;">
+          <img src="img/main-logo.svg" /> Aragon Research
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="https://aragon.org" style="color:#3d4556;display:inline-block;" title="Aragon main website">aragon.org</a>
+          <div class="onoffswitch" style="margin-left:10px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div class="container" style="margin-top:40px;max-width:800px;">
+      <h1>The Bellare-Micali Oblivious Transfer</h1>
+
+<p><em>2022-05-03 by <a href="https://github.com/alex-kampa">Alex Kampa</a></em></p>
+
+<p>Oblivious transfer (OT) is a cryptographical primitive introduced by Michael Rabin in 1981. It is fundamental for secure multiparty computation.</p>
+
+<p>A 1-2 oblivious transfer protocol can be described as follows. Bob has 2 messages $m_0$ and $m_1$ and Alice can retrieve one, and only one, of these messages. Bob should not learn which message Alice obtained. This can be generalised to 1-n (one out of n) and k-n (k out of n) oblivious transfer protocols.</p>
+
+<p>In this post, we will stick with the 1-2 protocol, for which Bellare and Micali provided a simple and elegant construction in 1989.</p>
+
+<h2>The Bellare-Micali trick</h2>
+
+<p>We have a group $G$ of prime order $q$ and publicly known generator $g$. As usual, the discrete log problem in $G$ is assumed to be suitably hard. The OT protocol of Bellare and Micali relies on the following fact:</p>
+
+<p>Given an element $c \in G$ for which the discrete log is not known, it is impossible to find a pair $(k_0, k_1)$ such that $k_0 k_1 = c$ while knowing the discrete logs of both $k_0$ and $k_1$. It is however easy to find such a pair so that the discrete log of one of the elements is known.</p>
+
+<p>As any element of $G$ can be seen as a public key, and therefore used for encrypting data, an OT protocol can be now constructed quite easily.</p>
+
+<h2>The Bellare-Micali OT protocol</h2>
+
+<p>The protocol works as follws:</p>
+
+<p><strong>(1)</strong> Bob selects a random $c \in G$ and sends it to Alice. To do that, Bob could take some random $r \in Z_q$ and set $c = g^r$. However, the knowledge of $r$ is actually not necessary. In some settings, such as a group of points on an elliptic curve, the random point could be chosen without any knowledge of its discrete log.</p>
+
+<p>Note that $c$ could also be a publicly known element for which no-one knows the discrete log. This would make this first step redundant.</p>
+
+<p><strong>(2)</strong> Alice generates two elements $k_0, k_1 \in G$ such that $k_0 k_1 = c$. Given that Alice does not know the discrete log of $c$, the only way to achieve this is to select a random $z \in Z_q$ and to set $k_0 = g^z$ and then $k_1 = c g^{-z}$. Note that Alice does not know the discrete log of $k_1$. Alice now sends Bob one of the ordered pairs $(k_0, k_1)$ or $(k_1, k_0)$.</p>
+
+<p>Note that Alice could have chosen some random $k_0$ for which she does not know the discrete log. As she will, in general, be able to compute the inverse of $k_0$, she can set $k_1 = c k_0^{-1}$ to obtain the desired relation $k_0 k_1 = c$. However, then she would not know the discrete log of any of the two points!</p>
+
+<p>Also note that if Alice does not choose $z$ randomly in step (2), she may leak information to Bob. For example, if she sent the pair $(c g^{-1}, g)$, Bob could easily find out that Alice knows the discrete log of the second point, and is therefore interested in message $m_1$.</p>
+
+<p><strong>(3)</strong> Bob receives the pair $(k, k&rsquo;)$ and verifies that $k k&rsquo; = c$. If that is the case, he can be confident that Alice knows the discrete log of one, and only one, of these two points. However, if Alice has chosen $z$ randomly, Bob will not know for which one of the two group elements Alice knows the discrete log.</p>
+
+<p>Using the group elements $(k, k&rsquo;)$ as public keys, Bob generates the encryptions $Enc(k, m_0)$ and $Enc(k&rsquo;, m_1)$ and sends them to Alice. Here, $Enc$ designates some suitable encryption protocol.</p>
+
+<p><strong>(4)</strong> Alice can now decrypt one (and only one) of these encrypted  messages. If she sent $(k_0, k_1)$ in step (2), she will be able to decrypt the message $m_0$ but not message $m_1$. And if she sent $(k_1, k_0)$ in step (2), then she will be able to decrypt the message $m_1$ but not message $m_0$.</p>
+
+<h2>Conclusion</h2>
+
+<p>The Bellare-Micali oblivious transfer protocol can easily be extended to a 2-3 OT protocol, or more generally to a (n-1)-(n) protocol.</p>
+
+<p>An extended abstract of the original paper can be found here, some of the notations are not the same as above though:</p>
+
+<p><a href="https://cseweb.ucsd.edu/~mihir/papers/niot.pdf">https://cseweb.ucsd.edu/~mihir/papers/niot.pdf</a></p>
+
+<p>$\mathrm{\blacksquare}$</p>
+
+    </div>
+
+    <footer style="text-align:center; margin-top:100px;margin-bottom:50px;">
+      <div class="container">
+        <div class="row" style="display:inline-block;">
+          <b>Aragon Research</b>is part of <a href="https://aragon.org"
+                  target="_blank" style="color: gray;text-decoration:none;"><img style="width:130px;margin-top:-8px;" src="img/aragon_logo_full.svg" /></a>
+        </div>
+        <br><br>
+        <a href="https://github.com/aragon" style="color: gray;">github</a> |
+        <a href="https://twitter.com/aragonproject" style="color: gray;">twitter</a>
+        <!-- <a href="" style="color: gray;">RSS</a> -->
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+      ///
+      let theme = localStorage.getItem("theme");
+      if ((theme === "light-theme")||(theme==null)) {
+          theme = "light-theme";
+          document.getElementById("themeSwitcher").checked = false;
+      } else if (theme === "dark-theme") {
+          theme = "dark-theme";
+          document.getElementById("themeSwitcher").checked = true;
+      }
+      document.body.className = theme;
+      localStorage.setItem("theme", theme);
+
+      function switchTheme() {
+        theme = localStorage.getItem("theme");
+        if (theme === "light-theme") {
+          theme = "dark-theme";
+          document.getElementById("themeSwitcher").checked = true;
+        } else {
+          theme = "light-theme";
+          document.getElementById("themeSwitcher").checked = false;
+        }
+        document.body.className = theme;
+        localStorage.setItem("theme", theme);
+
+        console.log(theme);
+      }
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+

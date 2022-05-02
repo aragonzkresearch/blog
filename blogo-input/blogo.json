@@ -8,6 +8,16 @@
   "metadescr": "Aragon Research blog",
   "metaimg": "img/main-logo.svg",
   "posts": [
+    {
+      "thumb": "oblivious-transfer_thumb.md",
+      "md": "oblivious-transfer.md",
+      "metadescr": "Oblivious transfer (OT) is a cryptographical primitive that is fundamental for secure multiparty computation. We give a brief introduction to the Bellare-Micali OT protocol, which is particularly simple and elegant."
+    },
+    {
+      "thumb": "lagrange_thumb.md",
+      "md": "lagrange.md",
+      "metadescr": "Our first Maths Seminar note is about Lagrange bases in subgroups of $F_p^*$ which happen to have a simple and explicit formula. Numerous examples as well as detailed proofs of the main results are provied. We note that these particular Langrange bases have been used in the construction of the well-known PLONK zk scheme."
+    }
   ],
   "copyRaw": [
     "css",
