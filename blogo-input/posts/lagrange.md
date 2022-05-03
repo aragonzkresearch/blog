@@ -25,7 +25,7 @@ These polynomials have the property of being equal to 0 at all but one points of
 $$
 \forall x \in X, \;\; L_i(x) =
   \begin{cases}
-    1 \text{   for } x = x_i\\
+    1 \text{   for } x = x_i\newline
     0 \text{   otherwise}
   \end{cases} 
 $$
@@ -51,7 +51,7 @@ The Lagrange bases on $H$ are the set of polynomials $L_i$ defined for $0 \le i 
 \begin{equation}
     \forall x \in H, \;\; L_i(x) =
     \begin{cases}
-      1 \text{   for } x = \omega^i\\
+      1 \text{   for } x = \omega^i\newline
       0 \text{   otherwise}
     \end{cases} 
 \end{equation}
