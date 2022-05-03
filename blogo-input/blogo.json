@@ -2,6 +2,7 @@
   "title": "Aragon Research - blog",
   "relativePath": "",
   "absoluteUrl": "https://research.aragon.com",
+  "outputDir": "docs",
   "postsDir": "posts",
   "indexTemplate": "index.html",
   "postThumbTemplate": "postThumbTemplate.html",
