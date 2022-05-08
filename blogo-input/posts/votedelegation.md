@@ -1,15 +1,17 @@
 # Adding Vote Delegation to Anonymous E-Voting Schemes
 
-*2022-05-06 by [Vincenzo Iovino]*
+*2022-05-06 by [Vincenzo Iovino](#)*
 
 Anonymous e-voting systems, often based on SNARK proof systems, provide the following features and security properties:
-        **Easy tallying.** The votes appear on the bulletin board in the clear, so the tally can be easily computed and checked at hand as in traditional paper-based elections.
-     **Anonymity.**               A vote cannot be associated to any of the eligible voters. However, only eligible voters are allowed to cast one and only one valid vote.
-        **Individual and universal verifiability.** Each eligible voter can quickly check that its vote was counted. Moreover, everyone, even a third party who did not participate in the election, can check that the election process was run faithfully.
-        **No authority is trusted for privacy.** There is no authority or participant in the electronic election that is able to guess what a voter voted for. Moreover, no authority or participant is even able to detect whether a voter casted a vote.
+
+- **Easy tallying.** The votes appear on the bulletin board in the clear, so the tally can be easily computed and checked at hand as in traditional paper-based elections.
+- **Anonymity.** A vote cannot be associated to any of the eligible voters. However, only eligible voters are allowed to cast one and only one valid vote.
+- **Individual and universal verifiability.** Each eligible voter can quickly check that its vote was counted. Moreover, everyone, even a third party who did not participate in the election, can check that the election process was run faithfully.
+- **No authority is trusted for privacy.** There is no authority or participant in the electronic election that is able to guess what a voter voted for. Moreover, no authority or participant is even able to detect whether a voter casted a vote.
 
 
-One example of such voting schemes based on SNARK proofs is [VocDoni](https://aragon.org/vocdoni) developed by Aragon Labs.
+One example of such voting schemes based on SNARK proofs is [Vocdoni](https://aragon.org/vocdoni) developed by Aragon Labs.
+
 ## Delegation
 We would like to add a new feature, namely *delegation.*
 This means that a *delegator* can issue to a *delegatee* a *token* $T_f$ relative a predicate $f$ so that the delegatee will be able to only submit a vote $v$ for the election identified by the identifier $id$ iff $f(v,id)=1$.
@@ -40,9 +42,10 @@ Note that the length of $p$ is logarithmic in $M$.
 Let $C^{R,v,h_V,id}$ be the following Boolean circuit with one output gate.
 
 $C^{R,v,h_v,id}$ depends on the constants $R,v,h_V,id$, takes as input a pair $w=(p,sk_V)$ and outputs $1$ if and only if *all* the following conditions are verified:
-**(1)** The string $p$ is a Merkle-path from $R$ to $pk_V$.
-**(2)** $sk_V$ is a secret-key corresponding to the public-key $pk_V$. 
-**(3)** $h_v=H(sk_V,id)$.
+
+1. The string $p$ is a Merkle-path from $R$ to $pk_V$.
+2. $sk_V$ is a secret-key corresponding to the public-key $pk_V$. 
+3. $h_v=H(sk_V,id)$.
 
 Note that the values $R,v,h_V,id$, and thus $C^{R,v,h_v,id}$, will represent public information while $w$ is only known to $V$.
 The voter $V$ use the SNARK prover to compute a proof $\pi_V$ of the fact that $C^{R,v,h_v,id}$ is satisfied by witness $w$.
@@ -68,7 +71,7 @@ When Alice wants to delegate to Bob a token for predicate $f$, Alice does the fo
 First, let $(pk,sk)$ be the public- and secret- key pair of Alice. We suppose that $pk$ is in the census Merkle Tree.
 Alice generate a new pair of public- and secret- key $(pk',sk')$ for the digital signature scheme (the same used to create the public- and secret- keys of the census Merkle Tree).
 
-(Observe that the previous version of VocDoni does not use signatures directly, but still the Merkle Tree consists of public-keys of a digital signature scheme.)
+(Observe that the previous version of Vocdoni does not use signatures directly, but still the Merkle Tree consists of public-keys of a digital signature scheme.)
 
 Alice signs the string $(vk'||f)$ with secret-key $sk$, that is Alice generates the signature $\sigma\=Sign(sk,(vk'||f))$.
 Finally, Alice sets as token $T_f$ the following:
@@ -97,6 +100,6 @@ Notice that the mechanism allows distribution of a token to multiple delegatees.
 The idea of delegating voting capability traces back to Charles Dodgson (more commonly known by his pseudonym Lewis Carroll), the author of the novel Alice in Wonderland, who first envisioned  the ability to transfer votes related to the modern concept of Liquid Democracy.
 In recent years, delegation of voting rights has been proposed as a potential solution to the problems in [coin voting](https://vitalik.ca/general/2021/08/16/voting3.html?msclkid=48c0f9a9ceef11ec994d3e607dcc1d8c).
 
-We showed a simple and elegant way to add delegation capability to current SNARK-based anonymous e-voting  scheme like [VocDoni](https://aragon.org/vocdoni). Our proposal does not significantly increase the complexity and does not rely on new assumptions.
+We showed a simple and elegant way to add delegation capability to current SNARK-based anonymous e-voting  scheme like [Vocdoni](https://aragon.org/vocdoni). Our proposal does not significantly increase the complexity and does not rely on new assumptions.
 
 $\mathrm{\blacksquare}$
