@@ -115,7 +115,7 @@ Note that the length of $p$ is logarithmic in $M$.</p>
 
 <p><em>Discarding invalid votes and duplicates.</em></p>
 
-<p>When a voter sends a ballot $(v,h_V,\pi_V)$ to the PBB, we assume that if the proof $\pi_V$ is not accepted by the SNARK verifier, an error symbol $\bot$ is written next to the ballot to indicate that $v$ should not be considered for the tally.</p>
+<p>When a voter sends a ballot $(v,h_V,\pi_V)$ to the blockchain, we assume that if the proof $\pi_V$ is not accepted by the SNARK verifier, an error symbol $\bot$ is written next to the ballot to indicate that $v$ should not be considered for the tally.</p>
 
 <p>Moreover, if two ballots $B_1=(v_1,h_1,\pi_1)$ and $B_2=(v_2,h_2,\pi_2)$ with $h_1=h_2$ are found, they should be considered a <em>duplicate</em> vote. Indeed, the purpose of the hash $H(sk_V,id)$ is to tie the voter $V$ with the election $id$ so to be able to detect whether $V$ (without revealing the identity of $V$) voted multiple times. According to the election policy, both ballots can be discarded or only the second one can be discarded.</p>
 
