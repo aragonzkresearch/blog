@@ -3,12 +3,13 @@
 *2022-05-06 by [Vincenzo Iovino](https://sites.google.com/site/vincenzoiovinoit)*
 
 Anonymous e-voting systems, often based on SNARK proof systems, provide the following features and security properties:
-        **Easy tallying.** After the end of the election, the votes (also called preferences or options) appear on the bulletin board in the clear, so the tally can be easily computed and checked at hand as in traditional paper-based elections.
-        **Vote independence.** A voter cannot base her own preference on the preferences of other voters.
-        **Eligibility.**  Only eligible voters are allowed to cast one and only one valid vote.
-     **Anonymity.**               A vote cannot be associated to any of the eligible voters. 
-        **Individual and universal verifiability.** Each eligible voter can quickly check that her own vote was counted. Moreover, everyone, even a third party who did not participate in the election, can check that the election process was run faithfully.
-        **No authority is trusted for privacy.** There is no authority or participant in the electronic election that is able to guess what a voter voted for. Moreover, no authority or participant is even able to detect whether a voter cast a vote.
+
+- **Easy tallying.** After the end of the election, the votes (also called preferences or options) appear on the bulletin board in the clear, so the tally can be easily computed and checked at hand as in traditional paper-based elections.
+- **Vote independence.** A voter cannot base her own preference on the preferences of other voters.
+- **Eligibility.** Only eligible voters are allowed to cast one and only one valid vote.
+- **Anonymity.** A vote cannot be associated to any of the eligible voters. 
+- **Individual and universal verifiability.** Each eligible voter can quickly check that her own vote was counted. Moreover, everyone, even a third party who did not participate in the election, can check that the election process was run faithfully.
+- **No authority is trusted for privacy.** There is no authority or participant in the electronic election that is able to guess what a voter voted for. Moreover, no authority or participant is even able to detect whether a voter cast a vote.
 
 
 One example of such voting schemes based on SNARK proofs is [Vocdoni](https://aragon.org/vocdoni), developed by Aragon Labs.
@@ -44,9 +45,9 @@ Note that the length of $p$ is logarithmic in $M$.
 Let $C^{R,v,h_V,id}$ be the following Boolean circuit with one output gate.
 
 $C^{R,v,h_v,id}$ depends on the constants $R,v,h_V,id$, takes as input a pair $w=(p,sk_V)$ and outputs $1$ if and only if *all* the following conditions are verified:
-**(1)** The string $p$ is a Merkle-path from $R$ to $pk_V$.
-**(2)** $sk_V$ is a secret-key corresponding to the public-key $pk_V$. 
-**(3)** $h_v=H(sk_V,id)$.
+1. The string $p$ is a Merkle-path from $R$ to $pk_V$.
+2. $sk_V$ is a secret-key corresponding to the public-key $pk_V$. 
+3. $h_v=H(sk_V,id)$.
 
 Note that the values $R,v,h_V,id$, and thus $C^{R,v,h_v,id}$, will represent public information while $w$ is only known to $V$. The voter $V$ uses the SNARK prover to compute a proof $\pi_V$ of the fact that $C^{R,v,h_v,id}$ is satisfied by witness $w$.
 
@@ -105,6 +106,6 @@ Notice that the mechanism allows distribution of a token to multiple delegatees.
 ## Conclusion 
 The idea of delegating voting capabilities traces back to Charles Dodgson (more commonly known by his pseudonym Lewis Carroll), the author of the novel Alice in Wonderland, who first envisioned  the ability to transfer votes; in modern times this concept has been named Liquid Democracy. In recent years, delegation of voting rights has been proposed as a potential solution to several problems in [coin voting](https://vitalik.ca/general/2021/08/16/voting3.html?msclkid=48c0f9a9ceef11ec994d3e607dcc1d8c).
 
-We showed a simple and elegant way to add delegation capabilities to current SNARK-based anonymous e-voting  schemes like [VocDoni](https://aragon.org/vocdoni). Our proposal does not significantly increase complexity and does not rely on new assumptions.
+We showed a simple and elegant way to add delegation capabilities to current SNARK-based anonymous e-voting  schemes like [Vocdoni](https://aragon.org/vocdoni). Our proposal does not significantly increase complexity and does not rely on new assumptions.
 
 $\mathrm{\blacksquare}$
