@@ -15,7 +15,7 @@ Anonymous e-voting systems, often based on SNARK proof systems, provide the foll
 One example of such voting schemes based on SNARK proofs is [Vocdoni](https://aragon.org/vocdoni), developed by Aragon Labs.
 
 ## Delegation
-We would like to add a new feature, namely *delegation.* This means that a *delegator* can issue to a *delegate* a *token* $T_f$ relative a predicate $f$ so that the delegatee will be able to only submit a vote $v$ for the election identified by the identifier $id$ iff $f(v,id)=1$.
+We would like to add a new feature, namely *delegation.* This means that a *delegator* can issue to a *delegate* a *token* $T_f$ relative a predicate $f$ so that the delegate will be able to only submit a vote $v$ for the election identified by the identifier $id$ iff $f(v,id)=1$.
 
 Observe that in this framework we can capture all delegation mechanisms. For instance, the predicate $f$ can just check that the identifier $id$ corresponds to the identifiers of the elections running in 2022 and 2023 or can check that $v$ belongs to a subset of options.
 
@@ -45,12 +45,13 @@ Note that the length of $p$ is logarithmic in $M$.
 Let $C^{R,v,h_V,id}$ be the following Boolean circuit with one output gate.
 
 $C^{R,v,h_v,id}$ depends on the constants $R,v,h_V,id$, takes as input a pair $w=(p,v',sk_V)$ and outputs $1$ if and only if *all* the following conditions are verified:
-1. The string $p$ is a Merkle-path from $R$ to $pk_V$.
-2. $sk_V$ is a secret-key corresponding to the public-key $pk_V$. 
-3. $h_v=H(sk_V,id)$.
-4. $v=v'$.
 
-Note that the values $R,v,h_V,id$, and thus $C^{R,v,h_v,id}$, will represent public information while $w$ is only known to $V$. The voter $V$ uses the SNARK prover to compute a proof $\pi_V$ of the fact that $C^{R,v,h_v,id}$ is satisfied by witness $w$.
+- The string $p$ is a Merkle-path from $R$ to $pk_V$.
+- $sk_V$ is a secret-key corresponding to the public-key $pk_V$. 
+- $h_v=H(sk_V,id)$.
+- $v'=v$.
+
+Note that the values $R,v,h_V,id$, and thus $C^{R,v,h_v,id}$ will represent public information while $w$ is only known to $V$. The voter $V$ uses the SNARK prover to compute a proof $\pi_V$ of the fact that $C^{R,v,h_v,id}$ is satisfied by witness $w=(p,v,sk_V)$.
 
 $V$ publishes on the blockchain her ballot $B_V=(v,h_V,\pi_V)$.
 
@@ -67,7 +68,7 @@ Moreover, if two ballots $B_1=(v_1,h_1,\pi_1)$ and $B_2=(v_2,h_2,\pi_2)$ with $h
 **Vote independence.** The previous solution suffers from the issue that the votes appear on the blockchain as soon as each voter casts her own preference. In this case, at time of casting a ballot, a voter could be affected by the current *partial* tally of the election.
 This issue can be solved by having the voters to encrypt their own preferences under a public-key of a public-key encryption scheme whose secret-key is shared among a set of authorities. Here, we need to assume that not all authorities collude together to break the vote independence property. Note however that, even if all such authorities colluded together, they could not break the anonymity of the votes. Other mechanisms can be employed to mitigate this issue.
 
-**Security.** For the sake of this post, we will not analyze the security in depth. We briefly mention that the security properties of the SNARK guarantee that a proof published on the blockchain does not leak the witness. This means that the Merkle path from the root to the voter-s public-key is  hidden, thus the identity of the voter (among the many voters eligible to vote) is hideen as well. 
+**Security.** For the sake of this post, we will not analyze the security in depth. We briefly mention that the security properties of the SNARK guarantee that a proof published on the blockchain does not leak the witness. This means that the Merkle path from the root to the voter's public-key is hidden, thus the identity of the voter (among the many voters eligible to vote) is hidden as well. 
 Similarly, if a SNARK proof is verified, then it is possible to extract a secret-key corresponding to one of the public-keys published in the census tree, and by the fact that it is hard to extract secret-keys from public-keys, eligibility follows.
 
 ## Adding delegation
@@ -76,9 +77,9 @@ When Alice wants to delegate to Bob a token for predicate $f$, Alice does the fo
 
 Alice generates a new pair of public and secret keys $(pk',sk')$ for the digital signature scheme (the same used to create the public- and secret- keys of the census Merkle Tree). Observe that the generic SNARK-based anonymous e-voting scheme we described before does not use signatures directly, but still the Merkle Tree consists of public-keys of a digital signature scheme.
 
-Alice signs the string $(vk'||f)$ with secret-key $sk$, that is Alice generates the signature
+Alice signs the string $(pk'||f)$ with secret-key $sk$, that is Alice generates the signature
 
-$$\sigma=Sign(sk,(vk'||f))$$
+$$\sigma=Sign(sk,(pk'||f))$$
 
 Finally, Alice sets as token $T_f$ the following:
 
@@ -86,9 +87,9 @@ $$T_f= (sk', \sigma).$$
 
 Alice can pass the token $T_f$ to Bob and Bob can use it to vote for any option satisfying $f(v,id)=1$ where $id$ is the identifier of the election.
 
-The circuit for the SNARK proof is changed as follows. The public statement consists of the vote $v$, and the nullifier. The witness input by Bob will also include the token $T_f$ (and thus implicitly the function $f$).
+The circuit for the SNARK proof is changed as follows. The public statement is as before. The witness input by Bob will also include the token $T_f$ (that inclues the description of $f$).
 
-The circuit checks that the path points to $vk$ and that $\sigma$ is a valid signature with respect to $vk$ of message $vk'||f$ and that $f(v,id)=1$ (where $id$ is the identifier of the election). Moreover, the circuit does the usual check on the nullifier to prevent double voting but the secret-key used to compute the nullifier is $sk'$.
+The circuit checks that the path points to $pk$ and that $\sigma$ is a valid signature with respect to $pk$ of message $pk'||f$ and that $f(v,id)=1$ (where $id$ is the identifier of the election). Moreover, the circuit does the usual check on the nullifier to prevent double voting but the secret-key used to compute the nullifier is $sk'$.
 
 Note that if Alice wants to vote, she can vote by simulating this delegation to herself.
 
@@ -101,8 +102,8 @@ The public statement will include a bit $b$ indicating whether the vote is a dir
 
 Now, if there are two nullifiers in the blockchain, one of which with the bit set to $1$ and one with the bit set to $0$, only the one with bit set to $0$ will be counted to indicated that delegated vote has to be discarded to give priority to direct vote.
 
-#### Distributing a token to multiple delegatees.
-Notice that the mechanism allows distribution of a token to multiple delegates. Then, depending on the policy, only one vote submitted by these delegatees will be counted. It can be thought like delegating the trust to anyone in a given group and at the same time trying to increase the chance that one of them will actually submit a vote.
+#### Distributing a token to multiple delegates.
+Notice that the mechanism allows distribution of a token to multiple delegates. Then, depending on the policy, only one vote submitted by these delegates will be counted. It can be thought like delegating the trust to anyone in a given group and at the same time trying to increase the chance that one of them will actually submit a vote.
 
 ## Conclusion 
 The idea of delegating voting capabilities traces back to Charles Dodgson (more commonly known by his pseudonym Lewis Carroll), the author of the novel Alice in Wonderland, who first envisioned  the ability to transfer votes; in modern times this concept has been named Liquid Democracy. In recent years, delegation of voting rights has been proposed as a potential solution to several problems in [coin voting](https://vitalik.ca/general/2021/08/16/voting3.html?msclkid=48c0f9a9ceef11ec994d3e607dcc1d8c).
