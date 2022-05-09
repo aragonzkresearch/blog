@@ -1,6 +1,6 @@
 # Adding Vote Delegation to Anonymous E-Voting Schemes
 
-*2022-05-06 by [Vincenzo Iovino](#)*
+*2022-05-06 by [Vincenzo Iovino](https://github.com/vincenzoiovino)*
 
 Anonymous e-voting systems, often based on SNARK proof systems, provide the following features and security properties:
 
