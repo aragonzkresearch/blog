@@ -44,10 +44,11 @@ Note that the length of $p$ is logarithmic in $M$.
 
 Let $C^{R,v,h_V,id}$ be the following Boolean circuit with one output gate.
 
-$C^{R,v,h_v,id}$ depends on the constants $R,v,h_V,id$, takes as input a pair $w=(p,sk_V)$ and outputs $1$ if and only if *all* the following conditions are verified:
+$C^{R,v,h_v,id}$ depends on the constants $R,v,h_V,id$, takes as input a pair $w=(p,v',sk_V)$ and outputs $1$ if and only if *all* the following conditions are verified:
 1. The string $p$ is a Merkle-path from $R$ to $pk_V$.
 2. $sk_V$ is a secret-key corresponding to the public-key $pk_V$. 
 3. $h_v=H(sk_V,id)$.
+4. $v=v'$.
 
 Note that the values $R,v,h_V,id$, and thus $C^{R,v,h_v,id}$, will represent public information while $w$ is only known to $V$. The voter $V$ uses the SNARK prover to compute a proof $\pi_V$ of the fact that $C^{R,v,h_v,id}$ is satisfied by witness $w$.
 
@@ -85,7 +86,7 @@ $$T_f= (sk', \sigma).$$
 
 Alice can pass the token $T_f$ to Bob and Bob can use it to vote for any option satisfying $f(v,id)=1$ where $id$ is the identifier of the election.
 
-The circuit for the SNARK proof is changed as follows. The public statement consists of the vote $v$, the nullifier but also the function $f$. The witness input by Bob consists of the token $T_f$ and a path in the Merle Tree to $vk$.
+The circuit for the SNARK proof is changed as follows. The public statement consists of the vote $v$, and the nullifier. The witness input by Bob will also include the token $T_f$ (and thus implicitly the function $f$).
 
 The circuit checks that the path points to $vk$ and that $\sigma$ is a valid signature with respect to $vk$ of message $vk'||f$ and that $f(v,id)=1$ (where $id$ is the identifier of the election). Moreover, the circuit does the usual check on the nullifier to prevent double voting but the secret-key used to compute the nullifier is $sk'$.
 
@@ -101,7 +102,7 @@ The public statement will include a bit $b$ indicating whether the vote is a dir
 Now, if there are two nullifiers in the blockchain, one of which with the bit set to $1$ and one with the bit set to $0$, only the one with bit set to $0$ will be counted to indicated that delegated vote has to be discarded to give priority to direct vote.
 
 #### Distributing a token to multiple delegatees.
-Notice that the mechanism allows distribution of a token to multiple delegatees. Then, depending on the policy, only one vote submitted by these delegatees will be counted. It can be thought like delegating the trust to anyone in a given group and at the same time trying to increase the chance that one of them will actually submit a vote.
+Notice that the mechanism allows distribution of a token to multiple delegates. Then, depending on the policy, only one vote submitted by these delegatees will be counted. It can be thought like delegating the trust to anyone in a given group and at the same time trying to increase the chance that one of them will actually submit a vote.
 
 ## Conclusion 
 The idea of delegating voting capabilities traces back to Charles Dodgson (more commonly known by his pseudonym Lewis Carroll), the author of the novel Alice in Wonderland, who first envisioned  the ability to transfer votes; in modern times this concept has been named Liquid Democracy. In recent years, delegation of voting rights has been proposed as a potential solution to several problems in [coin voting](https://vitalik.ca/general/2021/08/16/voting3.html?msclkid=48c0f9a9ceef11ec994d3e607dcc1d8c).
