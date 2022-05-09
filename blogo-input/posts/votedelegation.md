@@ -1,6 +1,6 @@
 # Adding Vote Delegation to Anonymous E-Voting Schemes
 
-*2022-05-06 by [Vincenzo Iovino](https://github.com/vincenzoiovino)*
+*2022-05-06 by [Vincenzo Iovino](https://sites.google.com/site/vincenzoiovinoit)*
 
 Anonymous e-voting systems, often based on SNARK proof systems, provide the following features and security properties:
         **Easy tallying.** After the end of the election, the votes (also called preferences or options) appear on the bulletin board in the clear, so the tally can be easily computed and checked at hand as in traditional paper-based elections.
