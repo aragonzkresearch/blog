@@ -10,6 +10,11 @@
   "metaimg": "img/main-logo.svg",
   "posts": [
     {
+      "thumb": "votedelegation_thumb.md",
+      "md": "votedelegation.md",
+      "metadescr": "Anonymous e-voting schemes are a promising tool in the current and future digital society. We propose a simple and elegant way to add delegation capabilities to such schemes."
+    },
+    {
       "thumb": "oblivious-transfer_thumb.md",
       "md": "oblivious-transfer.md",
       "metadescr": "Oblivious transfer (OT) is a cryptographical primitive that is fundamental for secure multiparty computation. We give a brief introduction to the Bellare-Micali OT protocol, which is particularly simple and elegant."

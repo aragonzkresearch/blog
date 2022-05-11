@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="Anonymous e-voting schemes are a promising tool in the current and future digital society. We propose a simple and elegant way to add delegation capabilities to such schemes." />
+    <meta charset="utf-8">
+    <title> Adding Vote Delegation to Anonymous E-Voting Schemes - Aragon Research - blog</title>
+    <meta name="title" content=" Adding Vote Delegation to Anonymous E-Voting Schemes - Aragon Research - blog">
+    <meta name="description" content="Anonymous e-voting schemes are a promising tool in the current and future digital society. We propose a simple and elegant way to add delegation capabilities to such schemes.">
+
+    <meta property="og:title" content=" Adding Vote Delegation to Anonymous E-Voting Schemes - Aragon Research - blog" />
+    <meta property="og:description" content="Anonymous e-voting schemes are a promising tool in the current and future digital society. We propose a simple and elegant way to add delegation capabilities to such schemes." />
+    <meta property="og:url" content="https://research.aragon.com/votedelegation.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.com/" />
+    <meta name="twitter:title" content=" Adding Vote Delegation to Anonymous E-Voting Schemes - Aragon Research - blog">
+    <meta name="twitter:description" content="Anonymous e-voting schemes are a promising tool in the current and future digital society. We propose a simple and elegant way to add delegation capabilities to such schemes.">
+    <meta name="twitter:image" content="https://research.aragon.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3d4556;">
+          <img src="img/main-logo.svg" /> Aragon Research
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="https://aragon.org" style="color:#3d4556;display:inline-block;" title="Aragon main website">aragon.org</a>
+          <div class="onoffswitch" style="margin-left:10px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div class="container" style="margin-top:40px;max-width:800px;">
+      <h1>Adding Vote Delegation to Anonymous E-Voting Schemes</h1>
+
+<p><em>2022-05-06 by <a href="https://sites.google.com/site/vincenzoiovinoit">Vincenzo Iovino</a></em></p>
+
+<p>Anonymous e-voting systems, often based on SNARK proof systems, provide the following features and security properties:</p>
+
+<ul>
+<li><strong>Easy tallying.</strong> After the end of the election, the votes (also called preferences or options) appear on the bulletin board in the clear, so the tally can be easily computed and checked at hand as in traditional paper-based elections.</li>
+<li><strong>Vote independence.</strong> A voter cannot base her own preference on the preferences of other voters.</li>
+<li><strong>Eligibility.</strong> Only eligible voters are allowed to cast one and only one valid vote.</li>
+<li><strong>Anonymity.</strong> A vote cannot be associated to any of the eligible voters.</li>
+<li><strong>Individual and universal verifiability.</strong> Each eligible voter can quickly check that her own vote was counted. Moreover, everyone, even a third party who did not participate in the election, can check that the election process was run faithfully.</li>
+<li><strong>No authority is trusted for privacy.</strong> There is no authority or participant in the electronic election that is able to guess what a voter voted for. Moreover, no authority or participant is even able to detect whether a voter cast a vote.</li>
+</ul>
+
+<p>One example of such voting schemes based on SNARK proofs is <a href="https://aragon.org/vocdoni">Vocdoni</a>, developed by Aragon Labs.</p>
+
+<h2>Delegation</h2>
+
+<p>We would like to add a new feature, namely <em>delegation.</em> This means that a <em>delegator</em> can issue to a <em>delegate</em> a <em>token</em> $T_f$ relative a predicate $f$ so that the delegate will be able to only submit a vote $v$ for the election identified by the identifier $id$ iff $f(v,id)=1$.</p>
+
+<p>Observe that in this framework we can capture all delegation mechanisms. For instance, the predicate $f$ can just check that the identifier $id$ corresponds to the identifiers of the elections running in 2022 and 2023 or can check that $v$ belongs to a subset of options.</p>
+
+<h2>Snark-based anoynmous e-voting schemes</h2>
+
+<p>Before describing our proposal to add delegation, we present a construction of a typical SNARK-based anonymous e-voting scheme. The following description is generic and does not describe a specific implementation.
+For sake of simplicity, the solution we sketch does not satisfy vote independence; we will discuss later how to add such property.</p>
+
+<p>We assume the reader be familiar with the concept of SNARK.
+A typical anonymous e-voting scheme from SNARKs look as follows.</p>
+
+<p><strong>Setup Phase.</strong> Let $n$ be the number of eligible voters. For each $i=1,\ldots,n$, we assume voter $i$ registers in the system with a public-key $pk_i$ relative to a signature scheme and retains privately the corresponding secret-key $sk_i$. All public-keys $(pk_1,\ldots,pk_n)$ of all eligible voters are published on a blockchain (that acts like a public bulletin board).</p>
+
+<p>The setup algorithm builds a Merkle tree $M$ (called the <em>census</em>) from $(pk_1,\ldots,pk_N)$ and publishes it on the blockchain. Let us call $R$ the root of $M$. The setup procedure outputs $R$ as the public-key of the e-voting scheme. Note that the voter&rsquo;s public-keys (their identities) are the leaves of $M$.</p>
+
+<p>We assume a public identifier $id$ is chosen for each election and published on the blockchain. The string $id$ can be for instance the day in which the election is run along with other information about the election.</p>
+
+<p><strong>Cast Phase.</strong> Each eligible voter $V$ who decides to cast a vote $v$ proceeds as follows.</p>
+
+<p>Let $v$ be the intended vote that $V$ wants to cast. The string $v$ can be both a valid voting option (e.g., the name of a candidate, a data structure representing the rating for each of a set of alternative proposals, etc) or an arbitrary string representing an invalid vote.</p>
+
+<p>Let $sk_V$ be the secret-key of $V$ corresponding to public-key $pk_V$, and let $h_V=H(sk_V,id),$ where $H$ is a cryptographic hash function like SHA256.</p>
+
+<p>Let $p$ be the Merkle-path in $M$ that proves that $R$ is the root of a tree that has $pk_V$ as leaf.
+Note that the length of $p$ is logarithmic in $M$.</p>
+
+<p>Let $C^{R,v,h_V,id}$ be the following Boolean circuit with one output gate.</p>
+
+<p>$C^{R,v,h_v,id}$ depends on the constants $R,v,h_V,id$, takes as input a pair $w=(p,v&rsquo;,sk_V)$ and outputs $1$ if and only if <em>all</em> the following conditions are verified:</p>
+
+<ul>
+<li>The string $p$ is a Merkle-path from $R$ to $pk_V$.</li>
+<li>$sk_V$ is a secret-key corresponding to the public-key $pk_V$.</li>
+<li>$h_v=H(sk_V,id)$.</li>
+<li>$v&rsquo;=v$.</li>
+</ul>
+
+<p>Note that the values $R,v,h_V,id$, and thus $C^{R,v,h_v,id}$ will represent public information while $w$ is only known to $V$. The voter $V$ uses the SNARK prover to compute a proof $\pi_V$ of the fact that $C^{R,v,h_v,id}$ is satisfied by witness $w=(p,v,sk_V)$.</p>
+
+<p>$V$ publishes on the blockchain her ballot $B_V=(v,h_V,\pi_V)$.</p>
+
+<p><em>Discarding invalid votes and duplicates.</em></p>
+
+<p>When a voter sends a ballot $(v,h_V,\pi_V)$ to the blockchain, we assume that if the proof $\pi_V$ is not accepted by the SNARK verifier, an error symbol $\bot$ is written next to the ballot to indicate that $v$ should not be considered for the tally.</p>
+
+<p>Moreover, if two ballots $B_1=(v_1,h_1,\pi_1)$ and $B_2=(v_2,h_2,\pi_2)$ with $h_1=h_2$ are found, they should be considered a <em>duplicate</em> vote. Indeed, the purpose of the hash $H(sk_V,id)$ is to tie the voter $V$ with the election $id$ so to be able to detect whether $V$ (without revealing the identity of $V$) voted multiple times. According to the election policy, both ballots can be discarded or only the second one can be discarded.</p>
+
+<p><strong>Tallying Phase.</strong> The tally can be now publicly computed from all votes $v$ in each ballot. Note that $v$ can be still an invalid voting option but we have the insurance that one of the voters (we do not know which) intended to write $v$ on the blockchain.</p>
+
+<p><strong>Vote independence.</strong> The previous solution suffers from the issue that the votes appear on the blockchain as soon as each voter casts her own preference. In this case, at time of casting a ballot, a voter could be affected by the current <em>partial</em> tally of the election.
+This issue can be solved by having the voters to encrypt their own preferences under a public-key of a public-key encryption scheme whose secret-key is shared among a set of authorities. Here, we need to assume that not all authorities collude together to break the vote independence property. Note however that, even if all such authorities colluded together, they could not break the anonymity of the votes. Other mechanisms can be employed to mitigate this issue.</p>
+
+<p><strong>Security.</strong> For the sake of this post, we will not analyze the security in depth. We briefly mention that the security properties of the SNARK guarantee that a proof published on the blockchain does not leak the witness. This means that the Merkle path from the root to the voter&rsquo;s public-key is hidden, thus the identity of the voter (among the many voters eligible to vote) is hidden as well.
+Similarly, if a SNARK proof is verified, then it is possible to extract a secret-key corresponding to one of the public-keys published in the census tree, and by the fact that it is hard to extract secret-keys from public-keys, eligibility follows.</p>
+
+<h2>Adding delegation</h2>
+
+<p>When Alice wants to delegate to Bob a token for predicate $f$, Alice does the following. First, let $(pk,sk)$ be the public- and secret- key pair of Alice. We suppose that $pk$ is in the census Merkle Tree.</p>
+
+<p>Alice generates a new pair of public and secret keys $(pk&rsquo;,sk&rsquo;)$ for the digital signature scheme (the same used to create the public- and secret- keys of the census Merkle Tree). Observe that the generic SNARK-based anonymous e-voting scheme we described before does not use signatures directly, but still the Merkle Tree consists of public-keys of a digital signature scheme.</p>
+
+<p>Alice signs the string $(pk&rsquo;||f)$ with secret-key $sk$, that is Alice generates the signature</p>
+
+<p>$$\sigma=Sign(sk,(pk&rsquo;||f))$$</p>
+
+<p>Finally, Alice sets as token $T_f$ the following:</p>
+
+<p>$$T_f= (sk&rsquo;, \sigma).$$</p>
+
+<p>Alice can pass the token $T_f$ to Bob and Bob can use it to vote for any option satisfying $f(v,id)=1$ where $id$ is the identifier of the election.</p>
+
+<p>The circuit for the SNARK proof is changed as follows. The public statement is as before. The witness input by Bob will also include the token $T_f$ (that inclues the description of $f$).</p>
+
+<p>The circuit checks that the path points to $pk$ and that $\sigma$ is a valid signature with respect to $pk$ of message $pk&rsquo;||f$ and that $f(v,id)=1$ (where $id$ is the identifier of the election). Moreover, the circuit does the usual check on the nullifier to prevent double voting but the secret-key used to compute the nullifier is $sk&rsquo;$.</p>
+
+<p>Note that if Alice wants to vote, she can vote by simulating this delegation to herself.</p>
+
+<h4>Allowing a voter to change her mind before the end of the election.</h4>
+
+<p>In the previous proposal, once the vote is delegated the delegator cannot change her mind. If we do want to allow this, the scheme can be changed as follows.</p>
+
+<p>The public statement will include a bit $b$ indicating whether the vote is a direct vote from a voter or is a delegated vote. Delegated vote will work as before setting the bit to $1$ but direct vote will work setting the bit to $0$ and the circuit will work as described above in the version without delegation.</p>
+
+<p>Now, if there are two nullifiers in the blockchain, one of which with the bit set to $1$ and one with the bit set to $0$, only the one with bit set to $0$ will be counted to indicated that delegated vote has to be discarded to give priority to direct vote.</p>
+
+<h4>Distributing a token to multiple delegates.</h4>
+
+<p>Notice that the mechanism allows distribution of a token to multiple delegates. Then, depending on the policy, only one vote submitted by these delegates will be counted. It can be thought like delegating the trust to anyone in a given group and at the same time trying to increase the chance that one of them will actually submit a vote.</p>
+
+<h2>Conclusion</h2>
+
+<p>The idea of delegating voting capabilities traces back to Charles Dodgson (more commonly known by his pseudonym Lewis Carroll), the author of the novel Alice in Wonderland, who first envisioned  the ability to transfer votes; in modern times this concept has been named Liquid Democracy. In recent years, delegation of voting rights has been proposed as a potential solution to several problems in <a href="https://vitalik.ca/general/2021/08/16/voting3.html?msclkid=48c0f9a9ceef11ec994d3e607dcc1d8c">coin voting</a>.</p>
+
+<p>We showed a simple and elegant way to add delegation capabilities to current SNARK-based anonymous e-voting  schemes like <a href="https://aragon.org/vocdoni">Vocdoni</a>. Our proposal does not significantly increase complexity and does not rely on new assumptions.</p>
+
+<p>$\mathrm{\blacksquare}$</p>
+
+    </div>
+
+    <footer style="text-align:center; margin-top:100px;margin-bottom:50px;">
+      <div class="container">
+        <div class="row" style="display:inline-block;">
+          <b>Aragon Research</b>is part of <a href="https://aragon.org"
+                  target="_blank" style="color: gray;text-decoration:none;"><img style="width:130px;margin-top:-8px;" src="img/aragon_logo_full.svg" /></a>
+        </div>
+        <br><br>
+        <a href="https://github.com/aragon" style="color: gray;">github</a> |
+        <a href="https://twitter.com/aragonproject" style="color: gray;">twitter</a>
+        <!-- <a href="" style="color: gray;">RSS</a> -->
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+      ///
+      let theme = localStorage.getItem("theme");
+      if ((theme === "light-theme")||(theme==null)) {
+          theme = "light-theme";
+          document.getElementById("themeSwitcher").checked = false;
+      } else if (theme === "dark-theme") {
+          theme = "dark-theme";
+          document.getElementById("themeSwitcher").checked = true;
+      }
+      document.body.className = theme;
+      localStorage.setItem("theme", theme);
+
+      function switchTheme() {
+        theme = localStorage.getItem("theme");
+        if (theme === "light-theme") {
+          theme = "dark-theme";
+          document.getElementById("themeSwitcher").checked = true;
+        } else {
+          theme = "light-theme";
+          document.getElementById("themeSwitcher").checked = false;
+        }
+        document.body.className = theme;
+        localStorage.setItem("theme", theme);
+
+        console.log(theme);
+      }
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
