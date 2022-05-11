@@ -1,16 +1,15 @@
-## rwc2022 : Threshold ECDSA protocol with additive key derivation and presignatures
+## rwc2022 : Threshold ECDSA with additive key derivation and presignatures : an attack, and a solution
 
 During rwc2022, Victor Shoup presented joint work with Jens Groth on the
 security of additive key derivation and pre-signatures for ECDSA.  Additive key
 derivation (AKD) is used widely throughout the cryptocurrency space as it's
-specified in BIP32, the de facto cryptocurrency standard for the 'heirarchical
-deterministic' key derivation process. BIP32 is used to derive keys in both
+specified in BIP32, the de facto cryptocurrency standard for a heirarchical and
+deterministic key derivation process. BIP32 is used to derive keys in both
 Ledger and Trezor hardware wallets, and a large number of software wallets that
 have adopted BIP32 -- a search on github reveals 203,000 mentions.
 
-Before digging into the security proof and attacks identified, it would be
-helpful to have definitions of both AKD and presignatures, and to recap what
-ECDSA itself looks like.
+Before digging into the security proof and attacks identified, we'll define
+both AKD and presignatures and recap what ECDSA itself looks like.
 
 Keypairs for ECDSA look like `k`, `K = kG`, where `G` is a generator of an
 elliptic curve group, and `k` is a randomly selected element from the scalar
@@ -28,8 +27,8 @@ else s = r^{-1} (h + td)
 return sigma = (s, t)
 ```
 
-The verification algorithm is simply that the verifier, given `sigma`, and `m`,
-and knowing `K`, does the following :
+And the verification algorithm is simply that the verifier, given `sigma`, and `m`,
+and knowing `K`, performs the following :
 ```
 h = hash(m)
 R = s^{-1}hG + s^{-1}tK
@@ -39,13 +38,16 @@ else signature is valid
 
 ### Additive key derivation
 
-Additive key derivation is simply taking the public key from the key generation
-given above and adding another number to it, so that the new secret key can be
+Additive key derivation is a process of taking the public key from the key generation
+algorithm given above and adding another number to it, so that the new secret key can be
 computed only by the holder of the original one. Often this is done by
 generating a random element `j`, with `J = jG`, and then `k' = k + j`, and
 `K' = K + J (= kG + jG = (k+j)G)`. In BIP32's case, the element `j` is instead
 derived from some information in a deterministic way, which is where the name
-hierarchical deterministic key derivation comes from.
+hierarchical deterministic key derivation comes from. The elements `J` and `j` do
+not need to be private for the process to be secure (where security here means that
+only the original holder of `k` can compute `k + j` and sign transactions corresponding
+to the new key pair).
 
 #### Why is this useful?
 
@@ -62,8 +64,8 @@ efficiency and simplicity.
 ### Presignatures
 
 Presignatures take into account that one of the threads of computation of the
-ECDSA signing algorithm doesn't actually depend on the message being signed at
-all. It's possible to generate `r` at random, then compute
+ECDSA signing algorithm doesn't depend on the message being signed at all.
+It's perfectly possible to generate `r` at random, then compute
 `R = rG and t = F(R)` before the message itself is known.
 
 #### Why is this useful?
