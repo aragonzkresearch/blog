@@ -1,4 +1,5 @@
 ## rwc2022 : Threshold ECDSA with additive key derivation and presignatures : an attack, and a solution
+*2022-05-11 by Rebekah*
 
 During rwc2022, Victor Shoup presented joint work with Jens Groth on the
 security of additive key derivation and pre-signatures for ECDSA.  Additive key
