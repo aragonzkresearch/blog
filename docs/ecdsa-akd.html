@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="Additive key derivation and ECDSA presignatures are used widely throughout the cryptocurrency space, but a security proof for the construction was missing until this point. Shoup and Groth find an attack on threshold ECDSA when using AKD and presignatures, and present a solution." />
+    <meta charset="utf-8">
+    <title> rwc2022 : Threshold ECDSA with additive key derivation and presignatures : an attack, and a solution - Aragon Research - blog</title>
+    <meta name="title" content=" rwc2022 : Threshold ECDSA with additive key derivation and presignatures : an attack, and a solution - Aragon Research - blog">
+    <meta name="description" content="Additive key derivation and ECDSA presignatures are used widely throughout the cryptocurrency space, but a security proof for the construction was missing until this point. Shoup and Groth find an attack on threshold ECDSA when using AKD and presignatures, and present a solution.">
+
+    <meta property="og:title" content=" rwc2022 : Threshold ECDSA with additive key derivation and presignatures : an attack, and a solution - Aragon Research - blog" />
+    <meta property="og:description" content="Additive key derivation and ECDSA presignatures are used widely throughout the cryptocurrency space, but a security proof for the construction was missing until this point. Shoup and Groth find an attack on threshold ECDSA when using AKD and presignatures, and present a solution." />
+    <meta property="og:url" content="https://research.aragon.com/ecdsa-akd.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.com/" />
+    <meta name="twitter:title" content=" rwc2022 : Threshold ECDSA with additive key derivation and presignatures : an attack, and a solution - Aragon Research - blog">
+    <meta name="twitter:description" content="Additive key derivation and ECDSA presignatures are used widely throughout the cryptocurrency space, but a security proof for the construction was missing until this point. Shoup and Groth find an attack on threshold ECDSA when using AKD and presignatures, and present a solution.">
+    <meta name="twitter:image" content="https://research.aragon.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3d4556;">
+          <img src="img/main-logo.svg" /> Aragon Research
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="https://aragon.org" style="color:#3d4556;display:inline-block;" title="Aragon main website">aragon.org</a>
+          <div class="onoffswitch" style="margin-left:10px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div class="container" style="margin-top:40px;max-width:800px;">
+      <h2>rwc2022 : Threshold ECDSA with additive key derivation and presignatures : an attack, and a solution</h2>
+
+<p><em>2022-05-11 by Rebekah</em></p>
+
+<p>During rwc2022, Victor Shoup presented joint work with Jens Groth on the
+security of additive key derivation and pre-signatures for ECDSA.  Additive key
+derivation (AKD) is used widely throughout the cryptocurrency space as it&rsquo;s
+specified in BIP32, the de facto cryptocurrency standard for a heirarchical and
+deterministic key derivation process. BIP32 is used to derive keys in both
+Ledger and Trezor hardware wallets, and a large number of software wallets that
+have adopted BIP32 &ndash; a search on github reveals 203,000 mentions.</p>
+
+<p>Before digging into the security proof and attacks identified, we&rsquo;ll define
+both AKD and presignatures and recap what ECDSA itself looks like.</p>
+
+<p>Keypairs for ECDSA look like <code>k</code>, <code>K = kG</code>, where <code>G</code> is a generator of an
+elliptic curve group, and <code>k</code> is a randomly selected element from the scalar
+field.</p>
+
+<p>The signing algorithm for signing a message <code>m</code> with key <code>k</code> is given as
+follows :</p>
+
+<pre><code>h = hash(m) (to the scalar field)
+r randomly generated from the scalar field
+R = rG t = F(R) // where F is a function that maps R back to the
+                // scalar field (commonly taking the x coordinate)
+if t == 0 || h + tk == 0, fail
+else s = r^{-1} (h + td)
+return sigma = (s, t)
+</code></pre>
+
+<p>And the verification algorithm is simply that the verifier, given <code>sigma</code>, and <code>m</code>,
+and knowing <code>K</code>, performs the following :</p>
+
+<pre><code>h = hash(m)
+R = s^{-1}hG + s^{-1}tK
+if R == 0 || F(R) != t, fail
+else signature is valid
+</code></pre>
+
+<h3>Additive key derivation</h3>
+
+<p>Additive key derivation is a process of taking the public key from the key generation
+algorithm given above and adding another number to it, so that the new secret key can be
+computed only by the holder of the original one. Often this is done by
+generating a random element <code>j</code>, with <code>J = jG</code>, and then <code>k' = k + j</code>, and
+<code>K' = K + J (= kG + jG = (k+j)G)</code>. In BIP32&rsquo;s case, the element <code>j</code> is instead
+derived from some information in a deterministic way, which is where the name
+hierarchical deterministic key derivation comes from. The elements <code>J</code> and <code>j</code> do
+not need to be private for the process to be secure (where security here means that
+only the original holder of <code>k</code> can compute <code>k + j</code> and sign transactions corresponding
+to the new key pair).</p>
+
+<h4>Why is this useful?</h4>
+
+<p>Key derivation protocols are useful because they increase the number of key
+pairs that can be created with knowledge of just one long term secret. For
+cryptocurrency wallets (both hardware and software based), the 24 word seed
+phrase is used to derive the initial base key pair, and then all others are
+derived from that one using BIP32. This means that in the case you lose your
+hardware wallet or forget credentials for a software wallet, you can re-derive
+all of your keypairs with just the one seed phrase. The reason why addition is
+used over some more complicated key derivation process is mainly due to
+efficiency and simplicity.</p>
+
+<h3>Presignatures</h3>
+
+<p>Presignatures take into account that one of the threads of computation of the
+ECDSA signing algorithm doesn&rsquo;t depend on the message being signed at all.
+It&rsquo;s perfectly possible to generate <code>r</code> at random, then compute
+<code>R = rG and t = F(R)</code> before the message itself is known.</p>
+
+<h4>Why is this useful?</h4>
+
+<p>The value <code>R</code> is referred to as a presignature, and it&rsquo;s main value is found when
+computing threshold ECDSA. In a threshold implementation, the value <code>k</code> is shared
+across parties, with no one party knowing the true value of <code>k</code>. Each party&rsquo;s
+share is represented <code>[k]</code>. In this setting, it&rsquo;s also possible to precompute, for
+a random scalar <code>u</code>, sharings <code>[r]</code>, <code>[u]</code>, <code>[r′] = [ru]</code>, and <code>[k′] = [ku]</code>.</p>
+
+<p>With these precomputed shares, to sign a given message <code>m</code>, the parties only need
+to locally compute <code>h = hash(m)</code>, and <code>[v] = h[u] + t[k′]</code>,
+and then they can share their values <code>[v]</code> and <code>[r']</code> (opening the secret sharings,
+to reveal <code>v</code> and <code>r</code> themselves), which allows</p>
+
+<pre><code>s = v/r' = (hu + tku)/ru = (h + tk)/r
+</code></pre>
+
+<p>to be computed with only one round of interaction between parties after the message <code>m</code>
+is decided, rather than the two rounds that would be needed otherwise.</p>
+
+<h2>ECDSA + presignatures + additive key derivation &ndash; an attack</h2>
+
+<p>The verification algorithm for ECDSA is that given <code>sigma</code>, <code>m</code>, <code>K</code>:</p>
+
+<pre><code>h = hash(m)
+R = s^{-1}hG + s^{-1}tK
+if R == 0 || F(R) != t, fail
+else signature is valid
+</code></pre>
+
+<p>Rewriting this we have <code>sR = hG + tK</code>. For additive key derivation, this equation
+instead becomes <code>sR = hG + t(K + jG)</code>, or rewritten, <code>sR = (h + tj)G + tK</code>.</p>
+
+<p>We then have a weakening of security due to being able to manipulate (h + tj).
+The attack works by quering a presignature oracle to get an <code>R</code>, computing
+<code>t = F(R)</code> (as normal), and then finding <code>m, j, m*, j*</code> satisfying
+<code>h + tj = h* + tj*</code>. Given a signature for <code>m</code>, using <code>j</code> to change the key <code>k</code>,
+and with <code>R</code> as the pre-signature,
+you then also have a valid signature on <code>m*</code> using <code>j*</code> using <code>k</code>, and <code>R</code> as
+pre-signature (without knowledge of <code>k</code> itself). This constitutes a forgery,
+and is not good.</p>
+
+<h3>What does this attack mean for threshold ECDSA with presignatures and AKD?</h3>
+
+<p>With security parameter <code>lambda</code>, the ability to forge a proof by finding
+<code>m, j, m*, j*</code> that satisfy <code>h + tj = h* + tj*</code> lowers the complexity of
+breaking ECDSA in this sitaution from <code>O(lambda^1/2)</code> to <code>O(lambda^1/3)</code>, equivalent
+to security of 85 bits rather than 128. That&rsquo;s not good! But there are mitigations.</p>
+
+<h3>Mitigations</h3>
+
+<p>The main mitigation suggested is to rerandomise <code>R</code> at time of use, by some
+public value only generated at time of signing. <code>R</code> would then instead become
+<code>R + deltaG</code>, which eliminates the possibility
+of <code>t</code> being known in advance, meaning that an attacker no longer has enough
+information to solve <code>h + tj = h* + tj*</code> for any <code>h, j, h*, j*</code>, as <code>t</code> itself
+is not known in advance. In a cryptocurrency setting, it&rsquo;s easy to think of
+sources for this public randomness, for example the blockhash of the previous
+block, etc. And then the attack is eliminated!</p>
+
+    </div>
+
+    <footer style="text-align:center; margin-top:100px;margin-bottom:50px;">
+      <div class="container">
+        <div class="row" style="display:inline-block;">
+          <b>Aragon Research</b>is part of <a href="https://aragon.org"
+                  target="_blank" style="color: gray;text-decoration:none;"><img style="width:130px;margin-top:-8px;" src="img/aragon_logo_full.svg" /></a>
+        </div>
+        <br><br>
+        <a href="https://github.com/aragon" style="color: gray;">github</a> |
+        <a href="https://twitter.com/aragonproject" style="color: gray;">twitter</a>
+        <!-- <a href="" style="color: gray;">RSS</a> -->
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+      ///
+      let theme = localStorage.getItem("theme");
+      if ((theme === "light-theme")||(theme==null)) {
+          theme = "light-theme";
+          document.getElementById("themeSwitcher").checked = false;
+      } else if (theme === "dark-theme") {
+          theme = "dark-theme";
+          document.getElementById("themeSwitcher").checked = true;
+      }
+      document.body.className = theme;
+      localStorage.setItem("theme", theme);
+
+      function switchTheme() {
+        theme = localStorage.getItem("theme");
+        if (theme === "light-theme") {
+          theme = "dark-theme";
+          document.getElementById("themeSwitcher").checked = true;
+        } else {
+          theme = "light-theme";
+          document.getElementById("themeSwitcher").checked = false;
+        }
+        document.body.className = theme;
+        localStorage.setItem("theme", theme);
+
+        console.log(theme);
+      }
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
