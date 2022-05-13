@@ -10,6 +10,11 @@
   "metaimg": "img/main-logo.svg",
   "posts": [
     {
+      "thumb": "ecdsa-akd_thumb.md",
+      "md": "ecdsa-akd.md",
+      "metadescr": "Additive key derivation and ECDSA presignatures are used widely throughout the cryptocurrency space, but a security proof for the construction was missing until this point. Shoup and Groth find an attack on threshold ECDSA when using AKD and presignatures, and present a solution."
+    },
+    {
       "thumb": "votedelegation_thumb.md",
       "md": "votedelegation.md",
       "metadescr": "Anonymous e-voting schemes are a promising tool in the current and future digital society. We propose a simple and elegant way to add delegation capabilities to such schemes."
