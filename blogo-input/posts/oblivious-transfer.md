@@ -2,7 +2,7 @@
 
 *2022-05-03 by [Alex Kampa](https://github.com/alex-kampa)*
 
-Oblivious transfer (OT) is a cryptographical primitive introduced by Michael Rabin in 1981. It is fundamental for secure multiparty computation.
+Oblivious transfer (OT) is a cryptographical primitive introduced by Michael Rabin in 1981. It is fundamental for secure multiparty computation. It can also be combined with Garbled Circuits to construct 2-party semi-honest secure function evaluation protocols, as shown in the seminal work of Yao.
 
 A 1-2 oblivious transfer protocol can be described as follows. Bob has 2 messages $m_0$ and $m_1$ and Alice can retrieve one, and only one, of these messages. Bob should not learn which message Alice obtained. This can be generalised to 1-n (one out of n) and k-n (k out of n) oblivious transfer protocols.
 

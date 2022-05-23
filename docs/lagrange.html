@@ -56,11 +56,11 @@
 
 
     <div class="container" style="margin-top:40px;max-width:800px;">
-      <h1>Lagrange bases in subgroups of $F_p^*$: a hands-on introduction</h1>
+      <h1>Lagrange bases in subgroups of <span class="math inline">\(F_p^*\)</span>: a hands-on introduction</h1>
 
 <p><em>2022-05-02 by <a href="https://github.com/alex-kampa">Alex Kampa</a></em></p>
 
-<p>Our first <strong><a href="https://github.com/aragon/research/blob/main/blog/001_Lagrange/lagrange.pdf">Maths Seminar note</a></strong> is about Lagrange bases in subgroups of $F_p^*$, which happen to have a simple and explicit formula. This paper provides an easy to follow introduction to Lagrange bases, lots of of hands-on examples as well as a detailed proof of the main result, which is (cf below for notations):</p>
+<p>Our first <strong><a href="https://github.com/aragon/research/blob/main/blog/001_Lagrange/lagrange.pdf">Maths Seminar note</a></strong> is about Lagrange bases in subgroups of <span class="math inline">\(F_p^*\)</span>, which happen to have a simple and explicit formula. This paper provides an easy to follow introduction to Lagrange bases, lots of of hands-on examples as well as a detailed proof of the main result, which is (cf below for notations):</p>
 
 <p>\begin{equation}
     L_i(x) = \frac{1}{n} \cdot \sum _{k=0}^{n-1} \omega^{-ik} x^k
@@ -70,39 +70,27 @@
 
 <p>Lagrange polynomials, also called Lagrange bases, or Lagrange basis polynomials, allow us to define polynomials via their values at certain points, instead of defining them by their coefficients. Lagrange bases have recently been used in the construction of a popular zk-SNARK scheme called PLONK.</p>
 
-<p>In general, given a set of $k+1$ points $X = { x_j } _{j \in [0 .. k]}$, which we can call the basis set, the Lagrange bases $L_i$ are polynomials of the form:</p>
-
-<p>$$
-L_i(x) = \prod _{\substack{j \in J \ j \neq i}} \frac{(x - x_j)}{(x_i - x_j)}
-$$</p>
-
-<p>These polynomials have the property of being equal to 0 at all but one points of the base set, and to 1 at the remaining point:</p>
-
-<p>$$
+<p>In general, given a set of <span class="math inline">\(k+1\)</span> points <span class="math inline">\(X = \{ x_j \} _{j \in [0 .. k]}\)</span>, which we can call the basis set, the Lagrange bases <span class="math inline">\(L_i\)</span> are polynomials of the form:</p>
+<p><span class="math display">\[
+L_i(x) = \prod _{\substack{j \in J \\ j \neq i}} \frac{(x - x_j)}{(x_i - x_j)}
+\]</span></p><p>These polynomials have the property of being equal to 0 at all but one points of the base set, and to 1 at the remaining point:</p>
+<p><span class="math display">\[
 \forall x \in X, \;\; L_i(x) =
   \begin{cases}
     1 \text{   for } x = x_i\newline
     0 \text{   otherwise}
-  \end{cases}
-$$</p>
+  \end{cases} 
+\]</span></p><p>If we are now told that a polynomial <span class="math inline">\(P(x)\)</span> of degree at most <span class="math inline">\(k\)</span> takes the values <span class="math inline">\(v_i\)</span> over the elements of <span class="math inline">\(X\)</span>, then this polynomial can be expressed as a simple linear combination of the Lagrange bases:</p>
+<p><span class="math display">\[
+P(x) = v_0 L_0(x) + v_1 L_1(x) + ... + v _{k} L _{k}(x)
+\]</span></p><p>In general, when dealing with an arbitrary set <span class="math inline">\(X\)</span> in an arbitrary field, there is nothing specific we can say about the structure of Lagrange bases. But when we place ourselves in a very particular context of subgroups of <span class="math inline">\(F_p^*\)</span>, with the basis set being all the points of the subgroup, these Lagrange bases have a very definite structure.</p>
 
-<p>If we are now told that a polynomial $P(x)$ of degree at most $k$ takes the values $v_i$ over the elements of $X$, then this polynomial can be expressed as a simple linear combination of the Lagrange bases:</p>
+<h2>Lagrange Polynomials in subgroups of <span class="math inline">\(F_p^*\)</span></h2>
 
-<p>$$
-P(x) = v_0 L_0(x) + v_1 L_1(x) + &hellip; + v _{k} L _{k}(x)
-$$</p>
-
-<p>In general, when dealing with an arbitrary set $X$ in an arbitrary field, there is nothing specific we can say about the structure of Lagrange bases. But when we place ourselves in a very particular context of subgroups of $F_p^*$, with the basis set being all the points of the subgroup, these Lagrange bases have a very definite structure.</p>
-
-<h2>Lagrange Polynomials in subgroups of $F_p^*$</h2>
-
-<p>We are in the field $\mathbb{F}_p$ where $p$ is prime. The element $\omega \neq 0$ is a generator of order $n$ of a multiplicative subgroup $H$ of $\mathbb{F}_p^{\ast}$. Obviously, $n$ divides $p-1$, which is the order of $\mathbb{F}_p^{*}$, and we have:</p>
-
-<p>$$
-    H = { 1, \omega, \omega^2, &hellip;, \omega^{n-1} }
-$$</p>
-
-<p>The Lagrange bases on $H$ are the set of polynomials $L_i$ defined for $0 \le i &lt; n-1$ as follows:</p>
+<p>We are in the field <span class="math inline">\(\mathbb{F}_p\)</span> where <span class="math inline">\(p\)</span> is prime. The element <span class="math inline">\(\omega \neq 0\)</span> is a generator of order <span class="math inline">\(n\)</span> of a multiplicative subgroup <span class="math inline">\(H\)</span> of <span class="math inline">\(\mathbb{F}_p^{\ast}\)</span>. Obviously, <span class="math inline">\(n\)</span> divides <span class="math inline">\(p-1\)</span>, which is the order of <span class="math inline">\(\mathbb{F}_p^{*}\)</span>, and we have:</p>
+<p><span class="math display">\[
+    H = \{ 1, \omega, \omega^2, ..., \omega^{n-1} \}
+\]</span></p><p>The Lagrange bases on <span class="math inline">\(H\)</span> are the set of polynomials <span class="math inline">\(L_i\)</span> defined for <span class="math inline">\(0 \le i &lt; n-1\)</span> as follows:</p>
 
 <p>\begin{equation}
     \forall x \in H, \;\; L_i(x) =
@@ -112,7 +100,7 @@ $$</p>
     \end{cases}
 \end{equation}</p>
 
-<p>It is also useful to define the polynomial $L(x)$ which has roots at exactly all the element of H:</p>
+<p>It is also useful to define the polynomial <span class="math inline">\(L(x)\)</span> which has roots at exactly all the element of H:</p>
 
 <p>\begin{equation}
     L(x) = \prod_{j=0}^{n-1} (x - \omega^j)
@@ -130,7 +118,7 @@ $$</p>
     L_i(x) = \frac{\omega^i}{n} \cdot \frac{x^n - 1}{x - \omega^i} = \frac{1}{n} \cdot \sum _{k=0}^{n-1} \omega^{-ik} x^k
 \end{equation}</p>
 
-<p>$\mathrm{\blacksquare}$</p>
+<p><span class="math inline">\(\mathrm{\blacksquare}\)</span></p>
 
 <p><a href="https://github.com/aragon/research/blob/main/blog/001_Lagrange/lagrange.pdf">https://github.com/aragon/research/blob/main/blog/001_Lagrange/lagrange.pdf</a></p>
 
