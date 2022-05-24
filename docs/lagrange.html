@@ -39,11 +39,11 @@
     <!-- o_gradient_background" -->
     <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
       <div class="container">
-        <a href="/" style="color:#3d4556;">
-          <img src="img/main-logo.svg" /> Aragon Research
+        <a href="/" style="color:#3164FA; weight:bold;">
+          <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px;"/> Research
         </a>
         <div style="float:right;margin-top:-6px;">
-          <a href="https://aragon.org" style="color:#3d4556;display:inline-block;" title="Aragon main website">aragon.org</a>
+          Light/Dark theme
           <div class="onoffswitch" style="margin-left:10px;display:inline-block;" title="Change theme">
             <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
               id="themeSwitcher">
@@ -55,7 +55,7 @@
 
 
 
-    <div class="container" style="margin-top:40px;max-width:800px;">
+    <div class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:200px;">
       <h1>Lagrange bases in subgroups of <span class="math inline">\(F_p^*\)</span>: a hands-on introduction</h1>
 
 <p><em>2022-05-02 by <a href="https://github.com/alex-kampa">Alex Kampa</a></em></p>
@@ -70,7 +70,7 @@
 
 <p>Lagrange polynomials, also called Lagrange bases, or Lagrange basis polynomials, allow us to define polynomials via their values at certain points, instead of defining them by their coefficients. Lagrange bases have recently been used in the construction of a popular zk-SNARK scheme called PLONK.</p>
 
-<p>In general, given a set of <span class="math inline">\(k+1\)</span> points <span class="math inline">\(X = \{ x_j \} _{j \in [0 .. k]}\)</span>, which we can call the basis set, the Lagrange bases <span class="math inline">\(L_i\)</span> are polynomials of the form:</p>
+<p>In general, given a set of <span class="math inline">\(k+1\)</span> points <span class="math inline">\(X = \{ x_j \}_{j \in [0 .. k]}\)</span>, which we can call the basis set, the Lagrange bases <span class="math inline">\(L_i\)</span> are polynomials of the form:</p>
 <p><span class="math display">\[
 L_i(x) = \prod _{\substack{j \in J \\ j \neq i}} \frac{(x - x_j)}{(x_i - x_j)}
 \]</span></p><p>These polynomials have the property of being equal to 0 at all but one points of the base set, and to 1 at the remaining point:</p>
@@ -124,16 +124,18 @@ P(x) = v_0 L_0(x) + v_1 L_1(x) + ... + v _{k} L _{k}(x)
 
     </div>
 
-    <footer style="text-align:center; margin-top:100px;margin-bottom:50px;">
+    <footer style="text-align:center; height:100px; margin-top:-100px;">
       <div class="container">
-        <div class="row" style="display:inline-block;">
-          <b>Aragon Research</b>is part of <a href="https://aragon.org"
-                  target="_blank" style="color: gray;text-decoration:none;"><img style="width:130px;margin-top:-8px;" src="img/aragon_logo_full.svg" /></a>
+        <div style="float:left;margin-top:30px;">
+          <a href="/" style="color:#ffffff; weight:bold;">
+              <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px; filter: brightness(0) invert(1);"/> Research
+          </a>
         </div>
-        <br><br>
-        <a href="https://github.com/aragon" style="color: gray;">github</a> |
-        <a href="https://twitter.com/aragonproject" style="color: gray;">twitter</a>
-        <!-- <a href="" style="color: gray;">RSS</a> -->
+        <div>
+        </div>
+        <div style="float:right;margin-top:30px;">
+          <a href="https://aragon.org" target="_blank" style="color:#ffffff;">Aragon.org</a>
+        </div>
       </div>
     </footer>
 

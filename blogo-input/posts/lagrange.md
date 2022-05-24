@@ -14,7 +14,7 @@ Our first **[Maths Seminar note](https://github.com/aragon/research/blob/main/bl
 
 Lagrange polynomials, also called Lagrange bases, or Lagrange basis polynomials, allow us to define polynomials via their values at certain points, instead of defining them by their coefficients. Lagrange bases have recently been used in the construction of a popular zk-SNARK scheme called PLONK.
 
-In general, given a set of $k+1$ points $X = \{ x_j \} _{j \in [0 .. k]}$, which we can call the basis set, the Lagrange bases $L_i$ are polynomials of the form:
+In general, given a set of $k+1$ points $X = \{ x_j \}_{j \in [0 .. k]}$, which we can call the basis set, the Lagrange bases $L_i$ are polynomials of the form:
 
 $$
 L_i(x) = \prod _{\substack{j \in J \\ j \neq i}} \frac{(x - x_j)}{(x_i - x_j)}
