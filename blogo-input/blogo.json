@@ -1,12 +1,12 @@
 {
-  "title": "Aragon Research - blog",
+  "title": "Groupid Labs - blog",
   "relativePath": "",
-  "absoluteUrl": "https://research.aragon.com",
+  "absoluteUrl": "https://blog.groupoidlabs.io",
   "outputDir": "docs",
   "postsDir": "posts",
   "indexTemplate": "index.html",
   "postThumbTemplate": "postThumbTemplate.html",
-  "metadescr": "Aragon Research blog",
+  "metadescr": "Groupoid Labs blog",
   "metaimg": "img/main-logo.svg",
   "posts": [
     {

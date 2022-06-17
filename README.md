@@ -1,5 +1,5 @@
-# researchblog
-Aragon Research blog.
+# blog
+Groupoid Labs blog.
 
 ## Usage
 - Do not commit to `main` branch, always use a branch and do a PR to `main` later on.
