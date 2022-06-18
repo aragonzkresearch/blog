@@ -20,7 +20,7 @@ body {
 
 a {
   text-decoration:none!important;
-  color: #3164FA;
+  color: #8906e0;
 }
 
 blockquote {
@@ -50,7 +50,7 @@ h1,h2, h3, h4, h5 {
 footer{
   /* bottom: 0; */
   width: 100%;
-  background: #3164FA;
+  background: #8906e0;
   color: #ffffff;
 }
 
@@ -92,10 +92,10 @@ footer{
    transition: all 0.3s ease-in 0s;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label {
-   background-color: #3164FA;
+   background-color: #8906e0;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
-   border-color: #3164FA;
+   border-color: #8906e0;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label:before {
    right: 0px;
