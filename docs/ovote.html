@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="OVOTE (Offchain Voting with Onchain Trustless Execution) is a L2 design for voting using validity-proofs (zkSNARK proofs), which is similar to zkRollups. The main idea is that the votes are aggregated offchain, and proved onchain through a zkSNARK proof, resulting in constant gas costs while scaling up to thousands of voters through a single Ethereum transaction." />
+    <meta charset="utf-8">
+    <title> We present OVOTE: Offchain Voting with Onchain Trustless Execution - Groupid Labs - blog</title>
+    <meta name="title" content=" We present OVOTE: Offchain Voting with Onchain Trustless Execution - Groupid Labs - blog">
+    <meta name="description" content="OVOTE (Offchain Voting with Onchain Trustless Execution) is a L2 design for voting using validity-proofs (zkSNARK proofs), which is similar to zkRollups. The main idea is that the votes are aggregated offchain, and proved onchain through a zkSNARK proof, resulting in constant gas costs while scaling up to thousands of voters through a single Ethereum transaction.">
+
+    <meta property="og:title" content=" We present OVOTE: Offchain Voting with Onchain Trustless Execution - Groupid Labs - blog" />
+    <meta property="og:description" content="OVOTE (Offchain Voting with Onchain Trustless Execution) is a L2 design for voting using validity-proofs (zkSNARK proofs), which is similar to zkRollups. The main idea is that the votes are aggregated offchain, and proved onchain through a zkSNARK proof, resulting in constant gas costs while scaling up to thousands of voters through a single Ethereum transaction." />
+    <meta property="og:url" content="https://blog.groupoidlabs.io/ovote.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://blog.groupoidlabs.io/" />
+    <meta name="twitter:title" content=" We present OVOTE: Offchain Voting with Onchain Trustless Execution - Groupid Labs - blog">
+    <meta name="twitter:description" content="OVOTE (Offchain Voting with Onchain Trustless Execution) is a L2 design for voting using validity-proofs (zkSNARK proofs), which is similar to zkRollups. The main idea is that the votes are aggregated offchain, and proved onchain through a zkSNARK proof, resulting in constant gas costs while scaling up to thousands of voters through a single Ethereum transaction.">
+    <meta name="twitter:image" content="https://blog.groupoidlabs.io/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="groupoid labs">
+    <link rel="icon" type="image/svg" href="img/groupoidlabs-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#000000; font-weight:bold;">
+          <img src="img/groupoidlabs-logo-transparent.png" style="height:35px;margin-right:10px;"/>
+          Groupoid Labs blog
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="https://groupoidlabs.io" style="color:#000000;">
+            groupoidlabs.io
+          </a>
+          <div class="onoffswitch" style="margin-left:30px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:200px;">
+      <h1>We present OVOTE: Offchain Voting with Onchain Trustless Execution</h1>
+
+<p><em>2022-06-21 by <a href="https://arnaucube.com">arnaucube</a></em></p>
+
+<p>We present <strong>OVOTE: Offchain Voting with Onchain Trustless Execution</strong>.</p>
+
+<p><strong>TL;DR:</strong> OVOTE is a L2 design for voting using validity-proofs (zkSNARK proofs), which is similar to zkRollups. The main idea is that the <strong>votes are aggregated offchain, and proved onchain through a zkSNARK proof</strong>, resulting in constant gas costs while scaling up to thousands of voters through a single Ethereum transaction.
+We present the <a href="https://groupoidlabs.io/docs/ovote">technical document</a> together with the implementation of the <a href="https://github.com/groupoidlabs/ovote/tree/main/circuits">zk circuits</a>, <a href="https://github.com/groupoidlabs/ovote/tree/main/contracts">smart contracts</a> and <a href="https://github.com/groupoidlabs/ovote-node">backend node</a>.</p>
+
+<h2>Context</h2>
+
+<p>This is a project that we started 4 months ago in the Aragon ZK Research group (<a href="https://groupoidlabs.io">Groupoid Labs</a> guild), continuing the ideas that we&rsquo;ve been discussing in <a href="https://vocdoni.io">Vocdoni</a> for the past year, with the aim to be a contribution to the <a href="https://aragon.org">Aragon</a> ecosystem.</p>
+
+<p>OVOTE (v0) is a short-term project with a specific scope, with the aim to be a first practical step towards a future of high scalablility &amp; privacy preserving voting systems for DAOs using zkSNARKs.
+This forum post presents the high level idea, the full design can be found at the <a href="https://groupoidlabs.io/docs/ovote">OVOTE document</a>.</p>
+
+<h2>Introduction</h2>
+
+<p>The main idea is that the computation and verification of the votes (vote + signature + censusProof), is <b>computed off-chain. Then, a zkSNARK proof (validity-proof) is sent to the Smart Contract</b> which verifies that everything is correct, similar to a zkRollup (Validium), but instead of economic transactions updating the Rollup state, with votes aggregated into a Result.</p>
+
+<p>With this design, we can have thousands of users voting offchain, triggering onchain execution in a trustless way. This is done with constant gas costs without needing Oracles or optimistic multisigs.</p>
+
+<p><img src="img/ovote-overview.png" alt="" /></p>
+
+<h2>How it works</h2>
+
+<p>Votes are computed offchain, and a zkSNARK proof (validity-proof) is verified onchain which proves that votes aggregation result is correct and that includes votes issued by each user belonging to the census.
+<img src="img/ovote-how-it-works-diagram.png" alt="" /></p>
+
+<ul>
+<li>Census is created offchain, containing user&rsquo;s public keys.</li>
+<li>Once the census is closed, the CensusRoot is sent to the SmartContract, and the process is created.</li>
+<li>Users send their votes + signatures + censusProof to the OVOTE-node</li>
+<li>Once process is finished, the OVOTE-node aggregates all the received votes, computes the result (using user&rsquo;s weights) and generates the zkSNARK proof.</li>
+<li>Then, any user can get the generated proof and send it to the SmartContract, which will verify it and if it&rsquo;s correct will trigger the configured actions (eg. moving funds).</li>
+</ul>
+
+<h2>Status of the project</h2>
+
+<p>We have implemented the <strong>zk circuits</strong>, the <strong>smart contracts</strong>, <strong>clientlib</strong> and the <strong>backend node</strong> (see next subsection with the links to the repos). We have almost an usable version of OVOTE, which can be used to building a product for the Aragon ecosystem.</p>
+
+<!-- To sketch an idea of how the user flow could look like in terms of a webapp, we did this [sketch]() (not as a design, but to draft an idea of the user flow). -->
+
+<p>In the following subsection we list the different components that we have implemented.</p>
+
+<h3>Components implemented</h3>
+
+<ul>
+<li>Circuits: <a href="https://github.com/groupoidlabs/ovote/tree/main/circuits">https://github.com/groupoidlabs/ovote/tree/main/circuits</a>
+
+<ul>
+<li>zkSNARK (Groth16) Circom circuit, which proves the correct offchain computation of the aggregation of valid user votes and result computation.</li>
+</ul></li>
+<li>Smart contracts: <a href="https://github.com/groupoidlabs/ovote/tree/main/contracts">https://github.com/groupoidlabs/ovote/tree/main/contracts</a>
+
+<ul>
+<li>Onchain registry of processes, also verifies the zkSNARK proof and results.</li>
+</ul></li>
+<li>Client lib: <a href="https://github.com/groupoidlabs/ovote/tree/main/clientlib">https://github.com/groupoidlabs/ovote/tree/main/clientlib</a>
+
+<ul>
+<li>Typescript library used in the user&rsquo;s browser, to create keys, signatures and cast the votes.</li>
+</ul></li>
+<li>Node (Server): <a href="https://github.com/groupoidlabs/ovote-node">https://github.com/groupoidlabs/ovote-node</a>
+
+<ul>
+<li>OVOTE-node, similar to a zkRollup node. Aggregates the votes and generates the zkSNARK proof.</li>
+</ul></li>
+</ul>
+
+<h2>Properties</h2>
+
+<p><em>Properties covered for this initial version.</em></p>
+
+<ul>
+<li>Properties <strong>covered</strong>:
+
+<ul>
+<li><strong>Trustless</strong>: nobody (neither users nor the Node) is able to modify votes values, neither add fake votes (eg. votes which user is not in the census).</li>
+<li><strong>Offchain/gasless voting</strong>: users vote offchain, and the OVOTE-node aggregates the computation &amp; verification of all the votes and census-proofs, in a small zkSNARK proof (Validity-proof), which is sent to the SmartContract.</li>
+<li><strong>Binding execution</strong>: because of its trustless characteristic, it can trigger onchain actions in a trustless way (eg. moving funds of a DAO), directly from the voting process result (without human intervention).</li>
+<li><strong>Chain agnostic census</strong>: the census is build off-chain, and the zkSNARK proof of correct results computation can be published into any EVM chain (furthermore, into any chain that supports Pairing computation). So an OVOTE census could be used in Ethereum mainnet, but also in Polygon or GnosisChain.</li>
+<li><strong>Scalability</strong>: in a similar fashion than zkRollups, OVOTE scales to thousands of users under a single ethereum tx (results + proof publication).</li>
+</ul></li>
+<li>Properties <strong>not covered</strong> (that will be covered in future designs):
+
+<ul>
+<li><strong>No voter privacy</strong>
+
+<ul>
+<li>While the relation between votes &amp; publicKeys is not published in the blockchain, the OVOTE-node will know these relations and could make them public. So, unless users use a node managed by themselves, the votes info is assumed to be &lsquo;public&rsquo;.</li>
+<li>Future designs by the GroupoidLabs will focus on privacy preserving voting solutions.</li>
+</ul></li>
+<li><strong>No token-based voting</strong>
+
+<ul>
+<li>The scope of OVOTE is not about token-based voting, but it is planned in the mid-term future (check section: <em>&ldquo;Future use cases &gt; OVOTE-DAO&rdquo;</em>)</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Use cases</h2>
+
+<p>The aim of this project is to be a first step towards the usage of zkSNARKs technology for DAOs tooling. In the following sub-sections we describe some of the inmediate use cases that can be done with the current implementation, some other use cases that we plan to implement, and some further research that we will do.</p>
+
+<h3>Aragon DAOs integration</h3>
+
+<ul>
+<li>OVOTE is a modular component, which can be plugged into Zaragoza/AragonApp.
+
+<ul>
+<li>Users could use <em>OVOTE</em> as a sub-option (component) in Zaragoza/AragonApp, from the Zaragoza/AragonApp&rsquo;s UI</li>
+</ul></li>
+<li>Potentially, users, could deploy their own standalone instance of OVOTE with a minimalistic UI</li>
+<li>The OVOTE proof Verifier would be deployed in Ethereum, and any project could call it to verify their OVOTE proofs.
+
+<ul>
+<li>The Verifier contract contains part of the Trusted Setup which ceremony would be organized by Aragon</li>
+</ul></li>
+</ul>
+
+<h4>Tokenomics</h4>
+
+<p>Tokenomics are not in the scope of this project, but we identified some places where the usage of ANT would be useful:</p>
+
+<ul>
+<li>To pay the prover-server costs: Aragon could have servers that DAOs can use to compute the zkSNARK proofs, these are powerful (and a expensive) machines. There could be a fee in ANT that needs to be paid to the prover-server when publishing the results + proof on the Smart Contract.
+
+<ul>
+<li>This could be achieved by putting the prover-server ethereum address as a public input of the circuit, so the Smart Contract needs to know it to verify the proof, thus the contract can require sending ANT to that address, in the results publishing (&amp; verification) transaction call.</li>
+</ul></li>
+</ul>
+
+<p>We aim to do more research about possible other uses of ANT tokens in the context of OVOTE.</p>
+
+<h3>Direct use cases (short term, available with the current implementation)</h3>
+
+<p>Use cases available with the current implementation:</p>
+
+<ul>
+<li><strong>Offchain multisig with onchain results</strong>: users make offchain signatures, when a certian threshold of support is reached, the node generates a proof (validity-proof) and the SmartContract verifies it, if correct, it triggers the configured transaction (eg. DAO funds movement).</li>
+<li><strong>Offchain referendum with onchain results</strong>: similarly to the OVOTE, but users cast a vote which can be &lsquo;yes&rsquo; or &lsquo;no&rsquo;, meaning that when the results are presented, it is known how many votes are &lsquo;yes&rsquo; and how many votes are &lsquo;no&rsquo;.</li>
+<li><strong>Onchain Anonymous voting</strong>: the same census can be reused to users generating zkProofs that they belong to the census, and sending them directly to the onchain SmartContract. This approach is costly for users, but allows for anonymous voting. This use case would be cheap in non-congestioned EVM chains like Polygon or GnosisChain.</li>
+</ul>
+
+<h3>Future mid-term use case - OVOTE-DAO (~zkDAO)</h3>
+
+<p>An interesting idea to build on top of OVOTE, is to set up a Smart Contract that builds a <em>Census Tree</em>, where users can deposit ETH or any ERC20 token, and when the deposit is done, the contract adds a new leaf in the <em>Census Tree</em> with a <em>weight</em> value corresponding to the amount of tokens deposited by the user. In this way, the contract maintains the <em>Census Tree</em>, based on the deposits of tokens of the users, and the users can vote on proposals to spend the deposited tokens by using the same approach than the OVOTE. This could be managed by a contract on top of the OVOTE contract.</p>
+
+<p>In short words, this would be a kind of &lsquo;offchain DAO with onchain validity-proofs&rsquo;, where users make token deposits to the DAO contract, and then they vote offchain based on the weight of their deposited tokens, and the results with a zkSNARK proof is published to the DAO contract, which if correct, proves the correctness of the results and triggers a transaction execution (which, can be DAO funds movement).</p>
+
+<p><strong>In one line</strong>: a DAO where the census is built by the tokens deposited in the contract, where the members vote based on their deposited tokens through OVOTE, and the results are published onchain together with the OVOTE zkSNARK proofs, to triger the funds movement.</p>
+
+<p>This is our next step once OVOTE is implemented, as for having an initial version of OVOTE-DAO we could reuse the same zk-circuit that we implemented for OVOTE, and most of the needed implementation would be for the contract that gathers the user&rsquo;s deposits onchain and build the CensusTree.</p>
+
+<h3>Long term research</h3>
+
+<ul>
+<li>Proofs recursion: this would allow users generating a zkproof that they belong to the census, and the Node would generate a zkproof aggregating the verification of the user&rsquo;s zkproofs. In this way, users still enjoy gasless voting, but with anonymicity.</li>
+<li>Ring signatures inside zkSNARK circuit: this would allow users proving that they belong to the census without revealing who they are (Monero style), and later all the signatures verification would be proven inside a zkSNARK circuit by the node. This would bring anonymous voting while having the scalability that we have with OVOTE.</li>
+<li>EthStorageProofs and EthSignatures: instead of using &lsquo;snark-friendly&rsquo; cryptographic primitives (MerkleTree, Hash function, and elliptic curve) if we can have inside a zk circuit the Ethereum cryptographic primitives (such as Ethereum Patricia Trie (with RLP encoding), keccak256 hash function, and secp256k1 elliptic curve), we could use as census the already existing Ethereum state. This would allow to directly use Ethereum token-holdings as a census for voting.</li>
+<li>Research on results aggregation: this would allow for different nodes sending different results that are aggregated.</li>
+<li>Researching other proving schemas such as PLONK.</li>
+</ul>
+
+<h2>Regarding the project name</h2>
+
+<p>OVOTE (Offchain Voting with Onchain Trustless Execution) is the research project name. Aragon could build a product using OVOTE, and this product could have a more user-friendly name such as zkMultisig, zkGov, gaslessVoting, etc.</p>
+
+<h2>More details</h2>
+
+<p>Technical paper (draft): <a href="https://groupoidlabs.io/docs/ovote">https://groupoidlabs.io/docs/ovote</a></p>
+
+<p>Also, we published this same post into the Aragon forum: <a href="https://forum.aragon.org/t/we-present-ovote-offchain-voting-with-onchain-trustless-execution/3581">https://forum.aragon.org/t/we-present-ovote-offchain-voting-with-onchain-trustless-execution/3581</a></p>
+
+    </div>
+
+    <footer style="text-align:center; height:150px; margin-top:-140px;">
+      <div class="container">
+        <div style="margin-top:30px;padding-top:30px;">
+          <a href="https://groupoidlabs.io" target="_blank" style="color:#ffffff;font-weight:bold;"><span style="font-weight:bold;">Groupoid Labs</span></a> is a zk research group contributing to <a href="https://aragon.org" target="_blank" style="color:#ffffff;font-weight:bold;">Aragon</a> ecosystem.
+
+          <br><br>
+          <a href="https://twitter.com/groupoidlabs" target="_blank" style="color:#ffffff;margin:10px;"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+          <a href="https://github.com/groupoidlabs" target="_blank" style="color:#ffffff;margin:10px;"><i class="bi bi-github" style="font-size: 2rem;"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+      ///
+      let theme = localStorage.getItem("theme");
+      if ((theme === "light-theme")||(theme==null)) {
+          theme = "light-theme";
+          document.getElementById("themeSwitcher").checked = false;
+      } else if (theme === "dark-theme") {
+          theme = "dark-theme";
+          document.getElementById("themeSwitcher").checked = true;
+      }
+      document.body.className = theme;
+      localStorage.setItem("theme", theme);
+
+      function switchTheme() {
+        theme = localStorage.getItem("theme");
+        if (theme === "light-theme") {
+          theme = "dark-theme";
+          document.getElementById("themeSwitcher").checked = true;
+        } else {
+          theme = "light-theme";
+          document.getElementById("themeSwitcher").checked = false;
+        }
+        document.body.className = theme;
+        localStorage.setItem("theme", theme);
+
+        console.log(theme);
+      }
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
