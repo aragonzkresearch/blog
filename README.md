@@ -1,5 +1,7 @@
-# blog
-Groupoid Labs blog.
+# Groupoid Labs blog
+
+The Groupoid Labs website can be found at [https://blog.groupoidlabs.io/](https://blog.groupoidlabs.io/)
+
 
 ## Usage
 - Do not commit to `main` branch, always use a branch and do a PR to `main` later on.
