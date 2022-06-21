@@ -10,6 +10,11 @@
   "metaimg": "img/main-logo.svg",
   "posts": [
     {
+      "thumb": "ovote_thumb.md",
+      "md": "ovote.md",
+      "metadescr": "OVOTE (Offchain Voting with Onchain Trustless Execution) is a L2 design for voting using validity-proofs (zkSNARK proofs), which is similar to zkRollups. The main idea is that the votes are aggregated offchain, and proved onchain through a zkSNARK proof, resulting in constant gas costs while scaling up to thousands of voters through a single Ethereum transaction."
+    },
+    {
       "thumb": "ecdsa-akd_thumb.md",
       "md": "ecdsa-akd.md",
       "metadescr": "Additive key derivation and ECDSA presignatures are used widely throughout the cryptocurrency space, but a security proof for the construction was missing until this point. Shoup and Groth find an attack on threshold ECDSA when using AKD and presignatures, and present a solution."
