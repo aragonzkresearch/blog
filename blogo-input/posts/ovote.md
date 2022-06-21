@@ -71,8 +71,8 @@ In the following subsection we list the different components that we have implem
 The aim of this project is to be a first step towards the usage of zkSNARKs technology for DAOs tooling. In the following sub-sections we describe some of the inmediate use cases that can be done with the current implementation, some other use cases that we plan to implement, and some further research that we will do.
 
 ### Aragon DAOs integration
-- OVOTE is a modular component, which can be plugged into Zaragoza/AragonApp.
-    - Users could use *OVOTE* as a sub-option (component) in Zaragoza/AragonApp, from the Zaragoza/AragonApp's UI
+- OVOTE is a modular component, which can be plugged into AragonApp.
+    - Users could use *OVOTE* as a sub-option (component) in AragonApp, from the AragonApp's UI
 - Potentially, users, could deploy their own standalone instance of OVOTE with a minimalistic UI
 - The OVOTE proof Verifier would be deployed in Ethereum, and any project could call it to verify their OVOTE proofs.
     - The Verifier contract contains part of the Trusted Setup which ceremony would be organized by Aragon
