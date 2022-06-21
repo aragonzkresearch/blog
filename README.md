@@ -1,6 +1,6 @@
 # Groupoid Labs blog
 
-The Groupoid Labs website can be found at [https://blog.groupoidlabs.io/](https://blog.groupoidlabs.io/)
+The Groupoid Labs blog can be found at [https://blog.groupoidlabs.io/](https://blog.groupoidlabs.io/)
 
 
 ## Usage
