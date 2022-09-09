@@ -1,19 +1,27 @@
 # We present OVOTE: Offchain Voting with Onchain Trustless Execution
-*2022-06-21 by [arnaucube](https://arnaucube.com)*
 
-We present **OVOTE: Offchain Voting with Onchain Trustless Execution**.
+*2022-07-05 by [arnaucube](https://twitter.com/arnaucube)*
+
+We present **OVOTE (v0.5): Offchain Voting with Onchain Trustless Execution**.
 
 **TL;DR:** OVOTE is a L2 design for voting using validity-proofs (zkSNARK proofs), which is similar to zkRollups. The main idea is that the **votes are aggregated offchain, and proved onchain through a zkSNARK proof**, resulting in constant gas costs while scaling up to thousands of voters through a single Ethereum transaction.
-We present the [technical document](https://groupoidlabs.io/docs/ovote) together with the implementation of the [zk circuits](https://github.com/groupoidlabs/ovote/tree/main/circuits), [smart contracts](https://github.com/groupoidlabs/ovote/tree/main/contracts) and [backend node](https://github.com/groupoidlabs/ovote-node).
+We present the [technical document](https://research.aragon.org/docs/ovote) together with the implementation of the [zk circuits](https://github.com/aragonzkresearch/ovote/tree/main/circuits), [smart contracts](https://github.com/aragonzkresearch/ovote/tree/main/contracts) and [backend node](https://github.com/aragonzkresearch/ovote-node).
+
+
+<div style="text-align:center; margin:40px;">
+<a href="https://research.aragon.org/docs/ovote" target="_blank" class="alert alert-primary" role="alert">
+  <i class="bi bi-file-earmark-text" style="font-size: 1.5rem;"></i> OVOTE technical document
+</a>
+</div>
 
 ## Context
-This is a project that we started 4 months ago in the Aragon ZK Research group ([Groupoid Labs](https://groupoidlabs.io) guild), continuing the ideas that we've been discussing in [Vocdoni](https://vocdoni.io) for the past year, with the aim to be a contribution to the [Aragon](https://aragon.org) ecosystem.
+This is a project that we started 4 months ago in the [Aragon ZK Research](https://research.aragon.org) guild, continuing the ideas that we've been discussing in [Vocdoni](https://vocdoni.io) for the past year, with the aim to be a contribution to the [Aragon](https://aragon.org) ecosystem.
 
-OVOTE (v0) is a short-term project with a specific scope, with the aim to be a first practical step towards a future of high scalablility & privacy preserving voting systems for DAOs using zkSNARKs.
-This forum post presents the high level idea, the full design can be found at the [OVOTE document](https://groupoidlabs.io/docs/ovote).
+OVOTE (v0.5) is a short-term project with a specific scope, with the aim to be a first practical step towards a future of high scalablility & privacy preserving voting systems for DAOs using zkSNARKs.
+This forum post presents the high level idea, the full design can be found at the [OVOTE technical document](https://research.aragon.org/docs/ovote).
 
 ## Introduction
-The main idea is that the computation and verification of the votes (vote + signature + censusProof), is <b>computed off-chain. Then, a zkSNARK proof (validity-proof) is sent to the Smart Contract</b> which verifies that everything is correct, similar to a zkRollup (Validium), but instead of economic transactions updating the Rollup state, with votes aggregated into a Result.
+The main idea is that the computation and verification of the votes (vote + signature + censusProof), is **computed off-chain. Then, a zkSNARK proof (validity-proof) is sent to the Smart Contract** which verifies that everything is correct, similar to a zkRollup (Validium), but instead of economic transactions updating the Rollup state, with votes aggregated into a Result.
 
 With this design, we can have thousands of users voting offchain, triggering onchain execution in a trustless way. This is done with constant gas costs without needing Oracles or optimistic multisigs.
 
@@ -23,6 +31,7 @@ With this design, we can have thousands of users voting offchain, triggering onc
 
 ## How it works
 Votes are computed offchain, and a zkSNARK proof (validity-proof) is verified onchain which proves that votes aggregation result is correct and that includes votes issued by each user belonging to the census.
+
 ![](img/ovote-how-it-works-diagram.png)
 
 
@@ -33,21 +42,19 @@ Votes are computed offchain, and a zkSNARK proof (validity-proof) is verified on
 - Then, any user can get the generated proof and send it to the SmartContract, which will verify it and if it's correct will trigger the configured actions (eg. moving funds).
 
 ## Status of the project
-We have implemented the **zk circuits**, the **smart contracts**, **clientlib** and the **backend node** (see next subsection with the links to the repos). We have almost an usable version of OVOTE, which can be used to building a product for the Aragon ecosystem.
-
-<!-- To sketch an idea of how the user flow could look like in terms of a webapp, we did this [sketch]() (not as a design, but to draft an idea of the user flow). -->
+We have implemented the **zk circuits**, the **smart contracts**, **clientlib** and the **backend node** (see next subsection with the links to the repos). We have almost an usable version of OVOTE which we hope to finish during next weeks, with the idea that can be used to build a product for the Aragon ecosystem.
 
 In the following subsection we list the different components that we have implemented.
 
 ### Components implemented
 
-- Circuits: https://github.com/groupoidlabs/ovote/tree/main/circuits
+- Circuits: https://github.com/aragonzkresearch/ovote/tree/main/circuits
     - zkSNARK (Groth16) Circom circuit, which proves the correct offchain computation of the aggregation of valid user votes and result computation.
-- Smart contracts: https://github.com/groupoidlabs/ovote/tree/main/contracts
+- Smart contracts: https://github.com/aragonzkresearch/ovote/tree/main/contracts
     - Onchain registry of processes, also verifies the zkSNARK proof and results.
-- Client lib: https://github.com/groupoidlabs/ovote/tree/main/clientlib
+- Client lib: https://github.com/aragonzkresearch/ovote/tree/main/clientlib
     - Typescript library used in the user's browser, to create keys, signatures and cast the votes.
-- Node (Server): https://github.com/groupoidlabs/ovote-node
+- Node (Server): https://github.com/aragonzkresearch/ovote-node
     - OVOTE-node, similar to a zkRollup node. Aggregates the votes and generates the zkSNARK proof.
 
 ## Properties
@@ -63,7 +70,7 @@ In the following subsection we list the different components that we have implem
 - Properties **not covered** (that will be covered in future designs):
     - **No voter privacy**
         - While the relation between votes & publicKeys is not published in the blockchain, the OVOTE-node will know these relations and could make them public. So, unless users use a node managed by themselves, the votes info is assumed to be 'public'.
-        - Future designs by the GroupoidLabs will focus on privacy preserving voting solutions.
+        - Future designs by the Aragon ZK Research will focus on privacy preserving voting solutions.
     - **No token-based voting**
         - The scope of OVOTE is not about token-based voting, but it is planned in the mid-term future (check section: *"Future use cases > OVOTE-DAO"*)
 
@@ -79,7 +86,6 @@ The aim of this project is to be a first step towards the usage of zkSNARKs tech
 
 #### Tokenomics
 Tokenomics are not in the scope of this project, but we identified some places where the usage of ANT would be useful:
-
 - To pay the prover-server costs: Aragon could have servers that DAOs can use to compute the zkSNARK proofs, these are powerful (and a expensive) machines. There could be a fee in ANT that needs to be paid to the prover-server when publishing the results + proof on the Smart Contract.
     - This could be achieved by putting the prover-server ethereum address as a public input of the circuit, so the Smart Contract needs to know it to verify the proof, thus the contract can require sending ANT to that address, in the results publishing (& verification) transaction call.
 
@@ -113,8 +119,6 @@ This is our next step once OVOTE is implemented, as for having an initial versio
 OVOTE (Offchain Voting with Onchain Trustless Execution) is the research project name. Aragon could build a product using OVOTE, and this product could have a more user-friendly name such as zkMultisig, zkGov, gaslessVoting, etc.
 
 ## More details
-Technical paper (draft): https://groupoidlabs.io/docs/ovote
+Technical paper (draft): https://research.aragon.org/docs/ovote
 
-Also, we published this same post into the Aragon forum: https://forum.aragon.org/t/we-present-ovote-offchain-voting-with-onchain-trustless-execution/3581
-
-
+A forum version of this post can be found at: https://forum.aragon.org/t/we-present-ovote-offchain-voting-with-onchain-trustless-execution/3603

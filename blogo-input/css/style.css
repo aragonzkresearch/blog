@@ -20,7 +20,7 @@ body {
 
 a {
   text-decoration:none!important;
-  color: #8906e0;
+  color: #3164FA;
 }
 
 blockquote {
@@ -38,7 +38,7 @@ h1,h2, h3, h4, h5 {
 
 #mainNav {
   height:60px;
-  font-size:16px;
+  font-size:18px;
   /* background-image: linear-gradient(to right, #f0f2ff, #e8f6ff); */
   background: #F5F8FF;
   color: #3d4556;
@@ -47,10 +47,14 @@ h1,h2, h3, h4, h5 {
   /* border-image: linear-gradient(to right, #0085ff, #01e1f8) 1; */
 }
 
+.card {
+  margin-top: 15px;
+}
+
 footer{
   /* bottom: 0; */
   width: 100%;
-  background: #8906e0;
+  background: #3164FA;
   color: #ffffff;
 }
 
@@ -92,10 +96,10 @@ footer{
    transition: all 0.3s ease-in 0s;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label {
-   background-color: #8906e0;
+   background-color: #3164FA;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label, .onoffswitch-checkbox:checked + .onoffswitch-label:before {
-   border-color: #8906e0;
+   border-color: #3164FA;
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label:before {
    right: 0px;
