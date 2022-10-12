@@ -4,16 +4,16 @@
   <head>
     <meta name="description" content="Oblivious transfer (OT) is a cryptographical primitive that is fundamental for secure multiparty computation. We give a brief introduction to the Bellare-Micali OT protocol, which is particularly simple and elegant." />
     <meta charset="utf-8">
-    <title> The Bellare-Micali Oblivious Transfer - Aragon ZK Research - blog</title>
-    <meta name="title" content=" The Bellare-Micali Oblivious Transfer - Aragon ZK Research - blog">
+    <title> The Bellare-Micali Oblivious Transfer - Aragon ZK Research - blog</title>
+    <meta name="title" content=" The Bellare-Micali Oblivious Transfer - Aragon ZK Research - blog">
     <meta name="description" content="Oblivious transfer (OT) is a cryptographical primitive that is fundamental for secure multiparty computation. We give a brief introduction to the Bellare-Micali OT protocol, which is particularly simple and elegant.">
 
-    <meta property="og:title" content=" The Bellare-Micali Oblivious Transfer - Aragon ZK Research - blog" />
+    <meta property="og:title" content=" The Bellare-Micali Oblivious Transfer - Aragon ZK Research - blog" />
     <meta property="og:description" content="Oblivious transfer (OT) is a cryptographical primitive that is fundamental for secure multiparty computation. We give a brief introduction to the Bellare-Micali OT protocol, which is particularly simple and elegant." />
     <meta property="og:url" content="https://research.aragon.com/oblivious-transfer.html" />
     <meta property="og:type" content="article" />
     <meta property="og:image" content="https://research.aragon.com/" />
-    <meta name="twitter:title" content=" The Bellare-Micali Oblivious Transfer - Aragon ZK Research - blog">
+    <meta name="twitter:title" content=" The Bellare-Micali Oblivious Transfer - Aragon ZK Research - blog">
     <meta name="twitter:description" content="Oblivious transfer (OT) is a cryptographical primitive that is fundamental for secure multiparty computation. We give a brief introduction to the Bellare-Micali OT protocol, which is particularly simple and elegant.">
     <meta name="twitter:image" content="https://research.aragon.com/">
     <meta name="twitter:card" content="summary_large_image">
@@ -59,53 +59,60 @@
 
 
     <div class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:200px;">
-      <h1>The Bellare-Micali Oblivious Transfer</h1>
+      <h1>The Bellare-Micali Oblivious Transfer</h1>
 
-<p><em>2022-05-03 by <a href="https://github.com/alex-kampa">Alex Kampa</a></em></p>
+<p>
+<em>2022-05-03 by <a href="https://github.com/alex-kampa">Alex Kampa</a></em>
 
-<p>Oblivious transfer (OT) is a cryptographical primitive introduced by Michael Rabin in 1981. It is fundamental for secure multiparty computation. It can also be combined with Garbled Circuits to construct 2-party semi-honest secure function evaluation protocols, as shown in the seminal work of Yao.</p>
+Oblivious transfer (OT) is a cryptographical primitive introduced by Michael Rabin in 1981. It is fundamental for secure multiparty computation. It can also be combined with Garbled Circuits to construct 2-party semi-honest secure function evaluation protocols, as shown in the seminal work of Yao.
 
-<p>A 1-2 oblivious transfer protocol can be described as follows. Bob has 2 messages <span class="math inline">\(m_0\)</span> and <span class="math inline">\(m_1\)</span> and Alice can retrieve one, and only one, of these messages. Bob should not learn which message Alice obtained. This can be generalised to 1-n (one out of n) and k-n (k out of n) oblivious transfer protocols.</p>
+A 1-2 oblivious transfer protocol can be described as follows. Bob has 2 messages <span class="math inline">\(m_0\)</span> and <span class="math inline">\(m_1\)</span> and Alice can retrieve one, and only one, of these messages. Bob should not learn which message Alice obtained. This can be generalised to 1-n (one out of n) and k-n (k out of n) oblivious transfer protocols.
 
-<p>In this post, we will stick with the 1-2 protocol, for which Bellare and Micali provided a simple and elegant construction in 1989.</p>
+In this post, we will stick with the 1-2 protocol, for which Bellare and Micali provided a simple and elegant construction in 1989. 
+</p>
 
-<h2>The Bellare-Micali trick</h2>
+<h2>The Bellare-Micali trick</h2>
 
-<p>We have a group <span class="math inline">\(G\)</span> of prime order <span class="math inline">\(q\)</span> and publicly known generator <span class="math inline">\(g\)</span>. As usual, the discrete log problem in <span class="math inline">\(G\)</span> is assumed to be suitably hard. The OT protocol of Bellare and Micali relies on the following fact:</p>
+<p>
+We have a group <span class="math inline">\(G\)</span> of prime order <span class="math inline">\(q\)</span> and publicly known generator <span class="math inline">\(g\)</span>. As usual, the discrete log problem in <span class="math inline">\(G\)</span> is assumed to be suitably hard. The OT protocol of Bellare and Micali relies on the following fact:
 
-<p>Given an element <span class="math inline">\(c \in G\)</span> for which the discrete log is not known, it is impossible to find a pair <span class="math inline">\((k_0, k_1)\)</span> such that <span class="math inline">\(k_0 k_1 = c\)</span> while knowing the discrete logs of both <span class="math inline">\(k_0\)</span> and <span class="math inline">\(k_1\)</span>. It is however easy to find such a pair so that the discrete log of one of the elements is known.</p>
+Given an element <span class="math inline">\(c \in G\)</span> for which the discrete log is not known, it is impossible to find a pair <span class="math inline">\((k_0, k_1)\)</span> such that <span class="math inline">\(k_0 k_1 = c\)</span> while knowing the discrete logs of both <span class="math inline">\(k_0\)</span> and <span class="math inline">\(k_1\)</span>. It is however easy to find such a pair so that the discrete log of one of the elements is known.
 
-<p>As any element of <span class="math inline">\(G\)</span> can be seen as a public key, and therefore used for encrypting data, an OT protocol can be now constructed quite easily.</p>
+As any element of <span class="math inline">\(G\)</span> can be seen as a public key, and therefore used for encrypting data, an OT protocol can be now constructed quite easily. 
+</p>
 
-<h2>The Bellare-Micali OT protocol</h2>
+<h2>The Bellare-Micali OT protocol</h2>
 
-<p>The protocol works as follws:</p>
+<p>
+The protocol works as follws:
 
-<p><strong>(1)</strong> Bob selects a random <span class="math inline">\(c \in G\)</span> and sends it to Alice. To do that, Bob could take some random <span class="math inline">\(r \in Z_q\)</span> and set <span class="math inline">\(c = g^r\)</span>. However, the knowledge of <span class="math inline">\(r\)</span> is actually not necessary. In some settings, such as a group of points on an elliptic curve, the random point could be chosen without any knowledge of its discrete log.</p>
+<strong>(1)</strong> Bob selects a random <span class="math inline">\(c \in G\)</span> and sends it to Alice. To do that, Bob could take some random <span class="math inline">\(r \in Z_q\)</span> and set <span class="math inline">\(c = g^r\)</span>. However, the knowledge of <span class="math inline">\(r\)</span> is actually not necessary. In some settings, such as a group of points on an elliptic curve, the random point could be chosen without any knowledge of its discrete log.
 
-<p>Note that <span class="math inline">\(c\)</span> could also be a publicly known element for which no-one knows the discrete log. This would make this first step redundant.</p>
+Note that <span class="math inline">\(c\)</span> could also be a publicly known element for which no-one knows the discrete log. This would make this first step redundant.
 
-<p><strong>(2)</strong> Alice generates two elements <span class="math inline">\(k_0, k_1 \in G\)</span> such that <span class="math inline">\(k_0 k_1 = c\)</span>. Given that Alice does not know the discrete log of <span class="math inline">\(c\)</span>, the only way to achieve this is to select a random <span class="math inline">\(z \in Z_q\)</span> and to set <span class="math inline">\(k_0 = g^z\)</span> and then <span class="math inline">\(k_1 = c g^{-z}\)</span>. Note that Alice does not know the discrete log of <span class="math inline">\(k_1\)</span>. Alice now sends Bob one of the ordered pairs <span class="math inline">\((k_0, k_1)\)</span> or <span class="math inline">\((k_1, k_0)\)</span>.</p>
+<strong>(2)</strong> Alice generates two elements <span class="math inline">\(k_0, k_1 \in G\)</span> such that <span class="math inline">\(k_0 k_1 = c\)</span>. Given that Alice does not know the discrete log of <span class="math inline">\(c\)</span>, the only way to achieve this is to select a random <span class="math inline">\(z \in Z_q\)</span> and to set <span class="math inline">\(k_0 = g^z\)</span> and then <span class="math inline">\(k_1 = c g^{-z}\)</span>. Note that Alice does not know the discrete log of <span class="math inline">\(k_1\)</span>. Alice now sends Bob one of the ordered pairs <span class="math inline">\((k_0, k_1)\)</span> or <span class="math inline">\((k_1, k_0)\)</span>.
 
-<p>Note that Alice could have chosen some random <span class="math inline">\(k_0\)</span> for which she does not know the discrete log. As she will, in general, be able to compute the inverse of <span class="math inline">\(k_0\)</span>, she can set <span class="math inline">\(k_1 = c k_0^{-1}\)</span> to obtain the desired relation <span class="math inline">\(k_0 k_1 = c\)</span>. However, then she would not know the discrete log of any of the two points!</p>
+Note that Alice could have chosen some random <span class="math inline">\(k_0\)</span> for which she does not know the discrete log. As she will, in general, be able to compute the inverse of <span class="math inline">\(k_0\)</span>, she can set <span class="math inline">\(k_1 = c k_0^{-1}\)</span> to obtain the desired relation <span class="math inline">\(k_0 k_1 = c\)</span>. However, then she would not know the discrete log of any of the two points! 
 
-<p>Also note that if Alice does not choose <span class="math inline">\(z\)</span> randomly in step (2), she may leak information to Bob. For example, if she sent the pair <span class="math inline">\((c g^{-1}, g)\)</span>, Bob could easily find out that Alice knows the discrete log of the second point, and is therefore interested in message <span class="math inline">\(m_1\)</span>.</p>
+Also note that if Alice does not choose <span class="math inline">\(z\)</span> randomly in step (2), she may leak information to Bob. For example, if she sent the pair <span class="math inline">\((c g^{-1}, g)\)</span>, Bob could easily find out that Alice knows the discrete log of the second point, and is therefore interested in message <span class="math inline">\(m_1\)</span>.
 
-<p><strong>(3)</strong> Bob receives the pair <span class="math inline">\((k, k')\)</span> and verifies that <span class="math inline">\(k k' = c\)</span>. If that is the case, he can be confident that Alice knows the discrete log of one, and only one, of these two points. However, if Alice has chosen <span class="math inline">\(z\)</span> randomly, Bob will not know for which one of the two group elements Alice knows the discrete log.</p>
+<strong>(3)</strong> Bob receives the pair <span class="math inline">\((k, k')\)</span> and verifies that <span class="math inline">\(k k' = c\)</span>. If that is the case, he can be confident that Alice knows the discrete log of one, and only one, of these two points. However, if Alice has chosen <span class="math inline">\(z\)</span> randomly, Bob will not know for which one of the two group elements Alice knows the discrete log.
 
-<p>Using the group elements <span class="math inline">\((k, k')\)</span> as public keys, Bob generates the encryptions <span class="math inline">\(Enc(k, m_0)\)</span> and <span class="math inline">\(Enc(k', m_1)\)</span> and sends them to Alice. Here, <span class="math inline">\(Enc\)</span> designates some suitable encryption protocol.</p>
+Using the group elements <span class="math inline">\((k, k')\)</span> as public keys, Bob generates the encryptions <span class="math inline">\(Enc(k, m_0)\)</span> and <span class="math inline">\(Enc(k', m_1)\)</span> and sends them to Alice. Here, <span class="math inline">\(Enc\)</span> designates some suitable encryption protocol.
 
-<p><strong>(4)</strong> Alice can now decrypt one (and only one) of these encrypted  messages. If she sent <span class="math inline">\((k_0, k_1)\)</span> in step (2), she will be able to decrypt the message <span class="math inline">\(m_0\)</span> but not message <span class="math inline">\(m_1\)</span>. And if she sent <span class="math inline">\((k_1, k_0)\)</span> in step (2), then she will be able to decrypt the message <span class="math inline">\(m_1\)</span> but not message <span class="math inline">\(m_0\)</span>.</p>
+<strong>(4)</strong> Alice can now decrypt one (and only one) of these encrypted  messages. If she sent <span class="math inline">\((k_0, k_1)\)</span> in step (2), she will be able to decrypt the message <span class="math inline">\(m_0\)</span> but not message <span class="math inline">\(m_1\)</span>. And if she sent <span class="math inline">\((k_1, k_0)\)</span> in step (2), then she will be able to decrypt the message <span class="math inline">\(m_1\)</span> but not message <span class="math inline">\(m_0\)</span>.
+</p>
 
-<h2>Conclusion</h2>
+<h2>Conclusion</h2>
 
-<p>The Bellare-Micali oblivious transfer protocol can easily be extended to a 2-3 OT protocol, or more generally to a (n-1)-(n) protocol.</p>
+<p>
+The Bellare-Micali oblivious transfer protocol can easily be extended to a 2-3 OT protocol, or more generally to a (n-1)-(n) protocol.
 
-<p>An extended abstract of the original paper can be found here, some of the notations are not the same as above though:</p>
+An extended abstract of the original paper can be found here, some of the notations are not the same as above though:
 
-<p><a href="https://cseweb.ucsd.edu/~mihir/papers/niot.pdf">https://cseweb.ucsd.edu/~mihir/papers/niot.pdf</a></p>
+<a href="https://cseweb.ucsd.edu/~mihir/papers/niot.pdf">https://cseweb.ucsd.edu/~mihir/papers/niot.pdf</a>
 
-<p><span class="math inline">\(\mathrm{\blacksquare}\)</span></p>
+<span class="math inline">\(\mathrm{\blacksquare}\)</span></p>
 
     </div>
 
