@@ -1,6 +1,6 @@
 # Weil reciprocity on the projective line
 
-*2022-05-02 by [Alex Kampa](https://github.com/alex-kampa)*
+*2022-10-07 by [Alex Kampa](https://github.com/alex-kampa)*
 
 
 Our second **[Maths Seminar note](https://github.com/aragonzkresearch/blog/blob/main/pdf/weil-projective.pdf)** gives a detailed proof of the Weil reciprocity on the projective line.
@@ -23,6 +23,7 @@ $$
 		 \end{cases} 
     \end{aligned}
 $$
+
 
 In addition, we have $\infty^0 = 1$. In this new structure, which allows division by $0$, functions such as $\frac{1}{x}$, as well as all fractions of polynomials, are defined everywhere, including at $\infty$. However, this structure is not a field, as some operations are left undefined: $\infty \pm \infty, 0 \cdot \infty, \frac{\infty}{\infty}$ and $\frac{0}{0}$. Also, some functions that are defined everywhere on $\mathbb{k}$ may not have a well defined value at $\infty$.
 
@@ -181,7 +182,6 @@ $$
            \cdot (-1)^{(\sum \rho_i)(\sum \sigma_j)}
     \end{aligned}
 $$
-
 
 Because $r$ and $s$ have disjoint supports, at least one of $deg(r)$ and $deg(s)$ must be equal to zero. If both are zero, the above ratio is obviously equal to 1. For the case where one of the degrees is non-zero, let's assume wlog that $deg(r) \neq 0$ and $deg(s) = 0$. Because $deg(s) = 0$ implies $s(\infty) = c_s$, the ratio then becomes: 
 

@@ -1,6 +1,6 @@
 # Simple Soundness Proofs
 
-*2022-10-12 by [Alex Kampa](https://github.com/alex-kampa)*
+*2022-10-14 by [Alex Kampa](https://github.com/alex-kampa)*
 
 We present a general method to simplify soundness proofs under certain conditions. Given an adversary $\mathcal{A}$ able to break a scheme $S$ with non-negligible probability $t$, we define the concept of *trace* of a *winning configuration*, which is already implicitly used in soundness proofs. If a scheme can be constructed that (1) takes a random configuration $e$, being the inputs and execution environment of $\mathcal{A}$, (2) "guesses" a trace, (3) modifies $e$ based on its guess so that the modified configuration $e'$ is statistically indistinguishable from the original one, (4) is then able to execute $\mathcal{A}$ correctly under the condition that $e'$ is a winning configuration and that $B$'s guess of the trace was correct, and finally (5) that during its execution $\mathcal{A}$ is unable extract any information about $B$'s guess, then the probability of $B$ winning can be expressed as a simple function of $t$ and the bit-length of the trace, namely $\frac{t}{2^m}$. Soundness then results if $2^m$ is polynomial in the security parameter.
 
