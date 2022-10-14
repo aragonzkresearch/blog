@@ -62,39 +62,39 @@ The method described above relies on the following simple fact.
 
 Let $G$ be a finite set and $n$ a positive integer. Let $H = G^n$ and $E = [n] \times G \times H$. The uniform distributions on these sets are denoted $Pr_H$ and $Pr_E$. Elements of $H$ are denoted $\vec{h}$ while elements of $E$ are denoted $(k, u, \vec{g})$. Elements of a vector $\vec{v}$ are denoted $v(i)$. Given a vector $\vec{v}$, we denote by $r(\vec{v}, k, u)$ the vector obtained from $\vec{v}$ by replacing its $k$-th element by $u$:
 
-\begin{equation}
+$$
 r(\vec{v}, k, u)(i) =\begin{cases}
 			v(i) & \text{if $i \neq k$}\\
             u & \text{if $i = k$}
 		 \end{cases}
-\end{equation}
+$$
 
 The set of all elements in $H$ which are equal to a vector $\vec{h}$ except at some fixed index $k \in [n]$ is denoted $H(\vec{h}, k)$:
 
-\begin{equation}
+$$
     H(\vec{h}, k) = \{ \vec{v} \in H \; | \; \forall i \in [n] \setminus \{k\}, \; v(i) = h(i) \}
-\end{equation}
+$$
 
 Note that $\forall (\vec{h}, k), |H(\vec{h}, k)| = |G|$. We further define the function $\rho$ as  follows:
 
-\begin{equation}
+$$
     \begin{aligned}
         \rho : \:\: & E               & \longrightarrow \: & H \\
                  & (k, u, \vec{g}) & \longrightarrow  \: & \vec{h} = r(\vec{v}, k, u)
     \end{aligned}
-\end{equation}
+$$
 
 With fixed $\vec{h} \in H$ and $\kappa \in [n]$, we have:
 
-\begin{equation}
+$$
     Pr_E( \rho = \vec{h} \: | \: k = \kappa) = \frac{|H(\vec{h}, \kappa)|}{|E|} = \frac{|G|}{n|G|^{n+1}} = \frac{1}{n|G|^n}
-\end{equation}
+$$
 
 As a result:
 
-\begin{equation}
+$$
     Pr_E( \rho = \vec{h}) = \sum_{\kappa \in [n]} Pr_E( \rho = \vec{h} \: | \: k = \kappa) = n \frac{1}{n|G|^n}  = \frac{1}{|G|^n} = Pr_H(\vec{h})
-\end{equation}
+$$
 
 Therefore the random variable $\rho$ is uniform on $H$. This is not at all surprising: if we take a random vector in $G^n$, then select a random $k \in [n]$ and a random $u \in G$ and replace the $k$-th value of the vector with $u$, we naturally expect the result to also be random.  
 
