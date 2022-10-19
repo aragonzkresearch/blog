@@ -3,7 +3,7 @@
 *2022-05-02 by [Alex Kampa](https://github.com/alex-kampa)*
 
 
-Our first **[Maths Seminar note](https://github.com/aragon/research/blob/main/blog/001_Lagrange/lagrange.pdf)** is about Lagrange bases in subgroups of $F_p^*$, which happen to have a simple and explicit formula. This paper provides an easy to follow introduction to Lagrange bases, lots of of hands-on examples as well as a detailed proof of the main result, which is (cf below for notations):
+Our first **[Maths Seminar note](https://github.com/aragonzkresearch/blog/blob/main/pdf/lagrange.pdf)** is about Lagrange bases in subgroups of $F_p^*$, which happen to have a simple and explicit formula. This paper provides an easy to follow introduction to Lagrange bases, lots of of hands-on examples as well as a detailed proof of the main result, which is (cf below for notations):
 
 \begin{equation}
     L_i(x) = \frac{1}{n} \cdot \sum _{k=0}^{n-1} \omega^{-ik} x^k
