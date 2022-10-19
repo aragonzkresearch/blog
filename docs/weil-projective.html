@@ -4,16 +4,16 @@
   <head>
     <meta name="description" content="This Maths Seminar note provides a self-contained proof of the Weil reciprocity on athe projective line of a field, together with concrete examples. A good grasp of the concepts explained here will help with understanding elliptic curve pairings." />
     <meta charset="utf-8">
-    <title> Weil reciprocity on the projective line - Aragon ZK Research - blog</title>
-    <meta name="title" content=" Weil reciprocity on the projective line - Aragon ZK Research - blog">
+    <title> Weil reciprocity on the projective line - Aragon ZK Research - blog</title>
+    <meta name="title" content=" Weil reciprocity on the projective line - Aragon ZK Research - blog">
     <meta name="description" content="This Maths Seminar note provides a self-contained proof of the Weil reciprocity on athe projective line of a field, together with concrete examples. A good grasp of the concepts explained here will help with understanding elliptic curve pairings.">
 
-    <meta property="og:title" content=" Weil reciprocity on the projective line - Aragon ZK Research - blog" />
+    <meta property="og:title" content=" Weil reciprocity on the projective line - Aragon ZK Research - blog" />
     <meta property="og:description" content="This Maths Seminar note provides a self-contained proof of the Weil reciprocity on athe projective line of a field, together with concrete examples. A good grasp of the concepts explained here will help with understanding elliptic curve pairings." />
     <meta property="og:url" content="https://research.aragon.com/weil-projective.html" />
     <meta property="og:type" content="article" />
     <meta property="og:image" content="https://research.aragon.com/" />
-    <meta name="twitter:title" content=" Weil reciprocity on the projective line - Aragon ZK Research - blog">
+    <meta name="twitter:title" content=" Weil reciprocity on the projective line - Aragon ZK Research - blog">
     <meta name="twitter:description" content="This Maths Seminar note provides a self-contained proof of the Weil reciprocity on athe projective line of a field, together with concrete examples. A good grasp of the concepts explained here will help with understanding elliptic curve pairings.">
     <meta name="twitter:image" content="https://research.aragon.com/">
     <meta name="twitter:card" content="summary_large_image">
@@ -59,296 +59,211 @@
 
 
     <div class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:200px;">
-      <h1>Weil reciprocity on the projective line</h1>
+      <h1>Weil reciprocity on the projective line</h1>
 
-<p>
-<em>2022-05-02 by <a href="https://github.com/alex-kampa">Alex Kampa</a></em>
+<p><em>2022-10-07 by <a href="https://github.com/alex-kampa">Alex Kampa</a></em></p>
 
+<p>Our second <strong><a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/weil-projective.pdf">Maths Seminar note</a></strong> gives a detailed proof of the Weil reciprocity on the projective line.</p>
 
-Our second <strong><a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/weil-projective.pdf">Maths Seminar note</a></strong> gives a detailed proof of the Weil reciprocity on the projective line.
-</p>
+<h2>Projective lines of a field</h2>
 
-<h2>Projective lines of a field</h2>
-
-<p>
-A field <span class="math inline">\(\mathbb{k}\)</span> can be extended by adding a &ldquo;point at infinity&rdquo;, denoted <span class="math inline">\(\infty\)</span>, and by defining the following arithmetic operations: 
-
-\begin{equation}
+<p>A field <span class="math inline">\(\mathbb{k}\)</span> can be extended by adding a &ldquo;point at infinity&rdquo;, denoted <span class="math inline">\(\infty\)</span>, and by defining the following arithmetic operations:</p>
+<p><span class="math display">\[
     \begin{aligned}
         a \neq 0 \Rightarrow \begin{cases}
-			\frac{\infty}{a} &amp;= \infty \
-			a \cdot \infty &amp;= \infty \
+			\frac{\infty}{a} &amp;= \infty \\
+			a \cdot \infty &amp;= \infty \\
             \frac{a}{0} &amp;= \infty
 		\end{cases}
         \hspace{1cm}
         a \neq \infty \Rightarrow \begin{cases}
-			a \pm \infty &amp;= \infty \
-            \frac{a}{\infty} &amp;= 0 \
+			a \pm \infty &amp;= \infty \\
+            \frac{a}{\infty} &amp;= 0 \\
 		 \end{cases} 
     \end{aligned}
-\end{equation}
+\]</span></p><p>In addition, we have <span class="math inline">\(\infty^0 = 1\)</span>. In this new structure, which allows division by <span class="math inline">\(0\)</span>, functions such as <span class="math inline">\(\frac{1}{x}\)</span>, as well as all fractions of polynomials, are defined everywhere, including at <span class="math inline">\(\infty\)</span>. However, this structure is not a field, as some operations are left undefined: <span class="math inline">\(\infty \pm \infty, 0 \cdot \infty, \frac{\infty}{\infty}\)</span> and <span class="math inline">\(\frac{0}{0}\)</span>. Also, some functions that are defined everywhere on <span class="math inline">\(\mathbb{k}\)</span> may not have a well defined value at <span class="math inline">\(\infty\)</span>.</p>
 
-In addition, we have <span class="math inline">\(\infty^0 = 1\)</span>. In this new structure, which allows division by <span class="math inline">\(0\)</span>, functions such as <span class="math inline">\(\frac{1}{x}\)</span>, as well as all fractions of polynomials, are defined everywhere, including at <span class="math inline">\(\infty\)</span>. However, this structure is not a field, as some operations are left undefined: <span class="math inline">\(\infty \pm \infty, 0 \cdot \infty, \frac{\infty}{\infty}\)</span> and <span class="math inline">\(\frac{0}{0}\)</span>. Also, some functions that are defined everywhere on <span class="math inline">\(\mathbb{k}\)</span> may not have a well defined value at <span class="math inline">\(\infty\)</span>.
+<p>More formally, a \textbf{projective line} is a projective space of dimension 1. The projective line over a field <span class="math inline">\(\mathbb{k}\)</span>, with elements <span class="math inline">\(\mathbb{k} \cup \infty\)</span>, is usually denoted <span class="math inline">\(\mathbb{P}^1(\mathbb{k})\)</span>,  <span class="math inline">\(\mathbb{P}_{\mathbb{k}}^1\)</span>, or simply <span class="math inline">\(\mathbb{P}^1\)</span>. An element <span class="math inline">\(a \neq \infty\)</span> has homogeneous (or projective) coordinates <span class="math inline">\((a:1)\)</span>, while <span class="math inline">\(\infty\)</span> has coordinates <span class="math inline">\((0:1)\)</span>.</p>
 
-More formally, a \textbf{projective line} is a projective space of dimension 1. The projective line over a field <span class="math inline">\(\mathbb{k}\)</span>, with elements <span class="math inline">\(\mathbb{k} \cup \infty\)</span>, is usually denoted <span class="math inline">\(\mathbb{P}^1(\mathbb{k})\)</span>,  <span class="math inline">\(\mathbb{P}_{\mathbb{k}}^1\)</span>, or simply <span class="math inline">\(\mathbb{P}^1\)</span>. An element <span class="math inline">\(a \neq \infty\)</span> has homogeneous (or projective) coordinates <span class="math inline">\((a:1)\)</span>, while <span class="math inline">\(\infty\)</span> has coordinates <span class="math inline">\((0:1)\)</span>.
+<p><img src="img/projective-real-line1.png" alt="" /></p>
 
-<img src="img/projective-real-line1.png" alt="" />
+<p>The figure above shows a geometric interpretation of the projective real line <span class="math inline">\(\mathbb{P}^1(\mathbb{R})\)</span>, sometimes denoted <span class="math inline">\(\widehat{\mathbb{R}}\)</span>, which is homeomorphic to a circle. Every point on the circle, with the exception of the point at infinity, corresponds to a point on the real line. The two-dimensional version of this construction, <span class="math inline">\(\mathbb{P}^1(\mathbb{C})\)</span>, is called the Riemann sphere and is a model of the extended complex plane. In the context of finite fields, we generally do not have such neat geometric interpretations.</p>
 
-The figure above shows a geometric interpretation of the projective real line <span class="math inline">\(\mathbb{P}^1(\mathbb{R})\)</span>, sometimes denoted <span class="math inline">\(\widehat{\mathbb{R}}\)</span>, which is homeomorphic to a circle. Every point on the circle, with the exception of the point at infinity, corresponds to a point on the real line. The two-dimensional version of this construction, <span class="math inline">\(\mathbb{P}^1(\mathbb{C})\)</span>, is called the Riemann sphere and is a model of the extended complex plane. In the context of finite fields, we generally do not have such neat geometric interpretations.
+<h2>Rational functions and divisors</h2>
 
-</p>
+<p>The set of <strong>rational functions</strong> on <span class="math inline">\(\mathbb{P}^1\)</span>, denoted <span class="math inline">\(\mathbb{k}(\mathbb{P}^1)\)</span>, are quotients of polynomials of the form <span class="math inline">\(r(x) = \frac{u(x)}{v(x)}\)</span>, where <span class="math inline">\(v(x) \neq 0\)</span>. The representation of rational functions is obviously not unique.</p>
 
-<h2>Rational functions and divisors</h2>
-
-<p>
-The set of <strong>rational functions</strong> on <span class="math inline">\(\mathbb{P}^1\)</span>, denoted <span class="math inline">\(\mathbb{k}(\mathbb{P}^1)\)</span>, are quotients of polynomials of the form <span class="math inline">\(r(x) = \frac{u(x)}{v(x)}\)</span>, where <span class="math inline">\(v(x) \neq 0\)</span>. The representation of rational functions is obviously not unique.
-
-In the following, we assume that the rational functions we will deal with are such that the nominator and denominator decompose to linear factors in <span class="math inline">\(\mathbb{k}\)</span>. This will be the case if <span class="math inline">\(\mathbb{k}\)</span> is algebraically closed, or when <span class="math inline">\(\mathbb{k}\)</span> is &ldquo;large enough&rdquo;. In that case, a rational function <span class="math inline">\(r(x)\)</span> can be uniquely represented as:
-
-\begin{equation}
+<p>In the following, we assume that the rational functions we will deal with are such that the nominator and denominator decompose to linear factors in <span class="math inline">\(\mathbb{k}\)</span>. This will be the case if <span class="math inline">\(\mathbb{k}\)</span> is algebraically closed, or when <span class="math inline">\(\mathbb{k}\)</span> is &ldquo;large enough&rdquo;. In that case, a rational function <span class="math inline">\(r(x)\)</span> can be uniquely represented as:</p>
+<p><span class="math display">\[
     r(x) = c_r \prod_i (x - r_i)^{\rho_i}
-\end{equation}
+\]</span></p><p>where all <span class="math inline">\(r_i\)</span> are distinct, <span class="math inline">\(\rho_i \in \mathbb{ZZ}^*\)</span>, and <span class="math inline">\(i\)</span> ranges over some finite set <span class="math inline">\(I_r\)</span>. The sets <span class="math inline">\(\{ r_i \: | \: \rho_i &gt; 0 \}\)</span> and <span class="math inline">\(\{ r_i \: | \:  \rho_i &lt; 0 \}\)</span> are, respectively, the sets of finite zeroes and finite poles of <span class="math inline">\(r(x)\)</span>.</p>
 
-where all <span class="math inline">\(r_i\)</span> are distinct, <span class="math inline">\(\rho_i \in \mathbb{ZZ}^*\)</span>, and <span class="math inline">\(i\)</span> ranges over some finite set <span class="math inline">\(I_r\)</span>. The sets <span class="math inline">\(\{ r_i \: | \: \rho_i &gt; 0 \}\)</span> and <span class="math inline">\(\{ r_i \: | \:  \rho_i &lt; 0 \}\)</span> are, respectively, the sets of finite zeroes and finite poles of <span class="math inline">\(r(x)\)</span>.
-
-The <strong>degree</strong> of <span class="math inline">\(r\)</span>, which does not depend on the specific choice of <span class="math inline">\(u(x)\)</span> and <span class="math inline">\(v(x)\)</span>, is:
-
-\begin{equation}
-    deg&reg; = \sum \rho_i = deg(u) - deg(v)
-\end{equation}
-
-Given a rational function <span class="math inline">\(r(x)\)</span>, a function <span class="math inline">\(r : \; \mathbb{P}^1 \mapsto \mathbb{P}^1\)</span> can be defined in an obvious manner.
-
-\begin{equation}
+<p>The <strong>degree</strong> of <span class="math inline">\(r\)</span>, which does not depend on the specific choice of <span class="math inline">\(u(x)\)</span> and <span class="math inline">\(v(x)\)</span>, is:</p>
+<p><span class="math display">\[
+    deg(r) = \sum \rho_i = deg(u) - deg(v)
+\]</span></p><p>Given a rational function <span class="math inline">\(r(x)\)</span>, a function <span class="math inline">\(r : \; \mathbb{P}^1 \mapsto \mathbb{P}^1\)</span> can be defined in an obvious manner.</p>
+<p><span class="math display">\[
     \begin{aligned}
         a \neq \infty \longmapsto \begin{cases}
-			\infty \text{ if } a \text{ is a pole } \
+			\infty \text{ if } a \text{ is a pole } \\
             r(a) \text{ otherwise }
 		\end{cases}
         \; \;
         \infty \longmapsto \begin{cases}
-			0 \text{ if } deg&reg; &lt; 0 \
-            c_r \text{ if } deg&reg; = 0 \
-            \infty \text{ if } deg&reg; &gt; 0
+			0 \text{ if } deg(r) &lt; 0 \\
+            c_r \text{ if } deg(r) = 0 \\
+            \infty \text{ if } deg(r) &gt; 0
 		 \end{cases} 
     \end{aligned}
-\end{equation}
+\]</span></p><p>We see that in addition to <span class="math inline">\(\{ r_i \}\)</span>, <span class="math inline">\(r\)</span> can also have a zero or a pole at <span class="math inline">\(\infty\)</span>.
+The set of all zeroes and poles of <span class="math inline">\(r\)</span> is called the <strong>support</strong> of <span class="math inline">\(r\)</span> and denoted <span class="math inline">\(Supp(r)\)</span> or <span class="math inline">\(S_r\)</span>. We define the \textbf{finite support} of <span class="math inline">\(r\)</span>, denoted <span class="math inline">\(S_r^*\)</span>, as <span class="math inline">\(S_r \backslash \{ \infty \}\)</span>.</p>
 
-We see that in addition to <span class="math inline">\(\{ r_i \}\)</span>, <span class="math inline">\(r\)</span> can also have a zero or a pole at <span class="math inline">\(\infty\)</span>.
-The set of all zeroes and poles of <span class="math inline">\(r\)</span> is called the <strong>support</strong> of <span class="math inline">\(r\)</span> and denoted <span class="math inline">\(Supp(r)\)</span> or <span class="math inline">\(S_r\)</span>. We define the \textbf{finite support} of <span class="math inline">\(r\)</span>, denoted <span class="math inline">\(S_r^*\)</span>, as <span class="math inline">\(S_r \backslash \{ \infty \}\)</span>.
-
-The <strong>order of a point</strong> relative to <span class="math inline">\(r\)</span> is defined as follows:
-
-\begin{equation}
+<p>The <strong>order of a point</strong> relative to <span class="math inline">\(r\)</span> is defined as follows:</p>
+<p><span class="math display">\[
     \begin{aligned}
-        ord_a&reg; = \begin{cases}
-			\rho_i \text{ if } a = r<em>i \
+        ord_a(r) = \begin{cases}
+			\rho_i \text{ if } a = r_i \\
             0 \text{ otherwise }
 		\end{cases}
 		\; \;
-        ord</em>{\infty}&reg; = -deg&reg; = - \sum \rho<em>i
+        ord_{\infty}(r) = -deg(r) = - \sum \rho_i
     \end{aligned}
-\end{equation}
+\]</span></p><p>Note that the order of a zero is always positive, while the order of a pole is always negative. As a result, it is clear that the sum of the orders, taken over all points of <span class="math inline">\(\mathbb{P}^1\)</span>, is <span class="math inline">\(0\)</span>:</p>
+<p><span class="math display">\[
+    \sum_{a \in \mathbb{P}^1} ord_a(r) = \sum_{a \in S_r} ord_a(r) = 0
+\]</span></p><p>Although we seem to be taking a sum over all the elements of <span class="math inline">\(\mathbb{P}^1\)</span>, which may not even be countable, this is not a problem as only a finite number of elements in this sum are non-zero. More precisely, this sum is just shorthand for the finite sum of these non-zero elements.</p>
 
-Note that the order of a zero is always positive, while the order of a pole is always negative. As a result, it is clear that the sum of the orders, taken over all points of <span class="math inline">\(\mathbb{P}^1\)</span>, is <span class="math inline">\(0\)</span>:
+<p>A \textbf{divisor} <span class="math inline">\(D\)</span> on <span class="math inline">\(\mathbb{P}^1\)</span> is a formal sum of the form:</p>
+<p><span class="math display">\[
+    D = \sum_{a \in \mathbb{P}^1} n_a [a]
+\]</span></p><p>where <span class="math inline">\(n_a \in \mathbb{Z}\)</span> and <span class="math inline">\(n_a \neq 0\)</span> for only a finite number of elements of <span class="math inline">\(\mathbb{P}^1\)</span>. The set of points <span class="math inline">\(\{ a \: | \: n_a \neq 0 \}\)</span>, i.e. the points for which <span class="math inline">\(n_a\)</span> is not zero, is called the \textbf{support} of <span class="math inline">\(D\)</span> and denoted <span class="math inline">\(Supp(D)\)</span>. It can be helpful to think of a divisor as simply a finite set of pairs <span class="math inline">\(\{ (a_1, n_1), ..., (a_k, n_k) \} \in (\mathbb{k} \times \mathbb{Z}^*)^{&lt;\omega}\)</span>, in which case <span class="math inline">\(\{a_1, ..., a_k \}\)</span> is its support.</p>
 
-\begin{equation}
-    \sum</em>{a \in \mathbb{P}^1} ord<em>a&reg; = \sum</em>{a \in S_r} ord<em>a&reg; = 0
-\end{equation}
-
-Although we seem to be taking a sum over all the elements of <span class="math inline">\(\mathbb{P}^1\)</span>, which may not even be countable, this is not a problem as only a finite number of elements in this sum are non-zero. More precisely, this sum is just shorthand for the finite sum of these non-zero elements.
-
-A \textbf{divisor} <span class="math inline">\(D\)</span> on <span class="math inline">\(\mathbb{P}^1\)</span> is a formal sum of the form:
-
-\begin{equation}
-    D = \sum</em>{a \in \mathbb{P}^1} n_a [a]
-\end{equation}
-
-where <span class="math inline">\(n_a \in \mathbb{Z}\)</span> and <span class="math inline">\(n_a \neq 0\)</span> for only a finite number of elements of <span class="math inline">\(\mathbb{P}^1\)</span>. The set of points <span class="math inline">\(\{ a \: | \: n_a \neq 0 \}\)</span>, i.e. the points for which <span class="math inline">\(n_a\)</span> is not zero, is called the \textbf{support} of <span class="math inline">\(D\)</span> and denoted <span class="math inline">\(Supp(D)\)</span>. It can be helpful to think of a divisor as simply a finite set of pairs <span class="math inline">\(\{ (a_1, n_1), ..., (a_k, n_k) \} \in (\mathbb{k} \times \mathbb{Z}^*)^{&lt;\omega}\)</span>, in which case <span class="math inline">\(\{a_1, ..., a_k \}\)</span> is its support.
-
-Given the rational function <span class="math inline">\(r \in \mathbb{k}(\mathbb{P}^1)\)</span>, the \textbf{associated divisor} of <span class="math inline">\(r\)</span> is:
-
-\begin{equation}
+<p>Given the rational function <span class="math inline">\(r \in \mathbb{k}(\mathbb{P}^1)\)</span>, the \textbf{associated divisor} of <span class="math inline">\(r\)</span> is:</p>
+<p><span class="math display">\[
     \begin{aligned}
-        div&reg; &amp;= \sum_{a \in \mathbb{P}^1} ord_a&reg; [a] \
-               &amp;= \sum_i \rho_i [r<em>i] - deg&reg;[\infty]
+        div(r) &amp;= \sum_{a \in \mathbb{P}^1} ord_a(r) [a] \\
+               &amp;= \sum_i \rho_i [r_i] - deg(r)[\infty]
     \end{aligned}
-\end{equation}
+\]</span></p><p>This definition is valid because the support of <span class="math inline">\(r\)</span> is finite. Indeed, the supports of <span class="math inline">\(r\)</span> and of <span class="math inline">\(div(r)\)</span> are identical. Finally, given a divisor <span class="math inline">\(D\)</span> whose support is disjoint from the support of <span class="math inline">\(r\)</span>, the \textbf{evaluation} of <span class="math inline">\(r\)</span> at <span class="math inline">\(D\)</span> is defined as:</p>
+<p><span class="math display">\[
+    r(D) = \prod_{a \in \mathbb{P}^1} r(a)^{n_a} = \prod_{a \in Supp(D)} r(a)^{n_a}
+\]</span></p><p>The requirement that <span class="math inline">\(Supp(r) \; \cap \; Supp(D) = \varnothing\)</span> means that when <span class="math inline">\(n_a \neq 0\)</span>, then <span class="math inline">\(r(a)\)</span> is neither <span class="math inline">\(0\)</span> nor <span class="math inline">\(\infty\)</span>. For all other points <span class="math inline">\(a \notin Supp(D)\)</span> we have <span class="math inline">\(r(a)^{n_a} = r(a)^0 = 1\)</span> so that these factors can be ignored. As a result, this product is well defined.</p>
 
-This definition is valid because the support of <span class="math inline">\(r\)</span> is finite. Indeed, the supports of <span class="math inline">\(r\)</span> and of <span class="math inline">\(div(r)\)</span> are identical. Finally, given a divisor <span class="math inline">\(D\)</span> whose support is disjoint from the support of <span class="math inline">\(r\)</span>, the \textbf{evaluation} of <span class="math inline">\(r\)</span> at <span class="math inline">\(D\)</span> is defined as:
-
-\begin{equation}
-    r(D) = \prod</em>{a \in \mathbb{P}^1} r(a)^{n<em>a} = \prod</em>{a \in Supp(D)} r(a)^{n_a}
-\end{equation}
-
-The requirement that <span class="math inline">\(Supp(r) \; \cap \; Supp(D) = \varnothing\)</span> means that when <span class="math inline">\(n_a \neq 0\)</span>, then <span class="math inline">\(r(a)\)</span> is neither <span class="math inline">\(0\)</span> nor <span class="math inline">\(\infty\)</span>. For all other points <span class="math inline">\(a \notin Supp(D)\)</span> we have <span class="math inline">\(r(a)^{n_a} = r(a)^0 = 1\)</span> so that these factors can be ignored. As a result, this product is well defined.
-
-For example, taking the canonical representation of <span class="math inline">\(r\)</span>, the above evaluation becomes (the product is for <span class="math inline">\(a \in S_D\)</span>):
-
-\begin{equation}
+<p>For example, taking the canonical representation of <span class="math inline">\(r\)</span>, the above evaluation becomes (the product is for <span class="math inline">\(a \in S_D\)</span>):</p>
+<p><span class="math display">\[
     \begin{aligned}
-    r(D) &amp;= \prod_{a} r(a)^{n<em>a} \
-         &amp;= \prod</em>{a} ( c_r \prod_i (a - r_i)^{\rho_i} )^{n<em>a} \
-         &amp;= \prod</em>{a} ( c_r^{n_a} \prod_i (a - r_i)^{n_a \rho_i} ) \
-         &amp;= c_r^{\sum n<em>a} \prod</em>{a} \prod_i (a - r_i)^{n_a \rho_i}
+    r(D) &amp;= \prod_{a} r(a)^{n_a} \\
+         &amp;= \prod_{a} ( c_r \prod_i (a - r_i)^{\rho_i} )^{n_a} \\
+         &amp;= \prod_{a} ( c_r^{n_a} \prod_i (a - r_i)^{n_a \rho_i} ) \\
+         &amp;= c_r^{\sum n_a} \prod_{a} \prod_i (a - r_i)^{n_a \rho_i}
     \end{aligned}
-\end{equation}
+\]</span></p>
+<h2>Weil reciprocity on the projective line</h2>
 
-</p>
+<p><strong>Theorem</strong> Let <span class="math inline">\(r,s \in \mathbb{k}(\mathbb{P}^1)\)</span> be two rational functions with disjoint support, both of which can be decomposed to linear factors in <span class="math inline">\(\mathbb{k}\)</span>. Then <span class="math inline">\(r(div(s)) = s(div(r))\)</span>.</p>
 
-<h2>Weil reciprocity on the projective line</h2>
-
-<p>
-<strong>Theorem</strong> Let <span class="math inline">\(r,s \in \mathbb{k}(\mathbb{P}^1)\)</span> be two rational functions with disjoint support, both of which can be decomposed to linear factors in <span class="math inline">\(\mathbb{k}\)</span>. Then <span class="math inline">\(r(div(s)) = s(div(r))\)</span>.
-
-<em>Proof</em>. We write <span class="math inline">\(r\)</span> and <span class="math inline">\(s\)</span> in their canonical form:
-
-\begin{equation}
+<p><em>Proof</em>. We write <span class="math inline">\(r\)</span> and <span class="math inline">\(s\)</span> in their canonical form:</p>
+<p><span class="math display">\[
     r(x) = c_r \prod_i (x - r_i)^{\rho_i} \hspace{1cm} s(x) = c_s \prod_j (x - s_j)^{\sigma_j}
-\end{equation}
-
-We therefore have:
-
-\begin{equation}
+\]</span></p><p>We therefore have:</p>
+<p><span class="math display">\[
     \begin{aligned}
-    div&reg; = \sum_i \rho_i[r_i] - deg&reg;[\infty] \hspace{1cm} div(s) = \sum_j \sigma_j[s_j] - deg(s)[\infty]
+    div(r) = \sum_i \rho_i[r_i] - deg(r)[\infty] \hspace{1cm} div(s) = \sum_j \sigma_j[s_j] - deg(s)[\infty]
     \end{aligned}
-\end{equation}
-
-Applying formula \ref{for:Eval_r}, and remembering that <span class="math inline">\(deg(r) = \sum \rho_i\)</span> and <span class="math inline">\(deg(s) = \sum \sigma_j\)</span>, we obtain:
-
-\begin{equation}
+\]</span></p><p>Applying formula \ref{for:Eval_r}, and remembering that <span class="math inline">\(deg(r) = \sum \rho_i\)</span> and <span class="math inline">\(deg(s) = \sum \sigma_j\)</span>, we obtain:</p>
+<p><span class="math display">\[
     \begin{aligned}
          r(div(s)) &amp;= c_r^{\sum \sigma_j} \cdot
                       \prod_j \prod_i (s_j - r_i)^{\sigma_j \rho_i} 
-                      \cdot r(\infty)^{-deg(s)} \
+                      \cdot r(\infty)^{-deg(s)} \\
                    &amp;= \left( \frac{c_r}{r(\infty)} \right) ^{\sum \sigma_j} 
                       \cdot \prod_j \prod_i (s_j - r_i)^{\sigma_j \rho_i}
     \end{aligned}
-\end{equation}
-
-By symmetry, we get:
-
-\begin{equation}
+\]</span></p><p>By symmetry, we get:</p>
+<p><span class="math display">\[
     \begin{aligned}
-         s(div&reg;) &amp;= \left( \frac{c_s}{s(\infty)} \right) ^{\sum \rho_i} 
+         s(div(r)) &amp;= \left( \frac{c_s}{s(\infty)} \right) ^{\sum \rho_i} 
                       \prod_i \prod_j (r_i - s_j)^{\rho_i \sigma_j} 
     \end{aligned}
-\end{equation}
-
-The ratio between these two expressions is:
-
-\begin{equation}
+\]</span></p><p>The ratio between these two expressions is:</p>
+<p><span class="math display">\[
     \begin{aligned}
-    \frac{r(div(s))}{s(div&reg;)} 
+    \frac{r(div(s))}{s(div(r))} 
         &amp;= \left( \frac{c_r}{r(\infty)} \right) ^{\sum \sigma_j} 
            \cdot \left( \frac{c_s}{s(\infty)} \right) ^{-\sum \rho_i}
-           \cdot \prod_i \prod_j (-1)^{\rho_i \sigma_j} \
+           \cdot \prod_i \prod_j (-1)^{\rho_i \sigma_j} \\
         &amp;= \left( \frac{c_r}{r(\infty)} \right) ^{\sum \sigma_j} 
            \cdot \left( \frac{c_s}{s(\infty)} \right) ^{-\sum \rho_i}
            \cdot (-1)^{(\sum \rho_i)(\sum \sigma_j)}
     \end{aligned}
-\end{equation}
-
-
-Because <span class="math inline">\(r\)</span> and <span class="math inline">\(s\)</span> have disjoint supports, at least one of <span class="math inline">\(deg(r)\)</span> and <span class="math inline">\(deg(s)\)</span> must be equal to zero. If both are zero, the above ratio is obviously equal to 1. For the case where one of the degrees is non-zero, let&rsquo;s assume wlog that <span class="math inline">\(deg(r) \neq 0\)</span> and <span class="math inline">\(deg(s) = 0\)</span>. Because <span class="math inline">\(deg(s) = 0\)</span> implies <span class="math inline">\(s(\infty) = c_s\)</span>, the ratio then becomes: 
-
-\begin{equation}
+\]</span></p><p>Because <span class="math inline">\(r\)</span> and <span class="math inline">\(s\)</span> have disjoint supports, at least one of <span class="math inline">\(deg(r)\)</span> and <span class="math inline">\(deg(s)\)</span> must be equal to zero. If both are zero, the above ratio is obviously equal to 1. For the case where one of the degrees is non-zero, let&rsquo;s assume wlog that <span class="math inline">\(deg(r) \neq 0\)</span> and <span class="math inline">\(deg(s) = 0\)</span>. Because <span class="math inline">\(deg(s) = 0\)</span> implies <span class="math inline">\(s(\infty) = c_s\)</span>, the ratio then becomes:</p>
+<p><span class="math display">\[
     \begin{aligned}
-    \frac{r(div(s))}{s(div&reg;)} 
+    \frac{r(div(s))}{s(div(r))} 
         = \left( \frac{c_r}{r(\infty)} \right) ^0 
            \cdot \left( \frac{c_s}{c_s} \right) ^{-\sum \rho_i}
            \cdot (-1)^{(\sum \rho_i)\cdot 0} 
         = 1 \cdot 1^{-\sum \rho_i} \cdot 1 
         = 1
     \end{aligned}
-\end{equation}
+\]</span></p><p>This completes the proof.</p>
 
-This completes the proof.
+<h2>Examples</h2>
 
-</p>
+<h3>Example 1</h3>
 
-<h2>Examples</h2>
-
-<p></p>
-
-<h3>Example 1</h3>
-
-<p>
-Let us define rational functions f, g and h via their divisors:
-
-\begin{equation}
+<p>Let us define rational functions f, g and h via their divisors:</p>
+<p><span class="math display">\[
     \begin{aligned}
-        f(x) &amp;: div(f) =  [1] - [\infty] \
-        g(x) &amp;: div(g) = [0] - 2[1] + [\infty] \
+        f(x) &amp;: div(f) =  [1] - [\infty] \\
+        g(x) &amp;: div(g) = [0] - 2[1] + [\infty] \\
         h(x) &amp;: div(h) = [-1] - [0]
     \end{aligned}
-\end{equation}
-
-We can now directly obtain the divisors of proudcts or ratios of these functions:
-
-\begin{equation}
+\]</span></p><p>We can now directly obtain the divisors of proudcts or ratios of these functions:</p>
+<p><span class="math display">\[
     \begin{aligned}
-        div(fg)  &amp;= div(f) + div(g) &amp;= &amp; \; [0] - [1] \
-        div(f/g) &amp;= div(f) - div(g) &amp;= &amp; \; -[0] +3[1] -2[\infty] \
-        div(f^2) &amp;= 2 div(f)        &amp;= &amp; \; 2[1] -2[\infty] \
+        div(fg)  &amp;= div(f) + div(g) &amp;= &amp; \; [0] - [1] \\
+        div(f/g) &amp;= div(f) - div(g) &amp;= &amp; \; -[0] +3[1] -2[\infty] \\
+        div(f^2) &amp;= 2 div(f)        &amp;= &amp; \; 2[1] -2[\infty] \\
     \end{aligned}
-\end{equation}
-
-It is of course easy to see what form the functions f, g and h have:
-
-\begin{equation}
+\]</span></p><p>It is of course easy to see what form the functions f, g and h have:</p>
+<p><span class="math display">\[
     \begin{aligned}
-        f(x) &amp;= c_f (x - 1) \
-        g(x) &amp;= c_g \frac{x}{(x-1)^2} \
+        f(x) &amp;= c_f (x - 1) \\
+        g(x) &amp;= c_g \frac{x}{(x-1)^2} \\
         h(x) &amp;= c_h \frac{x + 1}{x}
     \end{aligned}
-\end{equation}
-
-We can now verify that Weil reciprocity holds for the functions <span class="math inline">\(f^2\)</span> and <span class="math inline">\(h\)</span>, whose supports are disjoint:
-
-\begin{equation}
+\]</span></p><p>We can now verify that Weil reciprocity holds for the functions <span class="math inline">\(f^2\)</span> and <span class="math inline">\(h\)</span>, whose supports are disjoint:</p>
+<p><span class="math display">\[
     \begin{aligned}
-        f^2(div(h)) &amp;= f(-1)^{(2)(1)} f(o)^{(2)(-1)}) = (-2c_f)^2 (-c_f)^{-2} = 4 \
-        h(div(f^2)) &amp;= h(1)^2 h(\infty)^{-2} = (2c_h)^2 (c_h)^{-2} = 4 \
+        f^2(div(h)) &amp;= f(-1)^{(2)(1)} f(o)^{(2)(-1)}) = (-2c_f)^2 (-c_f)^{-2} = 4 \\
+        h(div(f^2)) &amp;= h(1)^2 h(\infty)^{-2} = (2c_h)^2 (c_h)^{-2} = 4 \\
     \end{aligned}
-\end{equation}
-</p>
+\]</span></p>
+<h3>Example 2</h3>
 
-<h3>Example 2</h3>
-
-<p>
-Consider the following rational functions:
-
-\begin{equation}
+<p>Consider the following rational functions:</p>
+<p><span class="math display">\[
     \begin{aligned}
-        f(x) &amp;= x^2 + 1 \
+        f(x) &amp;= x^2 + 1 \\
         g(x) &amp;= \frac{(x + 2)^2}{(x-1)^2}
     \end{aligned}
-\end{equation}
-
-Their divisors are:
-
-\begin{equation}
+\]</span></p><p>Their divisors are:</p>
+<p><span class="math display">\[
     \begin{aligned}
-        div(f) &amp;=  [-i] + [i] - 2[\infty] \
+        div(f) &amp;=  [-i] + [i] - 2[\infty] \\
         div(g) &amp;= 2[-2] - 2[1]
     \end{aligned}
-\end{equation}
-
-These divisors have distinct support. We can verify that Weil reciprocity holds (note that <span class="math inline">\(g(\infty) = 1)\)</span>:
-
-\begin{equation}
+\]</span></p><p>These divisors have distinct support. We can verify that Weil reciprocity holds (note that <span class="math inline">\(g(\infty) = 1)\)</span>:</p>
+<p><span class="math display">\[
     \begin{aligned}
-        f(div(g)) &amp;=  f(-2)^2 f(1)^{-2} = 5^2 2^{-2} = (<sup>5</sup>&frasl;<sub>2</sub>)^2 \
-        g(div(f)) &amp;= g(-i) g(i) g(\infty)^{-2} \
-                  &amp;= \frac{((2+i)(2-i))^2}{((i+1)(1-i))^2} = \frac{(4 - i^2)^2}{(1 - i^2)^2} = (<sup>5</sup>&frasl;<sub>2</sub>)^2
+        f(div(g)) &amp;=  f(-2)^2 f(1)^{-2} = 5^2 2^{-2} = (5/2)^2 \\
+        g(div(f)) &amp;= g(-i) g(i) g(\infty)^{-2} \\
+                  &amp;= \frac{((2+i)(2-i))^2}{((i+1)(1-i))^2} = \frac{(4 - i^2)^2}{(1 - i^2)^2} = (5/2)^2
     \end{aligned}
-\end{equation}
+\]</span></p><p>This example shows that when we are considering rational functions on the real projective line, the divisors have to be expressed in terms of all the roots of the polynomials under consideration, even if the roots are complex. If this is not done, the Weil reciprocity cannot be applied. This reflects the fact that the Weil reciprocity holds only on algebraically closed fields.</p>
 
-This example shows that when we are considering rational functions on the real projective line, the divisors have to be expressed in terms of all the roots of the polynomials under consideration, even if the roots are complex. If this is not done, the Weil reciprocity cannot be applied. This reflects the fact that the Weil reciprocity holds only on algebraically closed fields.
-
-□</p>
+<p>□</p>
 
     </div>
 

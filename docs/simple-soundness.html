@@ -4,16 +4,16 @@
   <head>
     <meta name="description" content="Soundness proofs tend to be quite long and technical. We describe a general method to significantly simplify such proofs if some specific conditions are met." />
     <meta charset="utf-8">
-    <title> Simple Soundness Proofs - Aragon ZK Research - blog</title>
-    <meta name="title" content=" Simple Soundness Proofs - Aragon ZK Research - blog">
+    <title> Simple Soundness Proofs - Aragon ZK Research - blog</title>
+    <meta name="title" content=" Simple Soundness Proofs - Aragon ZK Research - blog">
     <meta name="description" content="Soundness proofs tend to be quite long and technical. We describe a general method to significantly simplify such proofs if some specific conditions are met.">
 
-    <meta property="og:title" content=" Simple Soundness Proofs - Aragon ZK Research - blog" />
+    <meta property="og:title" content=" Simple Soundness Proofs - Aragon ZK Research - blog" />
     <meta property="og:description" content="Soundness proofs tend to be quite long and technical. We describe a general method to significantly simplify such proofs if some specific conditions are met." />
     <meta property="og:url" content="https://research.aragon.com/simple-soundness.html" />
     <meta property="og:type" content="article" />
     <meta property="og:image" content="https://research.aragon.com/" />
-    <meta name="twitter:title" content=" Simple Soundness Proofs - Aragon ZK Research - blog">
+    <meta name="twitter:title" content=" Simple Soundness Proofs - Aragon ZK Research - blog">
     <meta name="twitter:description" content="Soundness proofs tend to be quite long and technical. We describe a general method to significantly simplify such proofs if some specific conditions are met.">
     <meta name="twitter:image" content="https://research.aragon.com/">
     <meta name="twitter:card" content="summary_large_image">
@@ -59,128 +59,102 @@
 
 
     <div class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:200px;">
-      <h1>Simple Soundness Proofs</h1>
+      <h1>Simple Soundness Proofs</h1>
 
-<p>
-<em>2022-10-12 by <a href="https://github.com/alex-kampa">Alex Kampa</a></em>
+<p><em>2022-10-14 by <a href="https://github.com/alex-kampa">Alex Kampa</a></em></p>
 
-We present a general method to simplify soundness proofs under certain conditions. Given an adversary <span class="math inline">\(\mathcal{A}\)</span> able to break a scheme <span class="math inline">\(S\)</span> with non-negligible probability <span class="math inline">\(t\)</span>, we define the concept of <em>trace</em> of a <em>winning configuration</em>, which is already implicitly used in soundness proofs. If a scheme can be constructed that (1) takes a random configuration <span class="math inline">\(e\)</span>, being the inputs and execution environment of <span class="math inline">\(\mathcal{A}\)</span>, (2) &ldquo;guesses&rdquo; a trace, (3) modifies <span class="math inline">\(e\)</span> based on its guess so that the modified configuration <span class="math inline">\(e'\)</span> is statistically indistinguishable from the original one, (4) is then able to execute <span class="math inline">\(\mathcal{A}\)</span> correctly under the condition that <span class="math inline">\(e'\)</span> is a winning configuration and that <span class="math inline">\(B\)</span>&rsquo;s guess of the trace was correct, and finally (5) that during its execution <span class="math inline">\(\mathcal{A}\)</span> is unable extract any information about <span class="math inline">\(B\)</span>&rsquo;s guess, then the probability of <span class="math inline">\(B\)</span> winning can be expressed as a simple function of <span class="math inline">\(t\)</span> and the bit-length of the trace, namely <span class="math inline">\(\frac{t}{2^m}\)</span>. Soundness then results if <span class="math inline">\(2^m\)</span> is polynomial in the security parameter.
+<p>We present a general method to simplify soundness proofs under certain conditions. Given an adversary <span class="math inline">\(\mathcal{A}\)</span> able to break a scheme <span class="math inline">\(S\)</span> with non-negligible probability <span class="math inline">\(t\)</span>, we define the concept of <em>trace</em> of a <em>winning configuration</em>, which is already implicitly used in soundness proofs. If a scheme can be constructed that (1) takes a random configuration <span class="math inline">\(e\)</span>, being the inputs and execution environment of <span class="math inline">\(\mathcal{A}\)</span>, (2) &ldquo;guesses&rdquo; a trace, (3) modifies <span class="math inline">\(e\)</span> based on its guess so that the modified configuration <span class="math inline">\(e'\)</span> is statistically indistinguishable from the original one, (4) is then able to execute <span class="math inline">\(\mathcal{A}\)</span> correctly under the condition that <span class="math inline">\(e'\)</span> is a winning configuration and that <span class="math inline">\(B\)</span>&rsquo;s guess of the trace was correct, and finally (5) that during its execution <span class="math inline">\(\mathcal{A}\)</span> is unable extract any information about <span class="math inline">\(B\)</span>&rsquo;s guess, then the probability of <span class="math inline">\(B\)</span> winning can be expressed as a simple function of <span class="math inline">\(t\)</span> and the bit-length of the trace, namely <span class="math inline">\(\frac{t}{2^m}\)</span>. Soundness then results if <span class="math inline">\(2^m\)</span> is polynomial in the security parameter.</p>
 
-To illustrate the concept, a concrete application of this method to a simple binary voting scheme is then described in detail.
+<p>To illustrate the concept, a concrete application of this method to a simple binary voting scheme is then described in detail.</p>
 
-Link to the paper: <a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/simple-soundness.pdf">https://github.com/aragonzkresearch/blog/blob/main/pdf/simple-soundness.pdf</a>
+<p>Link to the paper: <a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/simple-soundness.pdf">https://github.com/aragonzkresearch/blog/blob/main/pdf/simple-soundness.pdf</a></p>
 
-</p>
+<h2>Introduction</h2>
 
-<h2>Introduction</h2>
+<p>Soundness proofs tend to be quite long and technical. Here, we describe a general method to significantly simplify and shorten such proofs if some specific conditions are met.</p>
 
-<p>
-Soundness proofs tend to be quite long and technical. Here, we describe a general method to significantly simplify and shorten such proofs if some specific conditions are met.
-</p>
+<h2>Simple Soundness Proofs</h2>
 
-<h2>Simple Soundness Proofs</h2>
+<p>A common method of proving the soundness of a cryptographic scheme S is the following. We first assume that there exists an adversary <span class="math inline">\(\mathcal{A}\)</span> that can break the scheme with some non-negligible probability. We then construct a scheme B which uses <span class="math inline">\(\mathcal{A}\)</span> in a simulated environment to break a known-to-be-hard problem P, also with some non-negligible probability.</p>
 
-<p>
-A common method of proving the soundness of a cryptographic scheme S is the following. We first assume that there exists an adversary <span class="math inline">\(\mathcal{A}\)</span> that can break the scheme with some non-negligible probability. We then construct a scheme B which uses <span class="math inline">\(\mathcal{A}\)</span> in a simulated environment to break a known-to-be-hard problem P, also with some non-negligible probability.
+<p><strong>Description of <span class="math inline">\(\mathcal{A}\)</span> in its native environment</strong></p>
 
+<p><span class="math inline">\(\mathcal{A}\)</span> is a deterministic polynomial-time algorithm. There exists a finite set of \textit{execution configurations} <span class="math inline">\(E(\lambda)\)</span> for <span class="math inline">\(\mathcal{A}\)</span>, where <span class="math inline">\(\lambda\)</span> is the security parameter. Each such configuration includes inputs to <span class="math inline">\(\mathcal{A}\)</span> and completely determines the execution of <span class="math inline">\(\mathcal{A}\)</span>. Given a randomly selected execution configuration <span class="math inline">\(e \in E(\lambda)\)</span>, <span class="math inline">\(\mathcal{A}\)</span> breaks the scheme <span class="math inline">\(S\)</span> with probability <span class="math inline">\(t(\lambda)\)</span>, where <span class="math inline">\(t\)</span> is a polynomial function. We then say that <span class="math inline">\(\mathcal{A}\)</span> wins. In that case, <span class="math inline">\(e\)</span> is said to be a \textit{winning configuration}.</p>
 
-<strong>Description of <span class="math inline">\(\mathcal{A}\)</span> in its native environment</strong>
+<p><strong>The scheme <span class="math inline">\(B_r\)</span> able to correctly execute <span class="math inline">\(\mathcal{A}\)</span></strong></p>
 
-<span class="math inline">\(\mathcal{A}\)</span> is a deterministic polynomial-time algorithm. There exists a finite set of \textit{execution configurations} <span class="math inline">\(E(\lambda)\)</span> for <span class="math inline">\(\mathcal{A}\)</span>, where <span class="math inline">\(\lambda\)</span> is the security parameter. Each such configuration includes inputs to <span class="math inline">\(\mathcal{A}\)</span> and completely determines the execution of <span class="math inline">\(\mathcal{A}\)</span>. Given a randomly selected execution configuration <span class="math inline">\(e \in E(\lambda)\)</span>, <span class="math inline">\(\mathcal{A}\)</span> breaks the scheme <span class="math inline">\(S\)</span> with probability <span class="math inline">\(t(\lambda)\)</span>, where <span class="math inline">\(t\)</span> is a polynomial function. We then say that <span class="math inline">\(\mathcal{A}\)</span> wins. In that case, <span class="math inline">\(e\)</span> is said to be a \textit{winning configuration}.
+<p>We denote by <span class="math inline">\(B_r\)</span> (where &ldquo;r&rdquo; stands for &ldquo;real&rdquo;) a scheme that simulates the real execution environment of <span class="math inline">\(\mathcal{A}\)</span>. Usually, this will require the knowledge of extra information about some elements of the execution configuration. For example, the execution configuration may include a sequence of group elements, and it may be necessary to know the discrete log of these elements in order to be able to always complete the execution of <span class="math inline">\(\mathcal{A}\)</span>. If <span class="math inline">\(G\)</span> is a group with <span class="math inline">\(q\)</span> elements and generator <span class="math inline">\(g\)</span>, a set <span class="math inline">\(\{ g_i \}_{i \in [n]}\)</span> of random elements of <span class="math inline">\(G\)</span> can be produced by first sampling <span class="math inline">\(x_i \leftarrow \mathbb{Z}_q\)</span> and outputting <span class="math inline">\(\{ g^{x_i} \}\)</span>. In general, it is  not difficult to generate random execution environments such that <span class="math inline">\(B_r\)</span> has all the necessary extra information.</p>
 
-<strong>The scheme <span class="math inline">\(B_r\)</span> able to correctly execute <span class="math inline">\(\mathcal{A}\)</span></strong>
+<p><strong>A modified scheme <span class="math inline">\(B\)</span> to break <span class="math inline">\(P\)</span></strong></p>
 
-We denote by <span class="math inline">\(B_r\)</span> (where &ldquo;r&rdquo; stands for &ldquo;real&rdquo;) a scheme that simulates the real execution environment of <span class="math inline">\(\mathcal{A}\)</span>. Usually, this will require the knowledge of extra information about some elements of the execution configuration. For example, the execution configuration may include a sequence of group elements, and it may be necessary to know the discrete log of these elements in order to be able to always complete the execution of <span class="math inline">\(\mathcal{A}\)</span>. If <span class="math inline">\(G\)</span> is a group with <span class="math inline">\(q\)</span> elements and generator <span class="math inline">\(g\)</span>, a set <span class="math inline">\(\{ g_i \}_{i \in [n]}\)</span> of random elements of <span class="math inline">\(G\)</span> can be produced by first sampling <span class="math inline">\(x_i \leftarrow \mathbb{Z}_q\)</span> and outputting <span class="math inline">\(\{ g^{x_i} \}\)</span>. In general, it is  not difficult to generate random execution environments such that <span class="math inline">\(B_r\)</span> has all the necessary extra information.
+<p>To attempt to break <span class="math inline">\(P\)</span> using <span class="math inline">\(\mathcal{A}\)</span>, the scheme <span class="math inline">\(B\)</span> will usually need to modify the execution environment slightly. Given the modified environment <span class="math inline">\(e'\)</span>, we say that <span class="math inline">\(B\)</span> wins if it is able to complete the execution of <span class="math inline">\(\mathcal{A}\)</span>, and <span class="math inline">\(\mathcal{A}\)</span> wins. In that case, <span class="math inline">\(B\)</span> also breaks the problem <span class="math inline">\(P\)</span>. In some cases, however, <span class="math inline">\(B\)</span> will be unable to complete the execution of <span class="math inline">\(\mathcal{A}\)</span>. Running <span class="math inline">\(\mathcal{A}\)</span> in this simulation is therefore not equivalent of running <span class="math inline">\(\mathcal{A}\)</span> in its normal execution environment. This fact usually complicates the soundness proof, as conditional probabilities must be introduced to deal with cases where <span class="math inline">\(B\)</span> has to abort.</p>
 
-<strong>A modified scheme <span class="math inline">\(B\)</span> to break <span class="math inline">\(P\)</span></strong>
+<p><strong>Conditions for a simple soundness proof</strong></p>
 
-To attempt to break <span class="math inline">\(P\)</span> using <span class="math inline">\(\mathcal{A}\)</span>, the scheme <span class="math inline">\(B\)</span> will usually need to modify the execution environment slightly. Given the modified environment <span class="math inline">\(e'\)</span>, we say that <span class="math inline">\(B\)</span> wins if it is able to complete the execution of <span class="math inline">\(\mathcal{A}\)</span>, and <span class="math inline">\(\mathcal{A}\)</span> wins. In that case, <span class="math inline">\(B\)</span> also breaks the problem <span class="math inline">\(P\)</span>. In some cases, however, <span class="math inline">\(B\)</span> will be unable to complete the execution of <span class="math inline">\(\mathcal{A}\)</span>. Running <span class="math inline">\(\mathcal{A}\)</span> in this simulation is therefore not equivalent of running <span class="math inline">\(\mathcal{A}\)</span> in its normal execution environment. This fact usually complicates the soundness proof, as conditional probabilities must be introduced to deal with cases where <span class="math inline">\(B\)</span> has to abort.
+<p>We now describe the conditions necessary for applying our method.</p>
 
-<strong>Conditions for a simple soundness proof</strong>
+<p>When <span class="math inline">\(\mathcal{A}\)</span> wins, this is characterised by a unique \textit{trace} of its winning configuration <span class="math inline">\(e\)</span>, denoted <span class="math inline">\(tr(e)\)</span>, which we can think of as a very small subset of its full execution trace. The maximal bit-length m of the trace must be such that <span class="math inline">\(2^m\)</span> is polynomial in <span class="math inline">\(\lambda\)</span>. The trace will typically be a tuple of numbers, group elements, etc.</p>
 
-We now describe the conditions necessary for applying our method.
+<p>There is a well-defined procedure by which, after generating a random configuration <span class="math inline">\(e\)</span> and &ldquo;guessing&rdquo; a trace <span class="math inline">\(tr'\)</span> by randomly sampling from <span class="math inline">\(\{0,1\}^m\)</span>, <span class="math inline">\(B\)</span> is able to modify <span class="math inline">\(e\)</span> based on <span class="math inline">\(tr'\)</span>. This results in a new configuration <span class="math inline">\(e'\)</span>. The following must hold:</p>
 
-When <span class="math inline">\(\mathcal{A}\)</span> wins, this is characterised by a unique \textit{trace} of its winning configuration <span class="math inline">\(e\)</span>, denoted <span class="math inline">\(tr(e)\)</span>, which we can think of as a very small subset of its full execution trace. The maximal bit-length m of the trace must be such that <span class="math inline">\(2^m\)</span> is polynomial in <span class="math inline">\(\lambda\)</span>. The trace will typically be a tuple of numbers, group elements, etc.
+<ul>
+<li><p>the probability space of <span class="math inline">\(e'\)</span> is the same as the probability space of <span class="math inline">\(e\)</span>;</p></li>
 
-There is a well-defined procedure by which, after generating a random configuration <span class="math inline">\(e\)</span> and &ldquo;guessing&rdquo; a trace <span class="math inline">\(tr'\)</span> by randomly sampling from <span class="math inline">\(\{0,1\}^m\)</span>, <span class="math inline">\(B\)</span> is able to modify <span class="math inline">\(e\)</span> based on <span class="math inline">\(tr'\)</span>. This results in a new configuration <span class="math inline">\(e'\)</span>. The following must hold:
+<li><p><span class="math inline">\(\mathcal{A}\)</span> learns nothing about <span class="math inline">\(B\)</span>&rsquo;s guess during the execution, unless <span class="math inline">\(B\)</span> aborts - at which stage <span class="math inline">\(B\)</span> cannot win anyway so it has no impact on the result;</p></li>
 
-* the probability space of <span class="math inline">\(e'\)</span> is the same as the probability space of <span class="math inline">\(e\)</span>;
+<li><p>if <span class="math inline">\(e'\)</span> is a winning configuration, and <span class="math inline">\(B\)</span> guessed the trace <span class="math inline">\(tr(e')\)</span> correctly, then <span class="math inline">\(B\)</span> is able to finish the execution of <span class="math inline">\(\mathcal{A}\)</span> and therefore win.</p></li>
+</ul>
 
-* <span class="math inline">\(\mathcal{A}\)</span> learns nothing about <span class="math inline">\(B\)</span>&rsquo;s guess during the execution, unless <span class="math inline">\(B\)</span> aborts - at which stage <span class="math inline">\(B\)</span> cannot win anyway so it has no impact on the result;
-    
-* if <span class="math inline">\(e'\)</span> is a winning configuration, and <span class="math inline">\(B\)</span> guessed the trace <span class="math inline">\(tr(e')\)</span> correctly, then <span class="math inline">\(B\)</span> is able to finish the execution of <span class="math inline">\(\mathcal{A}\)</span> and therefore win.
+<p><strong>Applying the method</strong></p>
 
-<strong>Applying the method</strong>
+<p>If the above conditions are met, the configuration <span class="math inline">\(e'\)</span> generated by B is indistinguishable from a uniformly sampled configuration of <span class="math inline">\(E\)</span>. Therefore, with probability <span class="math inline">\(t\)</span>, it will be a winning configuration. The trace <span class="math inline">\(tr'\)</span> will then be equal to <span class="math inline">\(tr(e')\)</span> with probability <span class="math inline">\(\frac{1}{2^m}\)</span>, and this will be independent of the probability that <span class="math inline">\(e'\)</span> is a winning configuration. If <span class="math inline">\(B\)</span> guessed the trace correctly, it will be able to complete the execution of <span class="math inline">\(A\)</span> and, as a result, break <span class="math inline">\(P\)</span>, with probability of at least <span class="math inline">\(\frac{t}{2^m}\)</span>.</p>
 
-If the above conditions are met, the configuration <span class="math inline">\(e'\)</span> generated by B is indistinguishable from a uniformly sampled configuration of <span class="math inline">\(E\)</span>. Therefore, with probability <span class="math inline">\(t\)</span>, it will be a winning configuration. The trace <span class="math inline">\(tr'\)</span> will then be equal to <span class="math inline">\(tr(e')\)</span> with probability <span class="math inline">\(\frac{1}{2^m}\)</span>, and this will be independent of the probability that <span class="math inline">\(e'\)</span> is a winning configuration. If <span class="math inline">\(B\)</span> guessed the trace correctly, it will be able to complete the execution of <span class="math inline">\(A\)</span> and, as a result, break <span class="math inline">\(P\)</span>, with probability of at least <span class="math inline">\(\frac{t}{2^m}\)</span>.
+<p><span class="math inline">\(\mathrm{\blacksquare}\)</span></p>
 
-<span class="math inline">\(\mathrm{\blacksquare}\)</span>
+<p><em>The paper then proceeds to show in detail how this method can be applied to prove the soundness of a simple binary voting scheme.</em></p>
 
-<em>The paper then proceeds to show in detail how this method can be applied to prove the soundness of a simple binary voting scheme.</em>
+<p><span class="math inline">\(\mathrm{\blacksquare}\)</span></p>
 
-<span class="math inline">\(\mathrm{\blacksquare}\)</span>
-</p>
+<h2>Randomly replacing values in vectors</h2>
 
-<h2>Randomly replacing values in vectors</h2>
+<p>The method described above relies on the following simple fact.</p>
 
-<p>
-The method described above relies on the following simple fact.
-</p>
+<h3>From one uniformly random configuration to another</h3>
 
-<h3>From one uniformly random configuration to another</h3>
-
-<p>
-Let <span class="math inline">\(G\)</span> be a finite set and <span class="math inline">\(n\)</span> a positive integer. Let <span class="math inline">\(H = G^n\)</span> and <span class="math inline">\(E = [n] \times G \times H\)</span>. The uniform distributions on these sets are denoted <span class="math inline">\(Pr_H\)</span> and <span class="math inline">\(Pr_E\)</span>. Elements of <span class="math inline">\(H\)</span> are denoted <span class="math inline">\(\vec{h}\)</span> while elements of <span class="math inline">\(E\)</span> are denoted <span class="math inline">\((k, u, \vec{g})\)</span>. Elements of a vector <span class="math inline">\(\vec{v}\)</span> are denoted <span class="math inline">\(v(i)\)</span>. Given a vector <span class="math inline">\(\vec{v}\)</span>, we denote by <span class="math inline">\(r(\vec{v}, k, u)\)</span> the vector obtained from <span class="math inline">\(\vec{v}\)</span> by replacing its <span class="math inline">\(k\)</span>-th element by <span class="math inline">\(u\)</span>:
-
-\begin{equation}
+<p>Let <span class="math inline">\(G\)</span> be a finite set and <span class="math inline">\(n\)</span> a positive integer. Let <span class="math inline">\(H = G^n\)</span> and <span class="math inline">\(E = [n] \times G \times H\)</span>. The uniform distributions on these sets are denoted <span class="math inline">\(Pr_H\)</span> and <span class="math inline">\(Pr_E\)</span>. Elements of <span class="math inline">\(H\)</span> are denoted <span class="math inline">\(\vec{h}\)</span> while elements of <span class="math inline">\(E\)</span> are denoted <span class="math inline">\((k, u, \vec{g})\)</span>. Elements of a vector <span class="math inline">\(\vec{v}\)</span> are denoted <span class="math inline">\(v(i)\)</span>. Given a vector <span class="math inline">\(\vec{v}\)</span>, we denote by <span class="math inline">\(r(\vec{v}, k, u)\)</span> the vector obtained from <span class="math inline">\(\vec{v}\)</span> by replacing its <span class="math inline">\(k\)</span>-th element by <span class="math inline">\(u\)</span>:</p>
+<p><span class="math display">\[
 r(\vec{v}, k, u)(i) =\begin{cases}
-			v(i) &amp; \text{if <span class="math inline">\(i \neq k\)</span>}\
-            u &amp; \text{if <span class="math inline">\(i = k\)</span>}
+			v(i) &amp; \text{if $i \neq k$}\\
+            u &amp; \text{if $i = k$}
 		 \end{cases}
-\end{equation}
-
-The set of all elements in <span class="math inline">\(H\)</span> which are equal to a vector <span class="math inline">\(\vec{h}\)</span> except at some fixed index <span class="math inline">\(k \in [n]\)</span> is denoted <span class="math inline">\(H(\vec{h}, k)\)</span>:
-
-\begin{equation}
-    H(\vec{h}, k) = { \vec{v} \in H \; | \; \forall i \in [n] \setminus {k}, \; v(i) = h(i) }
-\end{equation}
-
-Note that <span class="math inline">\(\forall (\vec{h}, k), |H(\vec{h}, k)| = |G|\)</span>. We further define the function <span class="math inline">\(\rho\)</span> as  follows:
-
-\begin{equation}
+\]</span></p><p>The set of all elements in <span class="math inline">\(H\)</span> which are equal to a vector <span class="math inline">\(\vec{h}\)</span> except at some fixed index <span class="math inline">\(k \in [n]\)</span> is denoted <span class="math inline">\(H(\vec{h}, k)\)</span>:</p>
+<p><span class="math display">\[
+    H(\vec{h}, k) = \{ \vec{v} \in H \; | \; \forall i \in [n] \setminus \{k\}, \; v(i) = h(i) \}
+\]</span></p><p>Note that <span class="math inline">\(\forall (\vec{h}, k), |H(\vec{h}, k)| = |G|\)</span>. We further define the function <span class="math inline">\(\rho\)</span> as  follows:</p>
+<p><span class="math display">\[
     \begin{aligned}
-        \rho : :: &amp; E               &amp; \longrightarrow : &amp; H \
-                 &amp; (k, u, \vec{g}) &amp; \longrightarrow  : &amp; \vec{h} = r(\vec{v}, k, u)
+        \rho : \:\: &amp; E               &amp; \longrightarrow \: &amp; H \\
+                 &amp; (k, u, \vec{g}) &amp; \longrightarrow  \: &amp; \vec{h} = r(\vec{v}, k, u)
     \end{aligned}
-\end{equation}
+\]</span></p><p>With fixed <span class="math inline">\(\vec{h} \in H\)</span> and <span class="math inline">\(\kappa \in [n]\)</span>, we have:</p>
+<p><span class="math display">\[
+    Pr_E( \rho = \vec{h} \: | \: k = \kappa) = \frac{|H(\vec{h}, \kappa)|}{|E|} = \frac{|G|}{n|G|^{n+1}} = \frac{1}{n|G|^n}
+\]</span></p><p>As a result:</p>
+<p><span class="math display">\[
+    Pr_E( \rho = \vec{h}) = \sum_{\kappa \in [n]} Pr_E( \rho = \vec{h} \: | \: k = \kappa) = n \frac{1}{n|G|^n}  = \frac{1}{|G|^n} = Pr_H(\vec{h})
+\]</span></p><p>Therefore the random variable <span class="math inline">\(\rho\)</span> is uniform on <span class="math inline">\(H\)</span>. This is not at all surprising: if we take a random vector in <span class="math inline">\(G^n\)</span>, then select a random <span class="math inline">\(k \in [n]\)</span> and a random <span class="math inline">\(u \in G\)</span> and replace the <span class="math inline">\(k\)</span>-th value of the vector with <span class="math inline">\(u\)</span>, we naturally expect the result to also be random.</p>
 
-With fixed <span class="math inline">\(\vec{h} \in H\)</span> and <span class="math inline">\(\kappa \in [n]\)</span>, we have:
+<h3>Extending the result</h3>
 
-\begin{equation}
-    Pr_E( \rho = \vec{h} : | : k = \kappa) = \frac{|H(\vec{h}, \kappa)|}{|E|} = \frac{|G|}{n|G|^{n+1}} = \frac{1}{n|G|^n}
-\end{equation}
+<p>We can modify the definitions of <span class="math inline">\(E\)</span> as follows: instead of <span class="math inline">\(E = [n] \times G \times G^n\)</span>, we define <span class="math inline">\(E = R \times G \times G^n\)</span> where <span class="math inline">\(R \subseteq [n]\)</span>. It is clear that we will obtain the same result.</p>
 
-As a result:
+<p>Another observation is that if we have for example <span class="math inline">\(E = [n] \times G \times G^n \times H^m \times ...\)</span>, we can extend <span class="math inline">\(f\)</span> and <span class="math inline">\(f_{\kappa}\)</span> in an obvious way, resulting in a uniform distribution on <span class="math inline">\(G^n \times H^m \times ...\)</span>.</p>
 
-\begin{equation}
-    Pr<em>E( \rho = \vec{h}) = \sum</em>{\kappa \in [n]} Pr_E( \rho = \vec{h} : | : k = \kappa) = n \frac{1}{n|G|^n}  = \frac{1}{|G|^n} = Pr_H(\vec{h})
-\end{equation}
+<p>Finally, it is also clear that the process can be repeated several times. For example, if our initial sample space is <span class="math inline">\(G^n \times H^m\)</span>, we can randomly replace one or more values in <span class="math inline">\(G^n\)</span>, then randomly replace one or more values in <span class="math inline">\(H^m\)</span>, and the resulting distribution will remain uniformly random.</p>
 
-Therefore the random variable <span class="math inline">\(\rho\)</span> is uniform on <span class="math inline">\(H\)</span>. This is not at all surprising: if we take a random vector in <span class="math inline">\(G^n\)</span>, then select a random <span class="math inline">\(k \in [n]\)</span> and a random <span class="math inline">\(u \in G\)</span> and replace the <span class="math inline">\(k\)</span>-th value of the vector with <span class="math inline">\(u\)</span>, we naturally expect the result to also be random.  
-</p>
+<p><span class="math inline">\(\mathrm{\blacksquare}\)</span></p>
 
-<h3>Extending the result</h3>
-
-<p>
-We can modify the definitions of <span class="math inline">\(E\)</span> as follows: instead of <span class="math inline">\(E = [n] \times G \times G^n\)</span>, we define <span class="math inline">\(E = R \times G \times G^n\)</span> where <span class="math inline">\(R \subseteq [n]\)</span>. It is clear that we will obtain the same result.
-
-Another observation is that if we have for example <span class="math inline">\(E = [n] \times G \times G^n \times H^m \times ...\)</span>, we can extend <span class="math inline">\(f\)</span> and <span class="math inline">\(f_{\kappa}\)</span> in an obvious way, resulting in a uniform distribution on <span class="math inline">\(G^n \times H^m \times ...\)</span>.
-
-Finally, it is also clear that the process can be repeated several times. For example, if our initial sample space is <span class="math inline">\(G^n \times H^m\)</span>, we can randomly replace one or more values in <span class="math inline">\(G^n\)</span>, then randomly replace one or more values in <span class="math inline">\(H^m\)</span>, and the resulting distribution will remain uniformly random.
-
-<span class="math inline">\(\mathrm{\blacksquare}\)</span>
-
-<a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/simple-soundness.pdf">https://github.com/aragonzkresearch/blog/blob/main/pdf/simple-soundness.pdf</a></p>
+<p><a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/simple-soundness.pdf">https://github.com/aragonzkresearch/blog/blob/main/pdf/simple-soundness.pdf</a></p>
 
     </div>
 
