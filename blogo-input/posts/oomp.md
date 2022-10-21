@@ -1,7 +1,8 @@
 # privacy without snarks — one of many proofs
 
 Groth and Kohlweiss introduced the concept of one of many proofs in their 2014
-paper, which also proposes the first O(logN) construction of the concept. One
+paper [here](https://eprint.iacr.org/2014/764), which also proposes the first 
+O(logN) construction of the concept. One
 of many proofs are at their heart a membership proof, also know as a ring
 signature. In other words, whereas a normal digital signature attests to the
 statement 'I know the private key that corresponds to this public key', ring
