@@ -15,6 +15,16 @@
       "metadescr": " One of many proofs are at their heart a membership proof, also know as a ring signature. In other words, whereas a normal digital signature attests to the statement 'I know the private key that corresponds to this public key', ring signatures prove the statement 'I know the private key that corresponds to one of the public keys in this list', without revealing which of the public keys that it is. "
     },
     {
+      "thumb": "simple-soundness_thumb.md",
+      "md": "simple-soundness.md",
+      "metadescr": "Soundness proofs tend to be quite long and technical. We describe a general method to significantly simplify such proofs if some specific conditions are met."
+    },
+    {
+      "thumb": "weil-projective_thumb.md",
+      "md": "weil-projective.md",
+      "metadescr": "This Maths Seminar note provides a self-contained proof of the Weil reciprocity on athe projective line of a field, together with concrete examples. A good grasp of the concepts explained here will help with understanding elliptic curve pairings."
+    },
+    {
       "thumb": "ovote_thumb.md",
       "md": "ovote.md",
       "metadescr": "OVOTE (Offchain Voting with Onchain Trustless Execution) is a L2 design for voting using validity-proofs (zkSNARK proofs), which is similar to zkRollups. The main idea is that the votes are aggregated offchain, and proved onchain through a zkSNARK proof, resulting in constant gas costs while scaling up to thousands of voters through a single Ethereum transaction."
