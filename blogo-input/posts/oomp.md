@@ -1,5 +1,5 @@
 # privacy without snarks — one of many proofs
-*2022-10-21* by Rebekah
+*2022-10-21 by Rebekah*
 
 Groth and Kohlweiss introduced the concept of one of many proofs in their 2014
 paper [here](https://eprint.iacr.org/2014/764), which also proposes the first 
