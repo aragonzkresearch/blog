@@ -119,7 +119,7 @@ $$
     \end{aligned}
 $$
 
-This definition is valid because the support of $r$ is finite. Indeed, the supports of $r$ and of $div(r)$ are identical. Finally, given a divisor $D$ whose support is disjoint from the support of $r$, the **evaluation**}** of $r$ at $D$ is defined as:
+This definition is valid because the support of $r$ is finite. Indeed, the supports of $r$ and of $div(r)$ are identical. Finally, given a divisor $D$ whose support is disjoint from the support of $r$, the **evaluation** of $r$ at $D$ is defined as:
 
 $$
     r(D) = \prod_{a \in \mathbb{P}^1} r(a)^{n_a} = \prod_{a \in Supp(D)} r(a)^{n_a}
