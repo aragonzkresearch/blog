@@ -157,7 +157,7 @@ $$
     \end{aligned}
 $$
 
-Applying formula \ref{for:Eval_r}, and remembering that $deg(r) = \sum \rho_i$ and $deg(s) = \sum \sigma_j$, we obtain:
+Applying the last formula of the preceding section, and remembering that $deg(r) = \sum \rho_i$ and $deg(s) = \sum \sigma_j$, we obtain:
 
 $$
     \begin{aligned}
