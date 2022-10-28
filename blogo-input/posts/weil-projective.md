@@ -5,6 +5,15 @@
 
 Our second **[Maths Seminar note](https://github.com/aragonzkresearch/blog/blob/main/pdf/weil-projective.pdf)** gives a detailed proof of the Weil reciprocity on the projective line.
 
+
+## Motivation
+
+The Weil reciprocity for rational functions over elliptic curves is a crucial building block in the construction of elliptic curve pairings. The Weil reciprocity is in fact a general property of algebraic curves on algebraically closed fields. As mentioned in our Math Seminar Notes:
+
+*The proof of Weil reciprocity for Elliptic curves is carried out in two stages. In the first stage, one proves Weil reciprocity for the projective line (...) In the second stage, one uses a formal argument for projective curves to "transfer" the proof from the projective line to a general Elliptic curve.*
+
+While the second stage of the proof requires some relatively advanced theory, the first stage is much more approachable. A good grasp of the concepts explained here will help with understanding elliptic curve pairings.
+
 ## Projective lines of a field
 
 A field $\mathbb{k}$ can be extended by adding a "point at infinity", denoted $\infty$, and by defining the following arithmetic operations: 
@@ -27,7 +36,7 @@ $$
 
 In addition, we have $\infty^0 = 1$. In this new structure, which allows division by $0$, functions such as $\frac{1}{x}$, as well as all fractions of polynomials, are defined everywhere, including at $\infty$. However, this structure is not a field, as some operations are left undefined: $\infty \pm \infty, 0 \cdot \infty, \frac{\infty}{\infty}$ and $\frac{0}{0}$. Also, some functions that are defined everywhere on $\mathbb{k}$ may not have a well defined value at $\infty$.
 
-More formally, a \textbf{projective line} is a projective space of dimension 1. The projective line over a field $\mathbb{k}$, with elements $\mathbb{k} \cup \infty$, is usually denoted $\mathbb{P}^1(\mathbb{k})$,  $\mathbb{P}_{\mathbb{k}}^1$, or simply $\mathbb{P}^1$. An element $a \neq \infty$ has homogeneous (or projective) coordinates $(a:1)$, while $\infty$ has coordinates $(0:1)$.
+More formally, a **projective line** is a projective space of dimension 1. The projective line over a field $\mathbb{k}$, with elements $\mathbb{k} \cup \infty$, is usually denoted $\mathbb{P}^1(\mathbb{k})$,  $\mathbb{P}_{\mathbb{k}}^1$, or simply $\mathbb{P}^1$. An element $a \neq \infty$ has homogeneous (or projective) coordinates $(a:1)$, while $\infty$ has coordinates $(0:1)$.
 
 ![](img/projective-real-line1.png)
 
@@ -70,7 +79,7 @@ $$
 $$
 
 We see that in addition to $\{ r_i \}$, $r$ can also have a zero or a pole at $\infty$.
-The set of all zeroes and poles of $r$ is called the **support** of $r$ and denoted $Supp(r)$ or $S_r$. We define the \textbf{finite support} of $r$, denoted $S_r^*$, as $S_r \backslash \{ \infty \}$.
+The set of all zeroes and poles of $r$ is called the **support** of $r$ and denoted $Supp(r)$ or $S_r$. We define the **finite support** of $r$, denoted $S_r^*$, as $S_r \backslash \{ \infty \}$.
 
 The **order of a point** relative to $r$ is defined as follows:
 
@@ -93,15 +102,15 @@ $$
 
 Although we seem to be taking a sum over all the elements of $\mathbb{P}^1$, which may not even be countable, this is not a problem as only a finite number of elements in this sum are non-zero. More precisely, this sum is just shorthand for the finite sum of these non-zero elements.
 
-A \textbf{divisor} $D$ on $\mathbb{P}^1$ is a formal sum of the form:
+A **divisor** $D$ on $\mathbb{P}^1$ is a formal sum of the form:
 
 $$
     D = \sum_{a \in \mathbb{P}^1} n_a [a]
 $$
 
-where $n_a \in \mathbb{Z}$ and $n_a \neq 0$ for only a finite number of elements of $\mathbb{P}^1$. The set of points $\{ a \: | \: n_a \neq 0 \}$, i.e. the points for which $n_a$ is not zero, is called the \textbf{support} of $D$ and denoted $Supp(D)$. It can be helpful to think of a divisor as simply a finite set of pairs $\{ (a_1, n_1), ..., (a_k, n_k) \} \in (\mathbb{k} \times \mathbb{Z}^*)^{<\omega}$, in which case $\{a_1, ..., a_k \}$ is its support.
+where $n_a \in \mathbb{Z}$ and $n_a \neq 0$ for only a finite number of elements of $\mathbb{P}^1$. The set of points $\{ a \: | \: n_a \neq 0 \}$, i.e. the points for which $n_a$ is not zero, is called the **support** of $D$ and denoted $Supp(D)$. It can be helpful to think of a divisor as simply a finite set of pairs $\{ (a_1, n_1), ..., (a_k, n_k) \} \in (\mathbb{k} \times \mathbb{Z}^*)^{<\omega}$, in which case $\{a_1, ..., a_k \}$ is its support.
 
-Given the rational function $r \in \mathbb{k}(\mathbb{P}^1)$, the \textbf{associated divisor} of $r$ is:
+Given the rational function $r \in \mathbb{k}(\mathbb{P}^1)$, the **associated divisor** of $r$ is:
 
 $$
     \begin{aligned}
@@ -110,7 +119,7 @@ $$
     \end{aligned}
 $$
 
-This definition is valid because the support of $r$ is finite. Indeed, the supports of $r$ and of $div(r)$ are identical. Finally, given a divisor $D$ whose support is disjoint from the support of $r$, the \textbf{evaluation} of $r$ at $D$ is defined as:
+This definition is valid because the support of $r$ is finite. Indeed, the supports of $r$ and of $div(r)$ are identical. Finally, given a divisor $D$ whose support is disjoint from the support of $r$, the **evaluation**}** of $r$ at $D$ is defined as:
 
 $$
     r(D) = \prod_{a \in \mathbb{P}^1} r(a)^{n_a} = \prod_{a \in Supp(D)} r(a)^{n_a}
@@ -213,7 +222,7 @@ $$
     \end{aligned}
 $$
 
-We can now directly obtain the divisors of proudcts or ratios of these functions:
+We can now directly obtain the divisors of products or ratios of these functions:
 
 $$
     \begin{aligned}
