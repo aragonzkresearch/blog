@@ -15,6 +15,11 @@
       "metadescr": "Announcing SNARV: succinct non-interactive arguments of voting."
     },
     {
+      "thumb": "blind-ovote_thumb.md",
+      "metadescr": "Blind-OVOTE is a L2 voting solution which combines the validity rollup (~“zkRollup”) ideas with blind signatures over elliptic curves inside zkSNARK, to provide gasless anonymous voting with onchain binding execution on Ethereum.",
+      "outsideArticle": "https://forum.aragon.org/t/blind-ovote-ovote-with-blind-signatures-for-voter-anonymity/3881"
+    },
+    {
       "thumb": "oomp_thumb.md",
       "md": "oomp.md",
       "metadescr": "One of many proofs are at their heart a membership proof, also know as a ring signature. In other words, whereas a normal digital signature attests to the statement 'I know the private key that corresponds to this public key', ring signatures prove the statement 'I know the private key that corresponds to one of the public keys in this list', without revealing which of the public keys that it is."
@@ -31,8 +36,8 @@
     },
     {
       "thumb": "ovote_thumb.md",
-      "md": "ovote.md",
-      "metadescr": "OVOTE (Offchain Voting with Onchain Trustless Execution) is a L2 design for voting using validity-proofs (zkSNARK proofs), which is similar to zkRollups. The main idea is that the votes are aggregated offchain, and proved onchain through a zkSNARK proof, resulting in constant gas costs while scaling up to thousands of voters through a single Ethereum transaction."
+      "metadescr": "OVOTE (Offchain Voting with Onchain Trustless Execution) is a L2 design for voting using validity-proofs (zkSNARK proofs), which is similar to zkRollups. The main idea is that the votes are aggregated offchain, and proved onchain through a zkSNARK proof, resulting in constant gas costs while scaling up to thousands of voters through a single Ethereum transaction.",
+      "outsideArticle": "https://forum.aragon.org/t/we-present-ovote-offchain-voting-with-onchain-trustless-execution/3603"
     },
     {
       "thumb": "ecdsa-akd_thumb.md",
