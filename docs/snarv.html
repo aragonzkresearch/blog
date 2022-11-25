@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="Announcing SNARV: succinct non-interactive arguments of voting." />
+    <meta charset="utf-8">
+    <title> SNARVs: Succinct Non-Interactive Arguments of Voting -- protocols for cost-effective, off-chain e-voting. - Aragon ZK Research - blog</title>
+    <meta name="title" content=" SNARVs: Succinct Non-Interactive Arguments of Voting -- protocols for cost-effective, off-chain e-voting. - Aragon ZK Research - blog">
+    <meta name="description" content="Announcing SNARV: succinct non-interactive arguments of voting.">
+
+    <meta property="og:title" content=" SNARVs: Succinct Non-Interactive Arguments of Voting -- protocols for cost-effective, off-chain e-voting. - Aragon ZK Research - blog" />
+    <meta property="og:description" content="Announcing SNARV: succinct non-interactive arguments of voting." />
+    <meta property="og:url" content="https://research.aragon.com/snarv.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.com/" />
+    <meta name="twitter:title" content=" SNARVs: Succinct Non-Interactive Arguments of Voting -- protocols for cost-effective, off-chain e-voting. - Aragon ZK Research - blog">
+    <meta name="twitter:description" content="Announcing SNARV: succinct non-interactive arguments of voting.">
+    <meta name="twitter:image" content="https://research.aragon.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3164FA; weight:bold;">
+          <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px;"/> ZK Research - Blog
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="/about" style="color:#000000;">
+            About us
+          </a>
+          <div class="onoffswitch" style="margin-left:20px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div id="article" class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:180px;">
+      <h1>SNARVs: Succinct Non-Interactive Arguments of Voting &ndash; protocols for cost-effective, off-chain e-voting.</h1>
+
+<p><em>2022-11-25 by <a href="https://sites.google.com/site/vincenzoiovinoit">Vincenzo Iovino</a> and <a href="https://sites.google.com/site/matanprasma/artifact">Matan Prasma</a>.</em></p>
+
+<p>Currently, voting protocols for DAOs are carried out without any privacy, that is, the preference of each voter is publicly visible to everybody. Moreover, to tally the result, a large amount of gas is consumed on the Ethereum network. To address this problem, Aragon&rsquo;s ZK-research team has developed <a href="https://research.aragon.org/ovote.html">OVOTE</a><span class="math inline">\({}^{(1)}\)</span> as a solution to minimise gas consumption on-chain. This is done by moving the voting procedure off-chain and verifieng the result using an on-chain SNARK proof. General-purpose SNARKs like the one of <span class="math inline">\(\text{Groth}^{(2)}\)</span>, allow the proof to be verified in constant time, precisely using <span class="math inline">\(3\)</span> pairings and <span class="math inline">\(t\)</span> exponentiations where <span class="math inline">\(t\)</span> is the number of elements of the public statement.</p>
+
+<h3>SNARV</h3>
+
+<p>In an upcoming paper<span class="math inline">\(^{(3)}\)</span> we propose a general model that encompasses both anonymous and non-anonymous e-voting, which we call <strong>Succinct Non-Interactive Arguments of Voting (SNARV).</strong> Both <em>OVOTE</em> and two new protocols, <em>BatRaVot</em> and <em>SchnorrVot</em>, on which we&rsquo;ll ellaborate in a subsequent post, can be seen as special cases of <em>SNARV</em>.</p>
+
+<p>A <em>SNARV</em> is comprised of the following algorithms.</p>
+
+<ul>
+<li><p>There is a <strong>parameters generation</strong> (PPT) algorithm <em>Gen</em> that, on input the security parameter, outputs the public parameters <em>pp</em>.</p></li>
+
+<li><p>We suppose that at most <span class="math inline">\(n\)</span> voters <span class="math inline">\(V_1,...,V_n\)</span>, with corresponding public keys (PKs) <span class="math inline">\(PK_1,...,PK_n\)</span>, can register themselves in the system at any moment. Each voter <span class="math inline">\(V_i\)</span> keeps private the corresponding secret-key (SK) <span class="math inline">\(SK_i\)</span>. The pair <span class="math inline">\((PK_i,SK_i)\)</span> is produced by voter <span class="math inline">\(V_i\)</span> by means of a <strong>setup</strong> algorithm <em>Setup</em> on input the public parameters <em>pp</em>.</p></li>
+
+<li><p>From the <span class="math inline">\(n\)</span> possible PKs, an administrator may compute a <strong>census</strong> <span class="math inline">\(r\)</span> by means of a <strong>census algorithm</strong> <em>Census</em>, executed with input the list of all PKs <span class="math inline">\((PK_1,...,PK_n)\)</span>. The census can be used to increase efficiency by replacing the list of all PKs with a shorter string, so that verification of the election will be done with respect to the census and not  the full list of PKs.</p></li>
+
+<li><p>Each voting procedure (i.e. election) is identified by a public <strong>election identifier</strong> <span class="math inline">\(id\)</span>. In the <strong>voting phase</strong>, a generic voter <span class="math inline">\(V_i\)</span> can submit to a Blockchain, possibly different from Ethereum, the <strong>first message</strong> <span class="math inline">\((i,v_i,Blt_i)\)</span>, where <span class="math inline">\(Blt_i\)</span> is a bit string called the <strong>ballot</strong> of voter <span class="math inline">\(i\)</span> computed by means of a <strong>voting</strong> algorithm <em>Vote</em> that takes as input the election identifier <span class="math inline">\(id\)</span>, the voter&rsquo;s preference <span class="math inline">\(v_i\)</span> and its SK <span class="math inline">\(SK_i\)</span>.</p></li>
+
+<li><p>There is a <strong>ballot verification</strong> algorithm <em>BalVerify</em> that on input the PK <span class="math inline">\(PK\)</span> of a voter, an election identifier <span class="math inline">\(id\)</span>, a voter&rsquo;s preference <span class="math inline">\(v\in \{0,1\}\)</span> (<span class="math inline">\(0\)</span> denotes NO and <span class="math inline">\(1\)</span> denotes YES) and ballot <span class="math inline">\(Blt\)</span> returns <span class="math inline">\(1\)</span> or <span class="math inline">\(0\)</span> depending on whether the ballot was genuinely computed by the voter in an election for identifier <span class="math inline">\(id\)</span> or not. The ballot verification allows to discard (off-chain) invalid ballots, including double votes. The votes corresponding to the valid ballots can then be publicly tallied.</p></li>
+
+<li><p>Let <span class="math inline">\(m_0,m_1\)</span> be the number of NO and YES cast by eligible voters and let <span class="math inline">\(S_0,S_1\subseteq [n]\)</span> be the set of indices of voters who submitted a NO or YES respectively. Thus, <span class="math inline">\(m_0 = \#S_0\)</span> and <span class="math inline">\(m_1 = \#S_1\)</span>.
+Now, a Prover <em>Prov</em> wants to convince a Verifier <em>Ver</em> with low resources (e.g., a smart contract that implements a transfer of funds) that the election result is <span class="math inline">\((m_0,m_1)\)</span>. The <strong>prover</strong> algorithm <em>Prov</em>, on input <span class="math inline">\((S_0,S_1)\)</span>, <span class="math inline">\((PK_i,v_i,Blt_i)_{i\in S_0}\)</span>  <span class="math inline">\((PK_i,v_i,Blt_i)_{i\in S_1}\)</span>, the election identifier <span class="math inline">\(id\)</span>, the census <span class="math inline">\(r\)</span> and the claimed result <span class="math inline">\((m_0,m_1)\)</span>, outputs a <strong>proof</strong> <span class="math inline">\(\pi\)</span> of the fact that <span class="math inline">\((m_0,m_1)\)</span> is the tally of the election.</p></li>
+
+<li><p>There is a <strong>verifier</strong> algorithm <em>Ver</em> that, with RAM access to all possible PKs <span class="math inline">\((PK_1,...,PK_n)\)</span>, the election identifier <span class="math inline">\(id\)</span>, the census <span class="math inline">\(r\)</span>, the claimed result <span class="math inline">\((m_0,m_1)\)</span> and a proof <span class="math inline">\(\pi\)</span> outputs <span class="math inline">\(1\)</span> or <span class="math inline">\(0\)</span> to denote acceptance or rejection of the result. If the output is <span class="math inline">\(1\)</span> the funds are transferred, and are not transferred otherwise.</p></li>
+
+<li><p>There is <strong>public-key verification</strong> algorithm <em>PKVerify</em> that, on input the public parameters <em>pp</em> and a PK <span class="math inline">\(PK\)</span>, outputs a bit <span class="math inline">\(1\)</span> to denote that the public-key is honestly computed with respect to the public parameters.</p></li>
+</ul>
+
+<h3>Security</h3>
+
+<p>For security, we require that no adversary is able to forge a proof for e.g., a number of YES strictly greater than the number of observed signatures for a given election.</p>
+
+<p>More formally, we define a <strong>strong soundness</strong> experiment for a given <em>SNARV</em>. During the experiment, an adversary can corrupt voters getting their secret-keys or controlling the generation of their public-keys. For any integer <span class="math inline">\(n\)</span>, a set <span class="math inline">\(C\subsetneq [n]\)</span> and a list of <span class="math inline">\(n-|C|\)</span> elements <span class="math inline">\(\{SK_i\}_{i\in [n]-C}\)</span>, we assume to have a <em>VoteOracle</em> algorithm (for non-corrupted users) <span class="math inline">\(VO_{(\left\{SK_i\right\}_{i\in [n]-C},[n]-C)}(\cdot,\cdot,\cdot)\)</span> that, on input <span class="math inline">\((id,v,i)\)</span>, outputs <span class="math inline">\(Vote(id,v,SK_i)\)</span> if <span class="math inline">\(v\in\left\{0,1\right\}\)</span> and <span class="math inline">\(i\in [n]-C\)</span> and <em>ERROR</em> otherwise.</p>
+
+<p>Consider the following <strong>strong soundness experiment</strong> parameterized by an integer <span class="math inline">\(n\)</span>, a security parameter <span class="math inline">\(\lambda\)</span>, a SNARV <span class="math inline">\(%(Gen,Setup,Vote,BalVerify,Prov,Ver,PKVerify)\)</span> and an efficient adversary <span class="math inline">\(A := \left\{A_\lambda\right\}_\lambda\)</span>.</p>
+
+<ol>
+<li><p><strong>Parameters Generation Phase.</strong>
+We sample a random string of <span class="math inline">\(\lambda\)</span> bits, <span class="math inline">\(s\leftarrow  \left\{0,1 \right\}^\lambda\)</span> and generate the public prameters <span class="math inline">\(\textit{pp} \leftarrow Gen(1^\lambda;s).\)</span></p></li>
+
+<li><p><strong>Corruption Phase.</strong>
+The adversary <span class="math inline">\(A\)</span> chooses a set of &ldquo;corrupted users&rdquo; <span class="math inline">\(C\leftarrow A(s)\)</span> such that <span class="math inline">\(C \subsetneq [n]\)</span>.</p></li>
+
+<li><p><strong>Setup Phase.</strong>
+We generate public- and secret-keys for all non-corrupted users: <span class="math inline">\(\forall i\in[n]-C\)</span>, <span class="math inline">\((PK_i,SK_i)_{i\in [n]-C}\leftarrow Setup(1^\lambda)\)</span>.</p></li>
+
+<li><p><strong>Voting Phase.</strong>
+The adversary <span class="math inline">\(A\)</span> is allowed to query <em>VoteOracle</em> to produce verifiable Ballots for any non-corrupted user. Then, <span class="math inline">\(A\)</span> is required to output an election result <span class="math inline">\((id,m_0,m_1)\)</span> together with a proof <span class="math inline">\(\pi\)</span> of its correctness and the list of PKs for the corrupted users it has chosen in the start.
+<span class="math inline">\((id,m_0,m_1,S_0,S_1,\pi,\left\{PK_i\right\}_{i\in C})\leftarrow\)</span>
+<span class="math inline">\(\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;A^{VO_{(\left\{SK_i\right\}_{i\in [n]-C},[n]-C)}(\cdot,\cdot,\cdot)} (\left\{ PK_i \right\}_{i\in [n]-C}).\)</span>
+Using the PKs from the setup algorithm together with the PKs of the corrupted users that <span class="math inline">\(A\)</span> provided, a census <span class="math inline">\(r\)</span> is created.
+<span class="math inline">\(r\leftarrow Census(PK_1,...,PK_n)\)</span>.</p></li>
+
+<li><p><strong>Winning Conditions.</strong> For any <span class="math inline">\(v\in \left\{0,1\right\}\)</span>, let <span class="math inline">\(S_v^q\subseteq [n]\)</span> be such that <span class="math inline">\(i\in S_v^q\)</span> iff <span class="math inline">\(A\)</span> asked the query <span class="math inline">\((id,v,i)\)</span> to <em>VoteOracle</em>.
+The output of the experiment is <span class="math inline">\(1\)</span> (<span class="math inline">\(A\)</span> wins) iff all the following conditions hold:</p></li>
+</ol>
+
+<ul>
+<li><span class="math inline">\(\textit{Ver}(PK_1,...,PK_n,id,r,m_0,m_1,\pi)=1\)</span>.</li>
+<li><span class="math inline">\(S_0\cup S_1 \setminus (S_0^q\cup S_1^q\cup C) \neq \emptyset.\)</span></li>
+<li><span class="math inline">\(\forall i\in[n]:\ \textit{PKVerify}(\textit{pp},PK_i)=1\)</span>.</li>
+<li><span class="math inline">\(\forall i\neq j\in [n]:\ PK_i\neq PK_j\)</span>.</li>
+</ul>
+
+<p>A <em>SNARV</em> satisfies <strong>strong soundness</strong> if for all efficient adversaries <span class="math inline">\(A\)</span>, the probability that <span class="math inline">\(A\)</span> wins in the strong soundness experiment is a negligible function of the security parameter <span class="math inline">\(\lambda\)</span>.</p>
+
+<p>With this mind, we prove</p>
+
+<p><span class="math inline">\(\underline{Theorem}:\)</span> Under the Computational Diffie-Hellman assumption, our <em>SNARV</em> protocols <em>BatRaVot</em> and <em>SchnorrVot</em> satisfy strong soundness.</p>
+
+<h3>Conclusion</h3>
+
+<p>Our new model <em>SNARV</em> serves as a general framework for e-voting protocols. <em>OVOTE</em> and two other voting protocols BatRaVot and SchnorrVot are examples of SNARVs and one can reason about security of these protocols in a unified way.</p>
+
+<p>Furthermore, as we will explain in an upcoming post, <em>BatRaVot</em> and <em>SchnorrVot</em> improve on the gas cost compared to OVOTE when the number of voters is not to large, and offer additional security guarantees.</p>
+
+<p>Stay tuned!</p>
+
+<h3>References</h3>
+
+<p>(1) Arnaucube, Pau Escrich, Roger Baig, and Alex Kampa. Ovote (v0.5) : Off-chain voting with on-chain trustless execution. 2022.
+<a href="https://github.com/aragonzkresearch/research/blob/main/drafts/ovote.pdf">https://github.com/aragonzkresearch/research/blob/main/drafts/ovote.pdf</a>.</p>
+
+<p>(2) Jens Groth. On the size of pairing-based non-interactive arguments. 2016.</p>
+
+<p>(3) Vincenzo Iovino, Alex Kampa and Matan Prasma. SNARV: Succinct Non-Interactive Arguments of Voting (in preparation).</p>
+
+
+      <div style="text-align:center;margin-top:100px;">
+        <a href="/">Go to main</a>
+      </div>
+    </div>
+
+
+    <footer style="text-align:center; height:150px; margin-top:-140px;">
+      <div class="container">
+        <div style="margin-top:30px;padding-top:30px;">
+          <a href="/about" style="color:#ffffff;font-weight:bold;"><span style="font-weight:bold;">Aragon ZK Research</span></a> is a zk research group contributing to <a href="https://aragon.org" target="_blank" style="color:#ffffff;font-weight:bold;">Aragon</a> ecosystem.
+
+          <br><br>
+          <!-- <a href="https://research.aragon.org" target="_blank" style="color:#ffffff;margin:10px;" title="Blog" alt="Blog"><i class="bi bi-file-text-fill" style="font-size: 2rem;"></i></a> -->
+          <a href="https://github.com/aragonzkresearch" target="_blank" style="color:#ffffff;margin:10px;" title="Github" alt="Github"><i class="bi bi-github" style="font-size: 2rem;"></i></a>
+          <a href="https://twitter.com/aragon_zk" target="_blank" style="color:#ffffff;margin:10px;" title="Twitter" alt="Twitter"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script src="js/theme.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
