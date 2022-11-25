@@ -77,7 +77,7 @@ Stay tuned!
 ### References
 
 (1) Arnaucube, Pau Escrich, Roger Baig, and Alex Kampa. Ovote (v0.5) : Off-chain voting with on-chain trustless execution. 2022.
-https://github.com/aragonzkresearch/research/blob/main/drafts/ovote.pdf.
+https://github.com/aragonzkresearch/research/blob/main/ovote/ovote.pdf.
 
 (2) Jens Groth. On the size of pairing-based non-interactive arguments. 2016.
 
