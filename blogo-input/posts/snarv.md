@@ -74,6 +74,10 @@ Furthermore, as we will explain in an upcoming post, *BatRaVot* and *SchnorrVot*
 
 Stay tuned!
 
+<br>
+(For the moment, the [document is temporarily accessible](https://drive.google.com/file/d/1zelKLq0ZzfRwkmzf1j6GMsYMG72DwdXJ/view?usp=sharing) only inside Aragon Association. A public version will be released here in the coming weeks.)
+
+<br><br>
 ### References
 
 (1) Arnaucube, Pau Escrich, Roger Baig, and Alex Kampa. Ovote (v0.5) : Off-chain voting with on-chain trustless execution. 2022.
