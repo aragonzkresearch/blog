@@ -212,6 +212,34 @@ This completes the proof.
 
 ### Example 1
 
+We start with the simplest possible example. Let $\alpha$, $\beta$ and $\gamma$ be distinct real numbers and define rational functions $f$ and $g$ as follows:
+
+$$
+    \begin{aligned}
+        f(x) &= x - \alpha \\
+        g(x) &= \frac{(x -\beta)}{(x -\gamma)}
+    \end{aligned}
+$$
+
+These functions have distinct support and their divisors are:
+
+$$
+    \begin{aligned}
+        div(f) &= [\alpha] - [\infty] \\
+        div(g) &= [\beta] - [\gamma]
+    \end{aligned}
+$$
+
+Note that $g(\infty) = 1$, so that we have:
+
+$$
+    \begin{aligned}
+        f(div(g)) = \frac{f(\beta)}{f(\gamma)} = \frac{\beta - \alpha}{\gamma - \alpha} = \frac{\alpha - \beta}{\alpha - \gamma} =  g(\alpha) = \frac{g(\alpha)}{g(\infty)} = g(div(f))
+    \end{aligned}
+$$
+
+### Example 2
+
 Let us define rational functions f, g and h via their divisors:
 
 $$
@@ -228,7 +256,7 @@ $$
     \begin{aligned}
         div(fg)  &= div(f) + div(g) &= & \; [0] - [1] \\
         div(f/g) &= div(f) - div(g) &= & \; -[0] +3[1] -2[\infty] \\
-        div(f^2) &= 2 div(f)        &= & \; 2[1] -2[\infty] \\
+        div(f^2) &= 2 \cdot div(f)        &= & \; 2[1] -2[\infty] \\
     \end{aligned}
 $$
 
@@ -251,7 +279,7 @@ $$
     \end{aligned}
 $$
 
-### Example 2
+### Example 3
 
 Consider the following rational functions:
 
