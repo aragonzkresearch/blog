@@ -9,7 +9,7 @@ Aragon ZK Research blog.
 - Use `blogo -d` to locally serve the generated blog site
    - This will re-generate the html files each time that a input file is modified, and will serve the html generated site at `http://127.0.0.1:8080`.
 
-Generated files ready to be served are outputed into `docs` directory.
+Generated files ready to be served are output to the `docs` directory.
 
 Deployment:
 - Just serve the files from `docs` directory in a http server.
