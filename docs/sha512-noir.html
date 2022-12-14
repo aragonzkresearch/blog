@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="In this blog post, we discuss the SHA512 hash function and its implementation in Aztec's Noir, a domain-specific language for constructing and verifying zero-knowledge proofs." />
+    <meta charset="utf-8">
+    <title> SHA512 and its implementation in Noir - Aragon ZK Research - blog</title>
+    <meta name="title" content=" SHA512 and its implementation in Noir - Aragon ZK Research - blog">
+    <meta name="description" content="In this blog post, we discuss the SHA512 hash function and its implementation in Aztec's Noir, a domain-specific language for constructing and verifying zero-knowledge proofs.">
+
+    <meta property="og:title" content=" SHA512 and its implementation in Noir - Aragon ZK Research - blog" />
+    <meta property="og:description" content="In this blog post, we discuss the SHA512 hash function and its implementation in Aztec's Noir, a domain-specific language for constructing and verifying zero-knowledge proofs." />
+    <meta property="og:url" content="https://research.aragon.com/sha512-noir.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.com/" />
+    <meta name="twitter:title" content=" SHA512 and its implementation in Noir - Aragon ZK Research - blog">
+    <meta name="twitter:description" content="In this blog post, we discuss the SHA512 hash function and its implementation in Aztec's Noir, a domain-specific language for constructing and verifying zero-knowledge proofs.">
+    <meta name="twitter:image" content="https://research.aragon.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3164FA; weight:bold;">
+          <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px;"/> ZK Research - Blog
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="/about" style="color:#000000;">
+            About us
+          </a>
+          <div class="onoffswitch" style="margin-left:20px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div id="article" class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:180px;">
+      <h1>SHA512 and its implementation in Noir</h1>
+
+<p><em>2022-12-14 by <a href="https://github.com/ax0">Ahmad Afuni</a></em></p>
+
+<p>The SHA-2 family of hash functions, of which SHA256 and SHA512 are particular instances, are ubiquitous in cryptographic applications due to their ease of computation on modern computers. In this blog post, we discuss the SHA512 hash function and its implementation in Aztec&rsquo;s Noir, a domain-specific language for constructing and verifying zero-knowledge (ZK) proofs.</p>
+
+<h2>Noir</h2>
+
+<h3>What is Noir?</h3>
+
+<p>In a nutshell, <a href="https://aztec.network/noir/">Noir</a> is a programming language with <a href="https://www.rust-lang.org/">Rust</a>-like syntax that allows you to compile programs to an intermediate language that may then be further compiled to an <em><a href="https://tlu.tarilabs.com/cryptography/rank-1#arithmetic-circuits">arithmetic circuit</a></em> or <em><a href="https://tlu.tarilabs.com/cryptography/rank-1#rank-1-constraint-systems">rank-1 constraint system</a></em>, thereby facilitating the construction and verification of zero-knowledge proofs. Its main draws are its ease of use, its familiar syntax and its abstracting away of the underlying arithmetic circuit required to construct a proof. In other words, a background in ZK proofs is <em>not</em> necessary for using Noir. It supports different proving systems as backends, and, by analogy with Rust&rsquo;s <em><a href="https://doc.rust-lang.org/cargo/">cargo</a></em>, it comes with the <em><a href="https://noir-lang.github.io/book/getting_started/nargo.html">nargo</a></em> package manager. It also generates <em><a href="https://ethereum.org/en/developers/docs/smart-contracts/">smart contracts</a></em> that verify its proofs.</p>
+
+<h3>Demonstration</h3>
+
+<p>To illustrate the simplicity of Noir, here is a screencast where we</p>
+
+<ul>
+<li>create a project,</li>
+<li>build a proof,</li>
+<li>verify a proof, and</li>
+<li>create a smart contract verifying the proof</li>
+</ul>
+
+<p>using <em>nargo</em>, Noir&rsquo;s package manager:</p>
+
+<script id="asciicast-3ICFfvTVoDb2hQyOtBLFnyEsx" src="https://asciinema.org/a/3ICFfvTVoDb2hQyOtBLFnyEsx.js" async></script>
+
+<p>Installation instructions for various platforms may be found in the official <a href="https://noir-lang.github.io/book/index.html">documentation</a>.</p>
+
+<h3>Language features</h3>
+
+<p>Analogously to Rust, Noir has the usual unsigned integer data types (e.g. <code>u8</code>, <code>u32</code> and <code>u64</code>), but it also has a backend-dependent <code>Field</code> data type, which is modeled on a <a href="https://ncatlab.org/nlab/show/finite+field">finite field</a>; with the primary backend, it is none other than <span class="math inline">\(\mathbb{F}_{p}\)</span>, where <code>p=0x30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001</code>, i.e. the order of the BN254 (<a href="https://github.com/scipr-lab/libff/blob/674e437446216ade040194105b4fc9ff3d8db6f1/libff/algebra/curves/alt_bn128/alt_bn128.sage">alt_bn128</a>) curve or, alternatively, the order of the base field of the <a href="https://eips.ethereum.org/EIPS/eip-2494">Baby Jubjub curve</a>. Noir also has tuples, record types and fixed-length array types. At the time of writing, it has no vector or slice support, but there is some support for function signatures including arrays of unspecified length, which we made use of in our implementation of SHA512.</p>
+
+<h2>Hash functions in a nutshell</h2>
+
+<h3>The idea</h3>
+
+<p>In brief, a <em><a href="https://en.wikipedia.org/wiki/Cryptographic_hash_function">hash function</a></em> <span class="math inline">\(h\)</span> is a mapping taking a message of any length as input and returning a number, called a <em>message digest</em> (or <em>hash</em>) as output. A hash function <span class="math inline">\(h\)</span> should be</p>
+
+<ul>
+<li><em>collision-resistant</em> in the sense that it should be hard to find <span class="math inline">\(x_{1}\neq x_{2}\)</span> such that <span class="math inline">\(h(x_{1}) = h(x_{2})\)</span>, and</li>
+<li><em>one-way</em> in the sense that given a number <span class="math inline">\(y\)</span>, it should be hard to find an <span class="math inline">\(x\)</span> such that <span class="math inline">\(h(x) = y\)</span>, i.e. it should be difficult to guess the message belonging to a particular message digest.</li>
+</ul>
+
+<p>Hash functions are ubiquitous in the digital world, where they are used for data integrity checks and data hiding. A hash function should be relatively fast to compute, and its output should be seemingly random, despite its deterministic nature.</p>
+
+<h3>Construction</h3>
+
+<p>There are many different hash functions in current use, the choice depending on a compromise between security and computation speed. That being said, many of them are constructed by means of an iterative process typically consisting of the following steps:</p>
+
+<ul>
+<li><strong>Compression</strong>: Define a so-called <em>compression function</em> <span class="math inline">\(C:X^{n}\times H\rightarrow H\)</span> that takes a message of some fixed length <span class="math inline">\(n\)</span> (i.e. a sequence of <span class="math inline">\(n\)</span> elements of some set <span class="math inline">\(X\)</span>) and an element of <span class="math inline">\(H\)</span> as input and returns an element of <span class="math inline">\(H\)</span> as output. <span class="math inline">\(H\)</span> is typically the set where the message digest will reside. Depending on the particular construction, some form of collision resistance may be assumed of <span class="math inline">\(C(\cdot, \chi)\)</span> for fixed <span class="math inline">\(\chi\in H\)</span>.</li>
+<li><strong>Padding</strong>: Given an arbitrary message <span class="math inline">\(m\in X^{i}\)</span>, <span class="math inline">\(i\in\mathbb{N}\)</span>, append (or prepend) elements of <span class="math inline">\(X\)</span> to it to obtain a new message <span class="math inline">\(m'\in X^{kn}\)</span> for some <span class="math inline">\(k\in\mathbb{N}\)</span>.</li>
+<li><strong>Block decomposition</strong>: Split <span class="math inline">\(m'\)</span> up into blocks <span class="math inline">\(m_{1},m_{2},\dots, m_{k}\in X^{n}\)</span> with <span class="math inline">\(m' = m_{1}||\dots ||m_{k}\)</span>, where <span class="math inline">\(||\)</span> denotes <a href="https://en.wikipedia.org/wiki/Concatenation">concatenation</a>.</li>
+<li><strong>Absorption</strong>: Apply some rule that absorbs all of the <span class="math inline">\(m_{i}\)</span>&rsquo;s and returns a value in <span class="math inline">\(H\)</span> through appropriate applications of <span class="math inline">\(C\)</span>, e.g. fix some <span class="math inline">\(h_{0}\in H\)</span> and compute the sequence <span class="math inline">\(\{h_{i}\}_{i=1}^{k}\)</span> according to the rule <span class="math inline">\(h_{i} = C(m_{i}, h_{i-1})\)</span>.</li>
+<li><strong>Squeezing</strong> (optional): Apply more operations to the output obtained from the preceding step. In the concrete case mentioned in the preceding step, this could be a matter of computing <span class="math inline">\(f(h_{k})\)</span> for some function <span class="math inline">\(f:H\rightarrow H'\)</span>.</li>
+<li><strong>Output</strong>: Return (a combination of) the output from the preceding step(s) and call that the message digest.</li>
+</ul>
+
+<p>The result of the above steps is that we obtain a mapping <span class="math inline">\(h:\bigcup_{i=1}^{\infty}X^{i}\rightarrow H\)</span>. <span class="math inline">\(X\)</span> is typically taken to be <span class="math inline">\(\{0,1\}\)</span> (i.e. the set of bits) or a <a href="https://ncatlab.org/nlab/show/prime+field">prime field</a>, and <span class="math inline">\(H\)</span> is usually the integers modulo <span class="math inline">\(N\)</span> for some <span class="math inline">\(N\in\mathbb{N}\)</span>.</p>
+
+<p>Two constructions that are variations on the above theme are the <em><a href="https://en.wikipedia.org/wiki/Merkle%E2%80%93Damg%C3%A5rd_construction">Merkle-Damgård</a></em> and <em><a href="https://keccak.team/sponge_duplex.html">sponge</a></em> constructions. The <a href="https://csrc.nist.gov/publications/detail/fips/180/4/final">SHA-1 and SHA-2</a> families of hash functions are based on the former construction and the <a href="https://www.nist.gov/publications/sha-3-standard-permutation-based-hash-and-extendable-output-functions">SHA-3</a> family on the latter. We now turn our attention to a particular member of the SHA-2 family.</p>
+
+<h2>SHA512 and its implementation</h2>
+
+<h3>The algorithm in short</h3>
+
+<p>The SHA512 hash function takes a sequence of bits, i.e. an element of <span class="math inline">\(\bigcup_{i=1}^{\infty}\{0,1\}^{i}\)</span>, as its input and returns a 512-bit message digest as its output. Its official specification may be found <a href="https://doi.org/10.6028/NIST.FIPS.180-4">here</a>, and we shall refer back to this specification in the following discussion.</p>
+
+<p>As remarked earlier, SHA512 is constructed along the lines of the iterative process outlined earlier, processing a message 1024 bits at a time. Concretely:</p>
+
+<ul>
+<li><strong>Compression</strong>: Define a certain compression function <span class="math inline">\(C:\{0,1\}^{1024}\times\{0,1\}^{512}\rightarrow\{0,1\}^{512}\)</span> that applies a combination of bitwise operations, bit shifts, rotations and additions modulo <span class="math inline">\(2^{64}\)</span> to its inputs (see §6.4.2 on p. 24 of the spec). Note that the message portion of the input to <span class="math inline">\(C\)</span> consists of 1024 bits, which suggests that we should pad the input message so that its bit-length is a multiple of 1024.</li>
+<li><strong>Padding</strong>: Given an arbitrary message <span class="math inline">\(m\in\{0,1\}^{i}\)</span>, append a <span class="math inline">\(1\)</span> bit, <span class="math inline">\(z\)</span> zero bits, and the 128-bit representation of <span class="math inline">\(i\)</span>, where <span class="math inline">\(z\in\mathbb{N}\cup\{0\}\)</span> is the smallest number such that the length of this new message is a multiple of 1024, i.e. <span class="math inline">\(m'\in\{0,1\}^{k\cdot 1024}\)</span> for some <span class="math inline">\(k\in\mathbb{N}\)</span>.</li>
+<li><strong>Block-decomposition</strong>: Split <span class="math inline">\(m'\)</span> up into blocks <span class="math inline">\(m_{1},\dots, m_{k}\in\{0,1\}^{1024}\)</span> with <span class="math inline">\(m'=m_{1}||\dots||m_{k}\)</span>.</li>
+<li><strong>Absorption</strong>: Let <span class="math inline">\(h_{0}\in\{0,1\}^{512}\)</span> be the concatenation of the first 64 bits of the fractional parts of the square roots of the first 8 prime numbers in ascending order (see §6.3.5 on p. 15 of the spec) and for <span class="math inline">\(i\in\{1,\dots, k\}\)</span>, compute <span class="math inline">\(h_{i} = C(m_{i},h_{i-1}) + h_{i-1}\)</span> (modulo <span class="math inline">\(2^{64}\)</span>).</li>
+<li><strong>Output</strong>: Return <span class="math inline">\(h_{k}\)</span>.</li>
+</ul>
+
+<p>To illustrate the padding process, in ASCII, the string &ldquo;kebab&rdquo; has binary representation <code>01101011 01100101 01100010 01100001 01100010</code> (<code>0x6b65626162</code> in hex), which is of bit-length 40. After padding, we obtain the following number:</p>
+
+<p><code>01101011 01100101 01100010 01100001 01100010</code>
+<code>10000000 00000000 ... 00000000</code> (<span class="math inline">\(1\)</span> followed by <span class="math inline">\(1024-40-1-128 = 855\)</span> zero bits)
+<code>00000000 ... 00000000 00101000</code> (128-bit representation of the bit-length of the string, i.e. 40).</p>
+
+<p>In general, a message <span class="math inline">\(m\)</span> of bit-length <span class="math inline">\(l\)</span> admits a unique decomposition of the form <span class="math inline">\(m_{1}|| \dots || m_{N-1} || m_{N}\)</span> for some <span class="math inline">\(N\in\mathbb{N}\)</span> such that <span class="math inline">\(m_{i}\)</span> is of bit-length <span class="math inline">\(1024\)</span> for <span class="math inline">\(i\in\{1,\dots, N-1\}\)</span> and <span class="math inline">\(m_{N}\)</span> is of bit-length <span class="math inline">\(n= l\mod 1024\in\{0, \dots, 1023\}\)</span>, where a message of bit-length <span class="math inline">\(0\)</span> is interpreted as the empty string. In the case above, <span class="math inline">\(N=1\)</span> and <span class="math inline">\(n=40\)</span> so that we have <span class="math inline">\(1024-40 = 984\)</span> bits in the current block to apply the padding rule. In the case where <span class="math inline">\(n\)</span> is so large (i.e. greater than <span class="math inline">\(1024-1-128 = 895\)</span>) that we cannot simply apply the padding rule to complete <span class="math inline">\(m_{N}\)</span> to a block <span class="math inline">\(m_{N}'\)</span> of bit-length <span class="math inline">\(1024\)</span>, we would append a 1 bit followed by <span class="math inline">\(1024-n-1\)</span> zero bits to make <span class="math inline">\(m_{N}\)</span> a <span class="math inline">\(1024\)</span>-bit block, then append an additional 1024-bit block consisting of <span class="math inline">\(1024-128 = 896\)</span> zero bits followed by the 128-bit representation of the bit-length of the message. An example of this may be found <a href="https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/SHA512.pdf">here</a>.</p>
+
+<h3>Implementation in Noir</h3>
+
+<p>Our implementation of SHA512, which is now part of the Noir standard library, may be found <a href="https://github.com/noir-lang/noir/blob/master/noir_stdlib/src/sha512.nr">here</a>. Rather than processing messages one bit at a time, we process them one <em>byte</em> at a time and return the message digest as a byte array, which is typical of implementations of the SHA-2 family. We now do a rundown of the code.</p>
+
+<p>Lines 6-39 define the relevant auxiliary bit manipulation functions from the spec (cf. §4.1.3 on p. 11 of the spec), lines 41-57 define the so-called <em>expanded message block function</em> which applies some of the aforementioned bit manipulation functions to the message block being processed to prepare it for further processing in the compression function, whose definition is on lines 60-82. These functions operate on <code>u64</code> numbers rather than bytes, since they rely on 64-bit operations; a helper function for this conversion is defined on lines 85-98, and appropriate conversions are made throughout the hash function (here called <code>digest</code>), which may be found on lines 101-192.</p>
+
+<p>A quick comparison of the code with the specification shows an almost direct translation with the exception of the function <code>digest</code>. Instead of padding the message at the start, we allocate a message block array (of type <code>[u8; 128]</code>) and fill it up as we move along the bytes of the message until we have a 128-byte (1024-bit) block to absorb, at which point we absorb it, obtaining the <em>intermediate hash</em> <span class="math inline">\(h_{1}\)</span>, then fill the message block array with the next 128-byte block, which is then absorbed to yield an intermediate hash <span class="math inline">\(h_{2}\)</span>, and continue this process until the end of the message is reached; in other words, given an input message <span class="math inline">\(m\)</span>, we make use of the decomposition <span class="math inline">\(m = m_{1}||\dots || m_{N}\)</span> outlined in the preceding section and absorb message blocks <span class="math inline">\(m_{1},\dots, m_{N-1}\)</span>. The relevant code is on lines 109-124. Lines 128-179 then append the 1 bit to the final (incomplete) message block <span class="math inline">\(m_{N}\)</span> and check the resulting message block, <span class="math inline">\(m_{N}||1\)</span>, which consists of <span class="math inline">\(l + 1 \mod 128\)</span> bytes, where <span class="math inline">\(l\)</span> is the length of <span class="math inline">\(m\)</span>, to determine whether it is possible to simply complete it (see discussion of padding in the preceding section).</p>
+
+<p>Note that the alternative of pre-allocating a padded message array is not available to us at the time of writing, as there is no mechanism for dynamically allocating arrays. Despite this, it is possible to define functions whose signatures contain arrays of unspecified lengths. Also, in the aforementioned code, there are a couple of instances of for loops with somewhat arbitrary-looking bounds with an unused loop variable (lines 138 and 156); these were dictated by the constraint that only certain expressions involving compile-time constants (including array lengths) are allowed in for loop bounds, and there is no alternative loop construction.</p>
+
+<h3>Illustration of implementation</h3>
+
+<p>It may be checked using any implementation of SHA-512 that the ASCII string <code>&quot;kebab&quot;</code> has message digest <code>0xf5f5bd14be042c2568709b6f5a2cd77840eec1209f9ce8ede4679a7be631228dc33880f43e582a3e41cfb5221af89567c1ba893d96a1412f37ea7dcbeaebfa6b</code>. We may construct a ZK proof that a prover knows a 5-byte string with this message digest and verify it using our implementation of SHA512 as follows: First create a new project by running</p>
+
+<p><code>nargo new sha512_test</code></p>
+
+<p>and populate <code>sha512_test/src/main.nr</code> with the following code:</p>
+
+<pre><code>use dep::std;
+
+fn main(x: [u8; 5]) -&gt; pub [u8; 64] {
+        std::sha512::digest(x)
+}
+</code></pre>
+
+<p>Running <code>nargo build</code> builds the constraint system. Now populate <code>sha512_test/Prover.toml</code> with</p>
+
+<pre><code>x = [0x6b, 0x65, 0x62, 0x61, 0x62]
+return = [0xf5, 0xf5, 0xbd, 0x14, 0xbe, 0x04, 0x2c, 0x25, 0x68, 0x70, 0x9b, 0x6f, 0x5a, 0x2c, 0xd7, 0x78, 0x40, 0xee, 0xc1, 0x20, 0x9f, 0x9c, 0xe8, 0xed, 0xe4, 0x67, 0x9a, 0x7b, 0xe6, 0x31, 0x22, 0x8d, 0xc3, 0x38, 0x80, 0xf4, 0x3e, 0x58, 0x2a, 0x3e, 0x41, 0xcf, 0xb5, 0x22, 0x1a, 0xf8, 0x95, 0x67, 0xc1, 0xba, 0x89, 0x3d, 0x96, 0xa1, 0x41, 0x2f, 0x37, 0xea, 0x7d, 0xcb, 0xea, 0xeb, 0xfa, 0x6b]
+</code></pre>
+
+<p>Running <code>nargo prove proof</code> and <code>nargo verify proof</code> will construct and verify the proof.</p>
+
+<h2>Concluding remarks</h2>
+
+<p>We detailed the implementation of SHA512 in Noir above and went through an example making use of it in a ZK proof. If you followed the example closely, you may have noticed the somewhat long proof generation and verification times; on my 5-year-old laptop for example, these processes take several minutes and consume quite a bit of memory. Digging deeper reveals why: Bitwise operations are expensive in arithmetic circuits!</p>
+
+<p>While SHA512 is nice to have, there are hash functions that are better suited to this setting, such as <a href="https://www.poseidon-hash.info/">Poseidon</a>, which relies on natural field operations, viz. addition and multiplication, rather than bit manipulations. It is for this reason that the concentration of our current efforts is on the implementation of such hash functions, as well as cryptographic primitives necessary for their construction.</p>
+
+
+      <div style="text-align:center;margin-top:100px;">
+        <a href="/">Go to main</a>
+      </div>
+    </div>
+
+
+    <footer style="text-align:center; height:150px; margin-top:-140px;">
+      <div class="container">
+        <div style="margin-top:30px;padding-top:30px;">
+          <a href="/about" style="color:#ffffff;font-weight:bold;"><span style="font-weight:bold;">Aragon ZK Research</span></a> is a zk research group contributing to <a href="https://aragon.org" target="_blank" style="color:#ffffff;font-weight:bold;">Aragon</a> ecosystem.
+
+          <br><br>
+          <!-- <a href="https://research.aragon.org" target="_blank" style="color:#ffffff;margin:10px;" title="Blog" alt="Blog"><i class="bi bi-file-text-fill" style="font-size: 2rem;"></i></a> -->
+          <a href="https://github.com/aragonzkresearch" target="_blank" style="color:#ffffff;margin:10px;" title="Github" alt="Github"><i class="bi bi-github" style="font-size: 2rem;"></i></a>
+          <a href="https://twitter.com/aragon_zk" target="_blank" style="color:#ffffff;margin:10px;" title="Twitter" alt="Twitter"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script src="js/theme.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
