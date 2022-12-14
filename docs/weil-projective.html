@@ -220,6 +220,26 @@ The set of all zeroes and poles of <span class="math inline">\(r\)</span> is cal
 
 <h3>Example 1</h3>
 
+<p>We start with the simplest possible example. Let <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\gamma\)</span> be distinct real numbers and define rational functions <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> as follows:</p>
+<p><span class="math display">\[
+    \begin{aligned}
+        f(x) &amp;= x - \alpha \\
+        g(x) &amp;= \frac{(x -\beta)}{(x -\gamma)}
+    \end{aligned}
+\]</span></p><p>These functions have distinct support and their divisors are:</p>
+<p><span class="math display">\[
+    \begin{aligned}
+        div(f) &amp;= [\alpha] - [\infty] \\
+        div(g) &amp;= [\beta] - [\gamma]
+    \end{aligned}
+\]</span></p><p>Note that <span class="math inline">\(g(\infty) = 1\)</span>, so that we have:</p>
+<p><span class="math display">\[
+    \begin{aligned}
+        f(div(g)) = \frac{f(\beta)}{f(\gamma)} = \frac{\beta - \alpha}{\gamma - \alpha} = \frac{\alpha - \beta}{\alpha - \gamma} =  g(\alpha) = \frac{g(\alpha)}{g(\infty)} = g(div(f))
+    \end{aligned}
+\]</span></p>
+<h3>Example 2</h3>
+
 <p>Let us define rational functions f, g and h via their divisors:</p>
 <p><span class="math display">\[
     \begin{aligned}
@@ -232,7 +252,7 @@ The set of all zeroes and poles of <span class="math inline">\(r\)</span> is cal
     \begin{aligned}
         div(fg)  &amp;= div(f) + div(g) &amp;= &amp; \; [0] - [1] \\
         div(f/g) &amp;= div(f) - div(g) &amp;= &amp; \; -[0] +3[1] -2[\infty] \\
-        div(f^2) &amp;= 2 div(f)        &amp;= &amp; \; 2[1] -2[\infty] \\
+        div(f^2) &amp;= 2 \cdot div(f)        &amp;= &amp; \; 2[1] -2[\infty] \\
     \end{aligned}
 \]</span></p><p>It is of course easy to see what form the functions f, g and h have:</p>
 <p><span class="math display">\[
@@ -248,7 +268,7 @@ The set of all zeroes and poles of <span class="math inline">\(r\)</span> is cal
         h(div(f^2)) &amp;= h(1)^2 h(\infty)^{-2} = (2c_h)^2 (c_h)^{-2} = 4 \\
     \end{aligned}
 \]</span></p>
-<h3>Example 2</h3>
+<h3>Example 3</h3>
 
 <p>Consider the following rational functions:</p>
 <p><span class="math display">\[
