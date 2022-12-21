@@ -6,4 +6,4 @@ very frequently, and often in combination, a security proof for the construction
 this point. Shoup and Groth find an attack on threshold ECDSA when using both AKD and presignatures,
 and present a solution. 
 
-*2022-05-11 by Rebekah Mercer*
+*2022-05-11 by Rebekah*
