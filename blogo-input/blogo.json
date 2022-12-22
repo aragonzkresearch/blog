@@ -9,11 +9,18 @@
   "metadescr": "Aragon Research blog",
   "metaimg": "img/main-logo.svg",
   "posts": [
+          {
+      "thumb": "math_notes_thumb.md",
+      "md": "math_notes.md",
+      "metadescr": "In this blog post, we discuss new math notes"
+    },
+
     {
       "thumb": "sha512-noir_thumb.md",
       "md": "sha512-noir.md",
       "metadescr": "In this blog post, we discuss the SHA512 hash function and its implementation in Aztec's Noir, a domain-specific language for constructing and verifying zero-knowledge proofs."
     },
+
     {
       "thumb": "snarv_thumb.md",
       "md": "snarv.md",
@@ -73,3 +80,6 @@
     "docs"
   ]
 }
+
+
+
