@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="This note introduces a Rust implementation of the sum argument section of DualRing." />
+    <meta charset="utf-8">
+    <title> A rust implementation of DualRing's sum argument - Aragon ZK Research - blog</title>
+    <meta name="title" content=" A rust implementation of DualRing's sum argument - Aragon ZK Research - blog">
+    <meta name="description" content="This note introduces a Rust implementation of the sum argument section of DualRing.">
+
+    <meta property="og:title" content=" A rust implementation of DualRing's sum argument - Aragon ZK Research - blog" />
+    <meta property="og:description" content="This note introduces a Rust implementation of the sum argument section of DualRing." />
+    <meta property="og:url" content="https://research.aragon.com/sum-argument.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.com/" />
+    <meta name="twitter:title" content=" A rust implementation of DualRing's sum argument - Aragon ZK Research - blog">
+    <meta name="twitter:description" content="This note introduces a Rust implementation of the sum argument section of DualRing.">
+    <meta name="twitter:image" content="https://research.aragon.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3164FA; weight:bold;">
+          <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px;"/> ZK Research - Blog
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="/about" style="color:#000000;">
+            About us
+          </a>
+          <div class="onoffswitch" style="margin-left:20px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div id="article" class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:180px;">
+      <h3>A rust implementation of DualRing&rsquo;s sum argument</h3>
+
+<p><em>2022-12-22 by Rebekah</em></p>
+
+<p>Recently at Aragon we’ve been looking for ways to enable efficient,
+decentralised private voting. As part of that, we’ve been looking into the
+state of the art of private linkable membership proofs, as they’re very
+suitable to act as the base of a private voting protocol (or, in a more general
+sense, as the base of a private cryptocurrency itself, as in Monero’s case).</p>
+
+<p>The current state of the art in discrete log based linkable membership proofs
+without any trusted parties, which are also known as linkable ring signatures,
+is a May 2022 ESORICS paper called <a href="https://dualdory.github.io">DualDory</a>.
+DoryDory builds from a previous work called
+<a href="https://eprint.iacr.org/2021/1213">DualRing</a>, extending the ideas presented in
+that paper to offer both linkability, and also logarithmic verification time,
+which it does by introducing a pairing based preprocessing stage.</p>
+
+<p>DualRing builds from a long line of work that builds ring signatures in
+a ‘ring-like’ sense, with the ring representing a circle (usually of
+challenges) with the final link only being able to be created by a party with
+some trapdoor information. The trapdoor information in the case of a ring
+signature is the secret key that corresponds to any of the public keys which
+are in the ‘ring’ of public keys, which is known to everyone. A ring signature
+then proves that the signer holds one of the corresponding secret keys, without
+revealing which specific one that they possess.</p>
+
+<p>The initial ring signatures were constructed based on sigma protocol OR proofs.
+The prover would use the ability to simulate sigma protocols when the challenge
+can be selected out of order, and would generate n-1 of those sigma protocols,
+and then when responding to the real challenge, they would simply subtract all
+of their simulated challenges from the real challenge, and use the result to
+produce the last sigma protocol. They would then send the n sub-challenges, as
+well as the n last messages of the sigma protocols, real and simulated. This
+technique is very neat, but it results in a proof that is linear sized in the
+number of parties in the ring.</p>
+
+<p><a href="https://eprint.iacr.org/2017/1066">Bulletproofs</a> build from the work of <a href="https://eprint.iacr.org/2016/263">Bootle
+et al</a> which presents a membership proof with
+logarithmic communication. At a high level, it acheives this by, rather than
+sending the elements of the proof in the clear, recursively applying a proving
+function which halves the length needed to be sent to convince the verifier.
+Due to the recursive halfing, the final set of elements needing to be sent is
+logarithmic in the size of the initial proof, which in our case was linear.
+Bootle et al uses an inner product proof to acheive this, but the authors of
+DualRing noticed that in the case of membership proofs, rather than needing to
+prove <code>&lt;a, b&gt; = c</code>, with <code>c</code> a committed value, we instead only need to prove
+<code>&lt;a, 1^n&gt; = c</code>, which allows use of a sum argument, and enables this section of
+the proving computation to be halved.</p>
+
+<p>Our implementation of this section of the paper can be found at <a href="https://github.com/aragonzkresearch/sum-argument">this github
+link</a>, and hopefully will
+continue to be developed in the future! The implementation is based on the
+inner product argument of the <a href="https://github.com/dalek-cryptography/bulletproofs">dalek bulletproofs
+implementation</a>, which I&rsquo;d
+highly recommend you also check out if you&rsquo;re interested in membership proofs
+that go fast!</p>
+
+
+      <div style="text-align:center;margin-top:100px;">
+        <a href="/">Go to main</a>
+      </div>
+    </div>
+
+
+    <footer style="text-align:center; height:150px; margin-top:-140px;">
+      <div class="container">
+        <div style="margin-top:30px;padding-top:30px;">
+          <a href="/about" style="color:#ffffff;font-weight:bold;"><span style="font-weight:bold;">Aragon ZK Research</span></a> is a zk research group contributing to <a href="https://aragon.org" target="_blank" style="color:#ffffff;font-weight:bold;">Aragon</a> ecosystem.
+
+          <br><br>
+          <!-- <a href="https://research.aragon.org" target="_blank" style="color:#ffffff;margin:10px;" title="Blog" alt="Blog"><i class="bi bi-file-text-fill" style="font-size: 2rem;"></i></a> -->
+          <a href="https://github.com/aragonzkresearch" target="_blank" style="color:#ffffff;margin:10px;" title="Github" alt="Github"><i class="bi bi-github" style="font-size: 2rem;"></i></a>
+          <a href="https://twitter.com/aragon_zk" target="_blank" style="color:#ffffff;margin:10px;" title="Twitter" alt="Twitter"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script src="js/theme.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
