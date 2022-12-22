@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="This note introduces the private voting technical report, which is a summary of various directions that could be taken to implement private, decentralised, blockchain-based voting." />
+    <meta charset="utf-8">
+    <title> Decentralised Private Voting - Aragon ZK Research - blog</title>
+    <meta name="title" content=" Decentralised Private Voting - Aragon ZK Research - blog">
+    <meta name="description" content="This note introduces the private voting technical report, which is a summary of various directions that could be taken to implement private, decentralised, blockchain-based voting.">
+
+    <meta property="og:title" content=" Decentralised Private Voting - Aragon ZK Research - blog" />
+    <meta property="og:description" content="This note introduces the private voting technical report, which is a summary of various directions that could be taken to implement private, decentralised, blockchain-based voting." />
+    <meta property="og:url" content="https://research.aragon.com/private-voting.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.com/" />
+    <meta name="twitter:title" content=" Decentralised Private Voting - Aragon ZK Research - blog">
+    <meta name="twitter:description" content="This note introduces the private voting technical report, which is a summary of various directions that could be taken to implement private, decentralised, blockchain-based voting.">
+    <meta name="twitter:image" content="https://research.aragon.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3164FA; weight:bold;">
+          <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px;"/> ZK Research - Blog
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="/about" style="color:#000000;">
+            About us
+          </a>
+          <div class="onoffswitch" style="margin-left:20px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div id="article" class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:180px;">
+      <h3>Decentralised Private Voting</h3>
+
+<p><em>2022-12-21 by Rebekah</em></p>
+
+<p>There are several ways to achieve secure decentralised private voting, which we
+will go through within the document. Decentralisation is being stressed in the
+title of this blog post and within the document due to the fact that many
+voting schemes that exist in the current body of work rely on a trusted party
+for vote integrity, or voter privacy, or for a combination of these two
+alongside availability of the voting system itself.
+<a href="https://vote.heliosvoting.org">Helios</a> is one such voting scheme, which is
+used for private voting in, for example, <a href="https://vote.heliosvoting.org/helios/elections/e32be530-2dbf-11ec-af80-e2b5f37f7c96/view">IACR
+elections</a>.
+However, in Helios an authority needs to be trusted for privacy.  We do not
+wish for this to be the case in the scheme that we adopt.</p>
+
+<p>We will be using an Ethereum smart contract as a bulletin board and vote
+counter, but a constraint imposed by this model is that the contract cannot
+have any private state at all, which means that any system in which the
+‘authority’ needs to generate some private randomness is not available to use
+in this situation. This means that we need to provide a protocol where anyone
+who sees the votes can compute the final result themselves, without being able
+to reveal any information about the votes (except that which is revealed by the
+final vote itself). A final constraint is that computation is very expensive on
+Ethereum, and so we desire a protocol with a verification step that is as
+lightweight as possible. There are existing papers that provide a thorough
+overview of currently implemented and deployed cryptocurrency based voting
+schemes, for example Nomana Ayesha Majeed&rsquo;s brilliant <a href="https://monami.hs-mittweida.de/frontdoor/deliver/index/docId/13092/file/DruckversionNomanaAyeshaMajeed.pdf">Review on Blockchain
+based e-Voting
+Systems</a>.</p>
+
+<p>The document linked below talks through several different approaches to
+achieving private decentralised voting, and their trade-offs. The approaches
+are linkable (private) membership proofs (SNARK-based or not SNARK-based,
+depending on the computational power expectations of the voters); plain digital
+signatures and tallyable encrypted votes; membership proofs + tallyable
+encrypted votes; commit and reveal (in the case that privacy is not desired).
+The document explains more details about each of these, and can be found
+<a href="https://github.com/aragonzkresearch/blog/tree/main/pdf/private-voting.pdf">here</a>.
+But as a summary, we will provide some guidelines as follows.</p>
+
+<p>If you’re doing &lsquo;one person, one vote&rsquo; based protocols, non-snark membership
+proofs seem to offer the best efficiency, while guaranteeing privacy. If the
+aim is token weighted voting, use a special purpose encrypted voting protocol,
+with specific instationations given as recommendations within the linked note.
+These schemes are more complex in terms of implementation and computational
+complexity for the prover and verifier than non-snark membership proofs, but
+are required to maintain privacy while users are voting with different numbers
+of tokens. If the aim is to support arbitrary different voting functionalities
+(eg weighted, one person one vote, and non-linear tallying) all with the same
+overall framework, SNARK based voting solutions would be preferable, as using
+SNARKs minimises the infrastructure changes needed with a change of voting
+system. Hope you find the note helpful, and feel free to reach out with any questions
+or comments!</p>
+
+
+      <div style="text-align:center;margin-top:100px;">
+        <a href="/">Go to main</a>
+      </div>
+    </div>
+
+
+    <footer style="text-align:center; height:150px; margin-top:-140px;">
+      <div class="container">
+        <div style="margin-top:30px;padding-top:30px;">
+          <a href="/about" style="color:#ffffff;font-weight:bold;"><span style="font-weight:bold;">Aragon ZK Research</span></a> is a zk research group contributing to <a href="https://aragon.org" target="_blank" style="color:#ffffff;font-weight:bold;">Aragon</a> ecosystem.
+
+          <br><br>
+          <!-- <a href="https://research.aragon.org" target="_blank" style="color:#ffffff;margin:10px;" title="Blog" alt="Blog"><i class="bi bi-file-text-fill" style="font-size: 2rem;"></i></a> -->
+          <a href="https://github.com/aragonzkresearch" target="_blank" style="color:#ffffff;margin:10px;" title="Github" alt="Github"><i class="bi bi-github" style="font-size: 2rem;"></i></a>
+          <a href="https://twitter.com/aragon_zk" target="_blank" style="color:#ffffff;margin:10px;" title="Twitter" alt="Twitter"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script src="js/theme.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
