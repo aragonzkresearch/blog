@@ -20,4 +20,5 @@ At the moment, the material includes:
 * Tate pairing.
 
 Please feel invited to send me comments or remarks you might have.
+
 https://github.com/aragonzkresearch/blog/blob/matan/pdf/Aragon_Math_Seminar.pdf
