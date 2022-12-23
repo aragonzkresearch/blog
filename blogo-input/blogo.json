@@ -10,6 +10,16 @@
   "metaimg": "img/main-logo.svg",
   "posts": [
     {
+      "thumb": "sum-argument_thumb.md",
+      "md": "sum-argument.md",
+      "metadescr": "This note introduces a Rust implementation of the sum argument section of DualRing."
+    },
+    {
+      "thumb": "private-voting_thumb.md",
+      "md": "private-voting.md",
+      "metadescr": "This note introduces the private voting technical report, which is a summary of various directions that could be taken to implement private, decentralised, blockchain-based voting."
+    },
+    {
       "thumb": "sha512-noir_thumb.md",
       "md": "sha512-noir.md",
       "metadescr": "In this blog post, we discuss the SHA512 hash function and its implementation in Aztec's Noir, a domain-specific language for constructing and verifying zero-knowledge proofs."
