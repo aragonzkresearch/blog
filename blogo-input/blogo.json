@@ -10,6 +10,11 @@
   "metaimg": "img/main-logo.svg",
   "posts": [
     {
+      "thumb": "crypto-notes_thumb.md",
+      "md": "crypto-notes.md",
+      "metadescr": "This note introduces the cryptographic notes."
+    },
+    {
       "thumb": "sum-argument_thumb.md",
       "md": "sum-argument.md",
       "metadescr": "This note introduces a Rust implementation of the sum argument section of DualRing."
