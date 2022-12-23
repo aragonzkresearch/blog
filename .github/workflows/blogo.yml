@@ -1,0 +1,27 @@
+name: Blogo render
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'blogo-input/**'
+      - 'docs/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Blogo
+        run: |
+          mkdir -p $HOME/bin
+          curl -sSfL https://github.com/arnaucube/blogo/releases/download/v0_20221124/blogo-amd64-linux -o $HOME/bin/blogo
+          chmod +x $HOME/bin/blogo
+          echo "$HOME/bin" >> $GITHUB_PATH
+      - name: Gen HTML & commit
+        run: |
+          blogo
+          git config user.name blogo-bot
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Generate HTML files"
+          git push
