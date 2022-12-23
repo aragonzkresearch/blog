@@ -3,7 +3,7 @@
 *2022-12-23 by [Vincenzo Iovino](https://sites.google.com/site/vincenzoiovinoit)*
 
 In this post we present the first set of cryptographic notes that we published [here](https://github.com/aragonzkresearch/blog/blob/main/pdf/crypto-notes.pdf).
-The purpose of these notes is to provide a self-contained introduction to relevant concepts in cryptography with an eye on e-voting. We will present a toy e-voting system as as a motivational example to introduce several crypto primitives needed to implement it.  In particular, we will touch basic number theory, encryption, digital signatures, hash functions, commitments, secret sharing, proof systems, zero-knowledge, secure function evaluation, and distributed key generation. 
+The purpose of these notes is to provide a self-contained introduction to relevant concepts in cryptography with an eye on e-voting. We will present a toy e-voting system as as a motivational example to introduce several crypto primitives needed to implement it. In particular, we will touch basic number theory, encryption, digital signatures, hash functions, commitments, secret sharing, proof systems, zero-knowledge, secure function evaluation, and distributed key generation. 
 
 
 In particular, the topics we covered are the following.
