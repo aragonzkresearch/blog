@@ -1,6 +1,6 @@
 ### Notes on Elliptic curves over finite fields and their pairings
 
-*2022-12-23 by [Matan Prasma](https://sites.google.com/site/matanprasma/)
+*2022-12-23 by [Matan Prasma](https://sites.google.com/site/matanprasma/)*
 
 
 
