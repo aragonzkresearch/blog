@@ -1,5 +1,9 @@
 ### Notes on Elliptic curves over finite fields and their pairings
 
+*2022-12-23 by [Matan Prasma](https://sites.google.com/site/matanprasma/)
+
+
+
 I'd like to share notes that grew as part of a Mathematical Cryptography seminar I gave in Aragon Association during 2022. 
 Since the construction of Miller's algorithm, the Cryptography community started to use Elliptic curves and their pairing extensively. 
 By now, many publicly available code libraries allow one to efficiently compute Elliptic curves over finite fields and evaluate their pairings.
