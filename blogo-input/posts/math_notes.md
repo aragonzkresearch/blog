@@ -26,3 +26,9 @@ At the moment, the material includes:
 Please feel invited to send me comments or remarks you might have.
 
 The manuscript can be found [here](https://github.com/aragonzkresearch/blog/blob/matan/pdf/Aragon_Math_Seminar.pdf).
+
+<div style="text-align:center; margin:40px;">
+<a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/Aragon_Math_Seminar.pdf" target="_blank" class="alert alert-primary" role="alert">
+  <i class="bi bi-file-earmark-text" style="font-size: 1.5rem;"></i> Aragon_Math_Seminar.pdf
+</a>
+</div>

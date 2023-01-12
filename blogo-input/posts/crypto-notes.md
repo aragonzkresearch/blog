@@ -44,3 +44,9 @@ In particular, we provide a construction of DKG from the polynomial commitment s
 ## Conclusions
 In these  set of notes, we provided not only a set of cryptographic primitives of independent interest but explained how to reason about the security properties of protocol, in particular e-voting. Our final toy e-voting scheme was indeed constructed through different iterations in which at each step we solved a previously identified issue. 
 What is not covered in these notes are more recent topics like succinct proofs that we at Aragon ZK Research will explore in future blog posts, notes and papers.
+
+<div style="text-align:center; margin:40px;">
+<a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/crypto-notes.pdf" target="_blank" class="alert alert-primary" role="alert">
+  <i class="bi bi-file-earmark-text" style="font-size: 1.5rem;"></i> crypto-notes.pdf
+</a>
+</div>
