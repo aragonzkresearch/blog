@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="This note introduces the cryptographic notes." />
+    <meta charset="utf-8">
+    <title> Selected Topics in Cryptography: from the basics to e-voting - Aragon ZK Research - blog</title>
+    <meta name="title" content=" Selected Topics in Cryptography: from the basics to e-voting - Aragon ZK Research - blog">
+    <meta name="description" content="This note introduces the cryptographic notes.">
+
+    <meta property="og:title" content=" Selected Topics in Cryptography: from the basics to e-voting - Aragon ZK Research - blog" />
+    <meta property="og:description" content="This note introduces the cryptographic notes." />
+    <meta property="og:url" content="https://research.aragon.com/crypto-notes.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.com/" />
+    <meta name="twitter:title" content=" Selected Topics in Cryptography: from the basics to e-voting - Aragon ZK Research - blog">
+    <meta name="twitter:description" content="This note introduces the cryptographic notes.">
+    <meta name="twitter:image" content="https://research.aragon.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3164FA; weight:bold;">
+          <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px;"/> ZK Research - Blog
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="/about" style="color:#000000;">
+            About us
+          </a>
+          <div class="onoffswitch" style="margin-left:20px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div id="article" class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:180px;">
+      <h1>Selected Topics in Cryptography: from the basics to e-voting</h1>
+
+<p><em>2022-12-23 by <a href="https://sites.google.com/site/vincenzoiovinoit">Vincenzo Iovino</a></em></p>
+
+<p>In this post we present the first set of cryptographic notes that we published <a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/crypto-notes.pdf">here</a>.
+The purpose of these notes is to provide a self-contained introduction to relevant concepts in cryptography with an eye on e-voting. We will present a toy e-voting system as as a motivational example to introduce several crypto primitives needed to implement it. In particular, we will touch basic number theory, encryption, digital signatures, hash functions, commitments, secret sharing, proof systems, zero-knowledge, secure function evaluation, and distributed key generation.</p>
+
+<p>In particular, the topics we covered are the following.</p>
+
+<h2>Basic probability and complexity theory</h2>
+
+<p>We introduce axiomatic probability theory with a focus on the discrete case with examples coming from cryptography. We give a basic introduction to complexity theory and in particular we cover the concepts of NP relations and hard languages that are at the core of modern cryptography.</p>
+
+<h2>Public-key encryption</h2>
+
+<p>We present the basics of number theory with the objective of introducing secure algebraic groups like the group of quadratic residues modulo a prime number.
+We then proceed to formalize the concept of public-key encryption and we present the well known ElGamal encryption scheme whose homomorphic property are useful for e-voting.</p>
+
+<h2>Zero-knowledge Proof Systems</h2>
+
+<p>We start introducing the concept of an interactive zero-knowledge proof (ZK-IP) system using the framework of interactive machines. We then move to sigma protocols that are a special case of IP-ZK systems suitable for practical applications and we show how to transform them into non-interactive zero-knowledge (NIZK) proofs using the celebrated Fiat-Shamir transform. We employ sigma protocols to construct a simple e-voting protocol with the following property. The verifiability is unconditional: no set of participants or voters can subvert the result of the election. The privacy is however guaranteed only assuming a single trusted authority.</p>
+
+<h2>Secret Sharing and Threshold Cryptography</h2>
+
+<p>The previous e-votign protocol suffers from a major problem. There is a single trusted authority that can break privacy. We show how to mitigate thiss problem introducing the concept of secret sharing, and in particular the polynomial secret  sharing of Shamir.
+In addition, we demonstrate how the secret sharing of Shamir can be used to construct a protocol to allow a set of participants to jointly evaluate a public function <span class="math inline">\(F\)</span> on a set of secret inputs <span class="math inline">\(x_i\)</span>, where <span class="math inline">\(x_i\)</span> is known only by party <span class="math inline">\(P_i\)</span>.</p>
+
+<h2>Proof of knowledge and Digital Signatures</h2>
+
+<p>An IP system guarantees that a malicious prover cannot prove false theorems. An extension of it also ensures that if a proof is accepted by the verifier the prover actually knows the witness (e.g., the secret) used to compute the prover.
+We show that proofs of knowledge are essential to tweak our toy e-voting scheme in order to withstand re-randomization and malleability attacks.
+Moreover, we introduce the concept of digital signatures and their construction from proofs of knowledge and we use digital signatures to add a census of the voters to our toy e-voting scheme.</p>
+
+<h2>Commitments and applications to ZK</h2>
+
+<p>We introduce the concept of commitment scheme that allows a party to commit to a string and later on to open it in a unique way.
+We show applications of commitments to zero-knowledge, in particular the celebrated &ldquo;MPC in the head&rdquo; paradigm to construct zero-knowledge protocols from secure function evaluation and commitment schemes.
+We present several constructions of commitment schemes from different primitives: hash functions, specific number-theoretic assumptions and sigma protocols.
+We show that our toy e-voting scheme suffers from a security issue that can be solved using commitments.</p>
+
+<h2>Verifiable shuffles</h2>
+
+<p>Our toy e-voting scheme is well suited for referenda. For more general tally functions, the homomorphic property of ElGamal is not sufficient. We introduce the concept of verifiable shuffles that can be used to construct e-voting schemes for general tally functions and can be used to construct anonymous e-voting schemes as well, that is e-voting scheme in which, not only what a voter voted for is hidden but also whether a voter actually cast a vote is not revealed.</p>
+
+<h2>Polynomial commitments and applications to distributed key generation</h2>
+
+<p>Our previous toy e-voting scheme can be instantied either supposing that all authorities participate in the decryption procedure or using a Shamir&rsquo;s secret sharing.
+The Shamir&rsquo;s secret sharing when applied to e-voting introduces the need for a so called trusted dealer. This party, if malicious, can compute wrong shares, and subvert the result of the election.
+To withstand this issue, we provide a construction of a distributed key generation (DKG) protocol to share a public-key in a secure way without a trusted dealer and later on reconstruct the corresponding secret-key among an arbitrary subset of participants of sufficiently large cardinality.
+In particular, we provide a construction of DKG from the polynomial commitment scheme of KZG.</p>
+
+<h2>Conclusions</h2>
+
+<p>In these  set of notes, we provided not only a set of cryptographic primitives of independent interest but explained how to reason about the security properties of protocol, in particular e-voting. Our final toy e-voting scheme was indeed constructed through different iterations in which at each step we solved a previously identified issue.
+What is not covered in these notes are more recent topics like succinct proofs that we at Aragon ZK Research will explore in future blog posts, notes and papers.</p>
+
+<div style="text-align:center; margin:40px;">
+<a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/crypto-notes.pdf" target="_blank" class="alert alert-primary" role="alert">
+  <i class="bi bi-file-earmark-text" style="font-size: 1.5rem;"></i> crypto-notes.pdf
+</a>
+</div>
+
+
+      <div style="text-align:center;margin-top:100px;">
+        <a href="/">Go to main</a>
+      </div>
+    </div>
+
+
+    <footer style="text-align:center; height:150px; margin-top:-140px;">
+      <div class="container">
+        <div style="margin-top:30px;padding-top:30px;">
+          <a href="/about" style="color:#ffffff;font-weight:bold;"><span style="font-weight:bold;">Aragon ZK Research</span></a> is a zk research group contributing to <a href="https://aragon.org" target="_blank" style="color:#ffffff;font-weight:bold;">Aragon</a> ecosystem.
+
+          <br><br>
+          <!-- <a href="https://research.aragon.org" target="_blank" style="color:#ffffff;margin:10px;" title="Blog" alt="Blog"><i class="bi bi-file-text-fill" style="font-size: 2rem;"></i></a> -->
+          <a href="https://github.com/aragonzkresearch" target="_blank" style="color:#ffffff;margin:10px;" title="Github" alt="Github"><i class="bi bi-github" style="font-size: 2rem;"></i></a>
+          <a href="https://twitter.com/aragon_zk" target="_blank" style="color:#ffffff;margin:10px;" title="Twitter" alt="Twitter"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script src="js/theme.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+

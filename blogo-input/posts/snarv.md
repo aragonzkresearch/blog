@@ -75,7 +75,7 @@ Furthermore, as we will explain in an upcoming post, *BatRaVot* and *SchnorrVot*
 Stay tuned!
 
 <br>
-(For the moment, the [document is temporarily accessible](https://drive.google.com/file/d/1zelKLq0ZzfRwkmzf1j6GMsYMG72DwdXJ/view?usp=sharing) only inside Aragon Association. A public version will be released here in the coming weeks.)
+(A short version of the [document is accessible](https://github.com/aragonzkresearch/blog/blob/matan/pdf/SNARV_short_version.pdf) ).
 
 <br><br>
 ### References
