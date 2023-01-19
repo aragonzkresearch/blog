@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="BatRaVot is a trustless voting protocol that allows for both on-chain and off-chain voting with on-chain results, making it a cost-effective and versatile solution for various types of voting scenarios on the Ethereum blockchain. In the blog post we explain the protocol and present our implementation that you can already use today." />
+    <meta charset="utf-8">
+    <title> BatRaVot: Scalable Trustless Voting on Ethereum - Aragon ZK Research - blog</title>
+    <meta name="title" content=" BatRaVot: Scalable Trustless Voting on Ethereum - Aragon ZK Research - blog">
+    <meta name="description" content="BatRaVot is a trustless voting protocol that allows for both on-chain and off-chain voting with on-chain results, making it a cost-effective and versatile solution for various types of voting scenarios on the Ethereum blockchain. In the blog post we explain the protocol and present our implementation that you can already use today.">
+
+    <meta property="og:title" content=" BatRaVot: Scalable Trustless Voting on Ethereum - Aragon ZK Research - blog" />
+    <meta property="og:description" content="BatRaVot is a trustless voting protocol that allows for both on-chain and off-chain voting with on-chain results, making it a cost-effective and versatile solution for various types of voting scenarios on the Ethereum blockchain. In the blog post we explain the protocol and present our implementation that you can already use today." />
+    <meta property="og:url" content="https://research.aragon.com/batravot_imp.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.com/" />
+    <meta name="twitter:title" content=" BatRaVot: Scalable Trustless Voting on Ethereum - Aragon ZK Research - blog">
+    <meta name="twitter:description" content="BatRaVot is a trustless voting protocol that allows for both on-chain and off-chain voting with on-chain results, making it a cost-effective and versatile solution for various types of voting scenarios on the Ethereum blockchain. In the blog post we explain the protocol and present our implementation that you can already use today.">
+    <meta name="twitter:image" content="https://research.aragon.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3164FA; weight:bold;">
+          <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px;"/> ZK Research - Blog
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="/about" style="color:#000000;">
+            About us
+          </a>
+          <div class="onoffswitch" style="margin-left:20px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div id="article" class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:180px;">
+      <h1>BatRaVot: Scalable Trustless Voting on Ethereum</h1>
+
+<p><em>2023-01-19 by <a href="https://github.com/GurakG">Artem Grigor</a></em></p>
+
+<p>In one of our recent blogposts Rebekah Mercer <a href="https://research.aragon.org/private-voting.html">discussed</a> how one can build decentralised scalable and private voting. Today we would like to talk about a practical implementation of one such protocol, originally proposed by Vincenzo Iovino and Matan Prasma as part of their paper <a href="https://research.aragon.org/snarv.html">SNARVs: Succinct Non-Interactive Arguments of Voting</a>. Our implementation allows for scalable delegatale off-chain voting with on chain results on any EVM compatible chain. You can access the code <a href="https://github.com/aragonzkresearch/batravot/tree/TokenVoting">here</a>. The prototype works with ERC20 token based voting, however any alternative system can be implemented, such as ERC721, as well as different ways for weighting votes, such as one wallet one vote or token based. In the rest of the text we will delve deeper into this solution and explain how it works as well as how can be used to conduct efficient and secure voting on the Ethereum blockchain.</p>
+
+<h2>The Solution</h2>
+
+<p>The solution we will be discussing is a trustless voting protocol that allows for both on-chain and off-chain voting with on-chain results. This means that users can vote without incurring the high gas costs associated with on-chain voting by using Batchers. The user additionally has an option to vote on-chain as usual, needing external parties. The decision is up to the user and largely depends on their desire to pay fees and tolerance for censorship resistance. The protocol makes the results of the votes accessible on-chain in a smart contract. Furthermore, as the protocol only defines vote collection, one is free to reimagine how votes are counted as well as who is eligible to vote, making it a versatile solution for various types of voting scenarios.</p>
+
+<p>The protocol can be summarised to provide a <strong>Cost Effective Way to Identify Voter Choices</strong>, allowing the rest to be programmatically defined for the use case. For example, we have provided a simple implementation of a token based voting system, however one can easily implement a voting system based on ERC721 tokens, or any other constraint.</p>
+
+<h2>The BatRaVot Protocol</h2>
+
+<p>The basic idea behind the <em><strong>Bat</strong>ched<strong>Ra</strong>tified<strong>Vot</strong>ing</em> is that there are three types of participants in the system:
+1. The <strong>Voter</strong> wants to cast a vote in a referendum and prove to the <strong>Verifier</strong> that they have voted correctly.
+2. The <strong>Batcher</strong> facilitates this process, by combining votes and their correctness proofs into a single concise proof, which is then submitted to the <strong>Verifier</strong> on behalf of the <strong>Voters</strong>.
+3. The <strong>Verifier</strong> is a smart contract that verifies the correctness of the votes and updates the state of the referendum accordingly.</p>
+
+<h3>Regular On-Chain Voting</h3>
+
+<p>In regular on-chain settings, the voter is the owner of an Ethereum address, and the verifier is the Ethereum smart contract that checks for incoming transactions that mutate a state and cast a vote. However, in order to vote in this setting, one is required to create Ethereum transactions, which is costly.</p>
+
+<h3>New Proof of Voting</h3>
+
+<p>We introduce a new way for a voter to prove to a smart contract that they have voted for a particular option. We use cryptography to generate the proof, in particular, we resort to a modified BLS signature scheme to serve our need. This gives us a further advantage that proofs of votes from different voters can be combined into one. This is where the Batchers step in. The flexibility of our solution also allowed us to implement delegation of votes. This was achieved by using the fact that each voter in our system is identified using a public key not tied to a particular Ethereum address. This itself allowed us to connect multiple Ethereum address to one voting public key. You can read more about this <a href="https://github.com/aragonzkresearch/batravot/tree/TokenVoting">here</a>.</p>
+
+<h3>Batchers</h3>
+
+<p>Batchers can receive a number of votes from Voters and generate them into a one large vote proof. Now, instead of every voter needing to send a transaction to the blockchain, the Batcher can submit a single transaction for them. We actually saw that approach would take considerably less gas compared to verifying each signature one by one. In particular, we saw that already by aggregating 6 votes our protocol was more efficient than the OpenZeppelin Voting Standard. Please keep in mind that we have not made any optimisations, and we are not Solidity Professional Developers. After about 40 votes the batched method used twice as less gas, meaning that an amortised cost of one vote with our proposed protocol was twice as less. Please note that there are further optimisations that we could do to reduce this even further. And because of how the proofs are done, the batcher can not fake any result for any of the voters. The system is absolutely secure.</p>
+
+<p><img src="img/batravot-log-gas-comp.png" alt="Comparison of gas efficiency" />
+<em>Note that this is algorithmic scale, which does not show that well the fact that our solution is 200% more efficient.</em></p>
+
+<h3>Updating the State of the Referendum</h3>
+
+<p>Once the Batcher has submitted the votes, the state of the election is updated to represent information about these new votes. Such updates can happen multiple times, meaning there can be multiple Batchers submitting proofs simultaneously. Moreover, the protocol does not have any restriction on who can be a Batcher, meaning anyone can batch the vote proofs together. For example, if a user wants to avoid using a Batcher, they can submit their own proof to the Verifier directly. They will spend more gas in this case, but they will not have to work with any third party.</p>
+
+<h3>Final Result</h3>
+
+<p>We define a concept of closing an election, which is a point of time when no more proofs are accepted. Once the election is closed, the result is calculated using any custom logic of the smart contract. In our example, we have used the token based voting system, where the result is the sum of the votes of the tokens that have been used to vote. However, one can easily implement a voting system based on ERC721 tokens, or any other constraint.</p>
+
+<p><img src="img/batravot-process.png" alt="Putting it all together" />
+<em>Here you can see how all the steps and parties work together.</em></p>
+
+<h2>Try it Yourself</h2>
+
+<p>You can already try the protocol yourself. Please note, that the current version is not audited and is meant to work only for demonstration purposes. To try it, please download the <a href="https://github.com/aragonzkresearch/batravot/tree/TokenVoting">BatRaVot Rust Repository</a> and follow instructions inside to start up the system. There you will be able to start a Voter application, that would allow you to create votes, as well as the Batcher application, that would allow you to batch the votes into a proof. The Verifier is already deployed to the Sepolia testnet, and you can find the address in the repository. You can also find the address of the token that is used for voting in the repository. Anyone can mint this token, so that you can test the voting system. Alternatively, you can redeploy the Verifier and set up your own token for voting.</p>
+
+<h2>Future Steps</h2>
+
+<p>We are currently working on several improvements to the protocol, including:</p>
+
+<ul>
+<li>Adding privacy to the protocol <em>(to be researched in the future)</em></li>
+<li>Optimizing smart contracts</li>
+<li>Conducting a code and protocol security audit</li>
+<li>Building a web-based application for voters to integrate with wallets such as MetaMask</li>
+<li>Building a server-side application for aggregators to process ballots and generate votes</li>
+</ul>
+
+<h2>Learn More</h2>
+
+<p>To learn more about the protocol, please visit our code repository <a href="https://github.com/aragonzkresearch/batravot/tree/TokenVoting">here</a> or read our technical paper <a href="https://research.aragon.org/snarv.html">here</a>.</p>
+
+<p>We hope that this protocol will prove to be a useful tool for conducting efficient and secure voting on the Ethereum blockchain. Thank you for your interest in our project!</p>
+
+
+      <div style="text-align:center;margin-top:100px;">
+        <a href="/">Go to main</a>
+      </div>
+    </div>
+
+
+    <footer style="text-align:center; height:150px; margin-top:-140px;">
+      <div class="container">
+        <div style="margin-top:30px;padding-top:30px;">
+          <a href="/about" style="color:#ffffff;font-weight:bold;"><span style="font-weight:bold;">Aragon ZK Research</span></a> is a zk research group contributing to <a href="https://aragon.org" target="_blank" style="color:#ffffff;font-weight:bold;">Aragon</a> ecosystem.
+
+          <br><br>
+          <!-- <a href="https://research.aragon.org" target="_blank" style="color:#ffffff;margin:10px;" title="Blog" alt="Blog"><i class="bi bi-file-text-fill" style="font-size: 2rem;"></i></a> -->
+          <a href="https://github.com/aragonzkresearch" target="_blank" style="color:#ffffff;margin:10px;" title="Github" alt="Github"><i class="bi bi-github" style="font-size: 2rem;"></i></a>
+          <a href="https://twitter.com/aragon_zk" target="_blank" style="color:#ffffff;margin:10px;" title="Twitter" alt="Twitter"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script src="js/theme.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
