@@ -19,7 +19,7 @@ We first define the algorithms involved in a MINI-FE protocol and then we will p
 A MINI-FE protocol for $N$ users and a $N$-variate function $F$ consists of the algorithms $(KeyGen, Encrypt, Eval)$.
 In a MINI-FE protocol, $N$ users independently and non-interactively setup their own pairs of public- and secret-keys running the MINI-FE $KeyGen$ algorithm with a given security parameter.
 
-Each user $i\in {1, \ldots,N}$ that holds the previously generated secret-key $SK_i$ and a (possibly secret) input $x_i$, can use the MINI-FE $Encrypt$ algorithm that,  onput the public-keys of all other participants, $SK_i$, $x_i$ and an identifier $id$, produce a ciphertext $CT_i$.
+Each user $i\in {1, \ldots,N}$ that holds a previously generated secret-key $SK_i$ and a (possibly secret) input $x_i$, can use the MINI-FE $Encrypt$ algorithm that,  on input the public-keys of all other participants, $SK_i$, $x_i$ and an identifier $id$, outputs a ciphertext $CT_i$.
 In this case, we say that user $i$ encoded his input $x_i$ into $CT_i$.
 
 The public evaluation algorithm $Eval$ takes as input $N$ ciphertexts $CT_1,\ldots,CT_N$ for the same identifier and outputs $F(x_1,\ldots,x_n)$. Moreover, the same public keys can be reused for an unbounded number of evaluations for different identifiers. 
