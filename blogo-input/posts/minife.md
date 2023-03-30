@@ -2,65 +2,64 @@
 
 *2023-03-29 by [Artem Grigor and Vincenzo Iovino]*
 
-Computing functions over private data is one of the main research directions in modern cryptography.
-The most notable cryptographic tools in this area are Multi-Party Computation (MPC), Fully Homomorphic Encryption (FHE) and Functional Encryption (FE).
+Computing functions over private data is one of the key research directions in modern cryptography. 
 
-In this blog post, we introduce a new cryptographic primitive called Multi-input non-interactive functional encrypion (MINI-FE) that can be used in several applications that requires to compute functions over private data. 
+The most notable cryptographic tools in this area so far are Multi-Party Computation (MPC), Fully Homomorphic Encryption (FHE), and Functional Encryption (FE).
 
+In this blog post, we introduce a new cryptographic primitive called Multi-Input Non-Interactive Functional Encryption (MINI-FE). This primitive allows one party (the evaluator) to run a predetermined computational function over other parties' encrypted input and obtain a result in the clear. With infinite potential applications, this blog post in particular will describe the Quadratic-like boardroom voting application as well as Stream Aggregation solution.
 
-Unlike MPC, MINI-FE does not require complex interactive protocols in which the participants needs to stay online for several rounds of interaction.
+Compared to the current cryptographic tools, MINI-FE offers a perfect combination of simplicity and security. Unlike MPC, MINI-FE does not require complex interactive protocols in which the participants need to stay online for several rounds of interaction. Unlike FHE, it does not need advanced cryptographic primitives. And unlike regular FE, which MINI-FE is based on, there is no trusted party (authority) to provide original function encryption.
 
-In MINI-FE the result of the evaluation of a function over a set of encrypted data is returned in the clear to the evaluator whereas in FHE such result is still encrypted.
-MINI-FE, as the name suggests, is similar to FE but, unlike FE, does not require trusted autborities.
+In the following part of the blog post, we first define the algorithms involved in a MINI-FE protocol, and then we present some of the motivating applications of this cryptographic primitive.
 
-We first define the algorithms involved in a MINI-FE protocol and then we will present some of the motivating applications of this cryptographic primitive.
-
-## MINI-FE: definition
+## MINI-FE: Definition
 A MINI-FE protocol for $N$ users and a $N$-variate function $F$ consists of the algorithms $(KeyGen, Encrypt, Eval)$.
-In a MINI-FE protocol, $N$ users independently and non-interactively setup their own pairs of public- and secret-keys running the MINI-FE $KeyGen$ algorithm with a given security parameter.
 
-Each user $i\in {1, \ldots,N}$ that holds a previously generated secret-key $SK_i$ and a (possibly secret) input $x_i$, can use the MINI-FE $Encrypt$ algorithm that,  on input the public-keys of all other participants, $SK_i$, $x_i$ and an identifier $id$, outputs a ciphertext $CT_i$.
-In this case, we say that user $i$ encoded his input $x_i$ into $CT_i$.
+At the start of the MINI-FE protocol, $N$ users independently setup pairs of public- and secret-keys running the MINI-FE $KeyGen$ algorithm with a given security parameter.
 
-The public evaluation algorithm $Eval$ takes as input $N$ ciphertexts $CT_1,\ldots,CT_N$ for the same identifier and outputs $F(x_1,\ldots,x_n)$. Moreover, the same public keys can be reused for an unbounded number of evaluations for different identifiers. 
+To later encrypt their secret input, each user $i\in {1, \ldots,N}$ with the previously generated secret-key $SK_i$ and a secret input $x_i$, uses the MINI-FE $Encrypt$ algorithm. Provided with the list of public-keys of all other participants, secret-key $SK_i$, secret value $x_i$ and a computation identifier $id$, it produces a ciphertext $CT_i$. Here the identifier is used to prevent someone from reusing the $CT_i$ submission in another computation. We say that the user $i$ encoded his input $x_i$ into $CT_i$.
 
-The security essentially guarantees that for any two tuples of $N$ inputs that map to the same value under $F$, the corresponding tuples of ciphertexts are computationally indistinguishable to adversaries that can also corrupt any subset of the users. 
+The public evaluation algorithm $Eval$ takes as input $N$ ciphertexts $CT_1,\ldots,CT_N$ for the same computation identifier and outputs $F(x_1,\ldots,x_n)$. Note that the MINI-FE scheme allows to reuse the same public keys for an unbounded number of evaluations for different identifiers. 
 
-We focus on MINI-FE protocols for the inner-product (IP) functionality. Specifically, we consider the following scenario.
-There are two groups of $N$ users and a known prime number $p$. Each user generates his own pair of public- and secret- keys according to the MINI-FE $KeyGen$ algorithm.
-Each user in the first group holds a secret input $x_i\in Z_p$, and each user in the second group holds a public input $y_i\in Z_p$.
-Each user in both groups encodes his own input to produce $2N$ ciphertexts $CT_1,\ldots, CT_{2N}$.
-The public evaluation algorithm $Eval$, on input such ciphertexts, outputs the inner-product of the vector $(x_1,\ldots,x_N)$ with the vector $(y_1,\ldots,y_N)$ in the field $Z_p$.
-We stress that the ciphertexts of the users in the second group do not hide the values $y_i$'s: this has to be formalized by requiring the functionality to additionally output the tuple of the values $y_i$'s but for simplicity we skip these details.
+The security of the MINI-FE scheme guarantees that for any two tuples of $N$ inputs that map to the same value under $F$, the corresponding tuples of ciphertexts are computationally indistinguishable. Meaning that the adversary would not be able to extract information about the exact values that went into the input besides what is extractable from the output $F(x_1,\ldots,x_n)$. This even holds when adversaries can corrupt up to $n - 2$ users out of $n$ users participating. 
 
-Note that in the applications we will see later, the user $i$ in the first group can be controlled by the person who also controls the user $i$ in the second group (that both the $i$-th secret key in the first and second group are generated by the same individual). 
-In this case, with a slight abuse of notation we will sometimes say that the user $i$ holds the pair of public- and secret- keys for user $i$ and user $N+i$. 
+Next we will describe the MINI-FE protocol for the inner-product (IP) functionality. Specifically, we consider the following scenario:
+
+1. There are two groups of $N$ users and a known prime number $p$. 
+2. Each user generates their own pair of public- and secret- keys according to the MINI-FE $KeyGen$ algorithm.
+3. Each user in the first group holds a secret input $x_i\in Z_p$, and each user in the second group holds a public input $y_i\in Z_p$.
+4. Users from both groups encodes their own inputs to produce $2N$ ciphertexts $CT_1,\ldots, CT_{2N}$.
+5. The public evaluation algorithm $Eval$, on input ciphertexts $CT_1,\ldots, CT_{2N}$, outputs the inner-product of the vector $(x_1,\ldots,x_N)$ with the vector $(y_1,\ldots,y_N)$ in the field $Z_p$.
+
+We stress that the ciphertexts of the users in the second group do not hide the values $y_i$'s.
+
+As we will see further, the user $i$ in the first group can be controlled by the person who also controls the user $i$ in the second group (that is both the $i$-th secret key in the first and second group are generated by the same individual). This fact will come in useful in the applications we describe bellow, as it allows the users to submit both a private and a public part to the protocol.
 
 ## Motivating applications
+
 ### Private Stream Aggregation
-A group of $N$ companies want to compute statistics about their private data.
-Precisely, each company holds a private input and at some point 
-the companies want to collaborate each other to compute a statistics over all private data. However, the companies wish not to reveal their private data to each other or to any third party.
-Moreover, the statistics to being computed on the private data are not known in advance to the companies.
-We can model and solve this problem with MINI-FE.
+The setting has a group of $N$ companies that want to compute statistics over their commulitative private data, without disclosing their individual private data.
 
-Specifically, for any $i\in[N]$ the company $i$ sets up two pairs of public- and secret-keys for MINI-FE, one as user $i$ and one as user $N+i$ of MINI-FE and publishes such public-keys over a blockchain.
 
-On a daily (or hourly) basis, any company $i$ sends to the blockchain a MINI-FE ciphertext of its private data $x_i$ tagging it with an identifier $id$ (e.g., the current day or an increasing counter). 
+Moreover, the exact statistics that will be computed on the private data is not known in advance to the companies. MINI-FE helps to solve this problem.
+
+In particular, for any $i\in[N]$ the company $i$ sets up two pairs of public- and secret-keys for MINI-FE, one as user $i$ and one as user $N+i$ of MINI-FE and publishes such public-keys over a blockchain.
+
+On a daily (or hourly) basis, company $i$ sends to the blockchain a MINI-FE ciphertext of its private data $x_i$ tagging it with an identifier $id$ (e.g., the current day or an increasing counter). 
 At any moment in the future the companies can decide to compute a certain statistics on the previously  set of encoded data tagged with the same identifier $id$ (e.g., all the data of a specific day). 
 In particular, the statistics we consider is a weighted sum in which the input $x_i$ of company $i$ has to be weighted by the value $y_i$.
 Then, company $i$ submits to the blockchain the MINI-FE ciphertext for user $N+i$, weight $y_i$ and tag $id$. 
 Given the $2N$ so computed ciphertexts ($N$ for the secret inputs $x_i$'s and $N$ for the public weights $y_i$'s) posted on the blockchain, anyone can then publicly compute the statistics $\sum_{i\in[N]} x_i\cdot y_i \mod p$.
 
-The weights can be decided dynamically and collectively: the private data are made available daily (or hourly) while the weights for the statistics might be jointly decided by the companies only, e.g., at the end of each month. 
+The weights can be decided dynamically and collectively: the private data is made available daily (or hourly) while the weights for the statistics might be jointly decided by the companies only, e.g., at the end of each month. 
 
-A solution in which each company waits until the end of each month to encode its private data directly in weighted form (i.e., like $x_i\cdot y_i$) is not satisfactory. 
-In fact, in this case the company could decide to change its input $x_i$ after knowing the weights $y_i$'s of all other companies. For this reason, the companies are required to commit to their private data $x_i$'s in the form of a MINI-FE ciphertext posted in the blockchain as soon as these values are available so as to guarantee that the choice of the weights is independent from the private data. 
+To understand why the solution in which each company waits until the end of each month to encode its private data directly in weighted form (i.e., like $x_i\cdot y_i$) is not satisfactory let us explore the following example. 
+The company could decide to change its input $x_i$ after knowing the weights $y_i$'s of all other companies. For this reason, the companies are required to commit to their private data $x_i$'s in the form of a MINI-FE ciphertext posted in the blockchain as soon as these values are available so as to guarantee that the choice of the weights is independent from the private data. 
 
 
 ### Quadratic-like boardroom voting
 
-In boardroom voting, it is required that each member of an organization participate in elections. In this setting, very strong privacy requiments can be attained. In particular it is possible to design e-voting protocols without any trusted parties and without requiring the voters to use anonymous channels (e.g. TOR) like in e-voting based on SNArKs and membership proofs.
+In boardroom voting, it is required that each member of an organization to participate in elections. In this setting, very strong privacy requiments can be attained. In particular it is possible to design e-voting protocols without any trusted parties and without requiring the voters to use anonymous channels (e.g. TOR) like in e-voting based on SNArKs and membership proofs.
 
 Quadratic voting is a novel voting procedure proposed by Lalley and Weyl to overcome several issues in social choice theory like the Condorcet paradox. 
 In quadratic voting, each voter casts his own preference along with a weight and is required to pay a cost that is quadratic in his weight; after the tally of the election is announced, the collected revenue is shared, e.g., evenly among the voters.
@@ -69,17 +68,14 @@ Researchers conducted an experiment that showed that when quadratic voting is em
 
 A MINI-FE for IP can be used to build a system that has features similar (though not identical) to secure quadratic voting system without trusted authorities in the following way.
 
-Each voter $i$ has a pair of public- and secret- keys for both user $i$ in the first group and user $i$ in the second group, that is a pair for user $i$ and another for user $N+i$.
-Voter $i\in[N]$ casts its preference $x_i$ computing a MINI-FE's ciphertext as it were the user $j$ of MINI-FE. The preferences are for instance in the domain ${1,-1}$ with the meaning of YES and NO.
+Each voter $i$ has a pair of public- and secret- keys for both user $i$ in the first group and user $i$ in the second group, that is a pair of keys for the user $i$ and another for the user $N+i$.
+Voter $i\in[N]$ casts their preference $x_i$ computing a MINI-FE's ciphertext as the user $i$ of the first group. The preferences definition is flexible and could be for instance in the domain ${1,-1}$ with the meaning of 1 as YES and -1 as NO.
 
-At a later point, the voter $i$ chooses its weight $y_i$ and pays for it the quantity $y_i^2$ and encodes a MINI-FE's ciphertext as it were user $N+i$. The weight is for instance in the domain $\{1,\ldots,10\}$.
-The ciphertexts are tallied according to the evaluation procedure of the MINI-FE protocol and thus the result is the inner-product $\sum_{i\in[N]} x_i\cdot y_i$ that measures how much the voters are in favor or against a given proposal.
+At a later point, the voter $i$ chooses its weight $y_i$ and pays for it the quantity $y_i^2$ and encodes a MINI-FE's ciphertext as the user $N+i$ from the second group. The weight could be for instance defined in the domain $\{1,\ldots,10\}$.
+The ciphertexts are tallied according to the evaluation procedure of the MINI-FE protocol and thus the result is the inner-product $\sum_{i\in[N]} x_i\cdot y_i$ that measures how many of the voters are in favor or against a given proposal.
 
-The capability to cast the weights in separate ciphertexts gives more flexibility with respect to solutions in which preferences and weights are cast together: a voter first commits to its own preference and later on can decide its weight. The choice of the voters' weights can be even done by means of a joint discussion when the preferences are already committed and cannot be longer changed. Indeed, having known how much voters are going to pay for their preferences could affect a voter's preference: our solution does not suffer this issue.
+The capability to cast the weights in separate ciphertexts gives more flexibility with respect to solutions in which preferences and weights are cast together: a voter first commits to its own preference and later on can decide its weight. The choice of the voters' weights can be even done by means of a joint discussion when the preferences are already committed and cannot be longer changed. Indeed, having known how much voters are going to pay for their preferences could affect a voter's preference: our solution does not suffer from this issue.
 
-## MINI-FE for IP: construction
+## MINI-FE: Construction for IP
 
 Our construction of MINI-FE for the IP functionality is based on blinear maps and the interested reader is defered to this [preprint](https://drive.google.com/file/d/1E6bmP5yhsAleeu34bBPRwtTEvflrKJf9/view?usp=sharing) that will appear in the proceedings of International Conference on Codes, Cryptology and Information Security (C2SI), Springer, 2023.
-
-
-
