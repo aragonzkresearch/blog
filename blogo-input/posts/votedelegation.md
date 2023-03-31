@@ -52,6 +52,7 @@ $C^{R,v,h_v,id}$ depends on the constants $R,v,h_V,id$, takes as input a pair $w
 - $v'=v$.
 
 Note that the values $R,v,h_V,id$, and thus $C^{R,v,h_v,id}$ will represent public information while $w$ is only known to $V$. The voter $V$ uses the SNARK prover to compute a proof $\pi_V$ of the fact that $C^{R,v,h_v,id}$ is satisfied by witness $w=(p,v,sk_V)$.
+(Note: the above circuit is an oversimplification that does not take in account important security considerations but serves as a toy example.)
 
 $V$ publishes on the blockchain her ballot $B_V=(v,h_V,\pi_V)$.
 
