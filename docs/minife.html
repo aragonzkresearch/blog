@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="In this blog post we introduce MINI-FE, a cryptographich protocol to compute functions over private data without any trusted parties and with minimal interaction. We show applications to private stream aggregation and quadratic-like boardroom voting." />
+    <meta charset="utf-8">
+    <title> MINI-FE: computing functions on private data without trusted parties - Aragon ZK Research - blog</title>
+    <meta name="title" content=" MINI-FE: computing functions on private data without trusted parties - Aragon ZK Research - blog">
+    <meta name="description" content="In this blog post we introduce MINI-FE, a cryptographich protocol to compute functions over private data without any trusted parties and with minimal interaction. We show applications to private stream aggregation and quadratic-like boardroom voting.">
+
+    <meta property="og:title" content=" MINI-FE: computing functions on private data without trusted parties - Aragon ZK Research - blog" />
+    <meta property="og:description" content="In this blog post we introduce MINI-FE, a cryptographich protocol to compute functions over private data without any trusted parties and with minimal interaction. We show applications to private stream aggregation and quadratic-like boardroom voting." />
+    <meta property="og:url" content="https://research.aragon.com/minife.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.com/" />
+    <meta name="twitter:title" content=" MINI-FE: computing functions on private data without trusted parties - Aragon ZK Research - blog">
+    <meta name="twitter:description" content="In this blog post we introduce MINI-FE, a cryptographich protocol to compute functions over private data without any trusted parties and with minimal interaction. We show applications to private stream aggregation and quadratic-like boardroom voting.">
+    <meta name="twitter:image" content="https://research.aragon.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3164FA; weight:bold;">
+          <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px;"/> ZK Research - Blog
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="/about" style="color:#000000;">
+            About us
+          </a>
+          <div class="onoffswitch" style="margin-left:20px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div id="article" class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:180px;">
+      <h1>MINI-FE: computing functions on private data without trusted parties</h1>
+
+<p><em>2023-03-29 by <a href="https://github.com/GurakG">Artem Grigor</a> and <a href="https://sites.google.com/site/vincenzoiovinoit">Vincenzo Iovino</a></em></p>
+
+<p>Computing functions over private data is one of the key research directions in modern cryptography.</p>
+
+<p>The most notable cryptographic tools in this area so far are Multi-Party Computation (MPC), Fully Homomorphic Encryption (FHE), and Functional Encryption (FE).</p>
+
+<p>In this blog post, we introduce a new cryptographic primitive called Multi-Input Non-Interactive Functional Encryption (MINI-FE). This primitive allows one party (the evaluator) to run a predetermined computational function over other parties&rsquo; encrypted input and obtain a result in the clear. With infinite potential applications, this blog post in particular will describe the Quadratic-like boardroom voting application as well as Stream Aggregation solution.</p>
+
+<p>Compared to the current cryptographic tools, MINI-FE offers a perfect combination of simplicity and security. Unlike MPC, MINI-FE does not require complex interactive protocols in which the participants need to stay online for several rounds of interaction. Unlike FHE, it does not need advanced cryptographic primitives and the result of the computation is returned in the clear. And unlike regular FE, which MINI-FE is based on, there is no trusted party (authority) to provide original function encryption.</p>
+
+<p>In the following part of the blog post, we first define the algorithms involved in a MINI-FE protocol, and then we present some of the motivating applications of this cryptographic primitive.</p>
+
+<h2>MINI-FE: Definition</h2>
+
+<p>A MINI-FE protocol for <span class="math inline">\(N\)</span> users and a <span class="math inline">\(N\)</span>-variate function <span class="math inline">\(F\)</span> consists of the algorithms <span class="math inline">\((KeyGen, Encrypt, Eval)\)</span>.</p>
+
+<p>At the start of the MINI-FE protocol, <span class="math inline">\(N\)</span> users independently setup pairs of public- and secret-keys running the MINI-FE <span class="math inline">\(KeyGen\)</span> algorithm with a given security parameter.</p>
+
+<p>To later encrypt their secret input, each user <span class="math inline">\(i\in {1, \ldots,N}\)</span> with the previously generated secret-key <span class="math inline">\(SK_i\)</span> and a secret input <span class="math inline">\(x_i\)</span>, uses the MINI-FE <span class="math inline">\(Encrypt\)</span> algorithm. Provided with the list of public-keys of all other participants, secret-key <span class="math inline">\(SK_i\)</span>, secret value <span class="math inline">\(x_i\)</span> and a computation identifier <span class="math inline">\(id\)</span>, it produces a ciphertext <span class="math inline">\(CT_i\)</span>. Here the identifier is used to prevent someone from reusing the <span class="math inline">\(CT_i\)</span> submission in another computation. We say that the user <span class="math inline">\(i\)</span> encoded his input <span class="math inline">\(x_i\)</span> into <span class="math inline">\(CT_i\)</span>.</p>
+
+<p>The public evaluation algorithm <span class="math inline">\(Eval\)</span> takes as input <span class="math inline">\(N\)</span> ciphertexts <span class="math inline">\(CT_1,\ldots,CT_N\)</span> for the same computation identifier and outputs <span class="math inline">\(F(x_1,\ldots,x_n)\)</span>. Note that the MINI-FE scheme allows to reuse the same public keys for an unbounded number of evaluations for different identifiers.</p>
+
+<p>The security of the MINI-FE scheme guarantees that for any two tuples of <span class="math inline">\(N\)</span> inputs that map to the same value under <span class="math inline">\(F\)</span>, the corresponding tuples of ciphertexts are computationally indistinguishable. Meaning that the adversary would not be able to extract information about the exact values that went into the input besides what is extractable from the output <span class="math inline">\(F(x_1,\ldots,x_n)\)</span>. This even holds when adversaries can corrupt up to <span class="math inline">\(n - 2\)</span> users out of <span class="math inline">\(n\)</span> users participating.</p>
+
+<p>Next we will describe the MINI-FE protocol for the inner-product (IP) functionality. Specifically, we consider the following scenario:</p>
+
+<ol>
+<li>There are two groups of <span class="math inline">\(N\)</span> users and a known prime number <span class="math inline">\(p\)</span>.</li>
+<li>Each user generates their own pair of public- and secret- keys according to the MINI-FE <span class="math inline">\(KeyGen\)</span> algorithm.</li>
+<li>Each user in the first group holds a secret input <span class="math inline">\(x_i\in Z_p\)</span>, and each user in the second group holds a public input <span class="math inline">\(y_i\in Z_p\)</span>.</li>
+<li>Users from both groups encodes their own inputs to produce <span class="math inline">\(2N\)</span> ciphertexts <span class="math inline">\(CT_1,\ldots, CT_{2N}\)</span>.</li>
+<li>The public evaluation algorithm <span class="math inline">\(Eval\)</span>, on input ciphertexts <span class="math inline">\(CT_1,\ldots, CT_{2N}\)</span>, outputs the inner-product of the vector <span class="math inline">\((x_1,\ldots,x_N)\)</span> with the vector <span class="math inline">\((y_1,\ldots,y_N)\)</span> in the field <span class="math inline">\(Z_p\)</span>.</li>
+</ol>
+
+<p>We stress that the ciphertexts of the users in the second group do not hide the values <span class="math inline">\(y_i\)</span>&rsquo;s.</p>
+
+<p>As we will see further, the user <span class="math inline">\(i\)</span> in the first group can be controlled by the person who also controls the user <span class="math inline">\(i\)</span> in the second group (that is both the <span class="math inline">\(i\)</span>-th secret key in the first and second group are generated by the same individual). This fact will come in useful in the applications we describe bellow, as it allows the users to submit both a private and a public part to the protocol.</p>
+
+<h2>Motivating applications</h2>
+
+<h3>Private Stream Aggregation</h3>
+
+<p>The setting has a group of <span class="math inline">\(N\)</span> companies that want to compute statistics over their commulitative private data, without disclosing their individual private data.</p>
+
+<p>Moreover, the exact statistics that will be computed on the private data is not known in advance to the companies. MINI-FE helps to solve this problem.</p>
+
+<p>In particular, for any <span class="math inline">\(i\in[N]\)</span> the company <span class="math inline">\(i\)</span> sets up two pairs of public- and secret-keys for MINI-FE, one as user <span class="math inline">\(i\)</span> and one as user <span class="math inline">\(N+i\)</span> of MINI-FE and publishes such public-keys over a blockchain.</p>
+
+<p>On a daily (or hourly) basis, company <span class="math inline">\(i\)</span> sends to the blockchain a MINI-FE ciphertext of its private data <span class="math inline">\(x_i\)</span> tagging it with an identifier <span class="math inline">\(id\)</span> (e.g., the current day or an increasing counter).
+At any moment in the future the companies can decide to compute a certain statistics on the previously  set of encoded data tagged with the same identifier <span class="math inline">\(id\)</span> (e.g., all the data of a specific day).
+In particular, the statistics we consider is a weighted sum in which the input <span class="math inline">\(x_i\)</span> of company <span class="math inline">\(i\)</span> has to be weighted by the value <span class="math inline">\(y_i\)</span>.
+Then, company <span class="math inline">\(i\)</span> submits to the blockchain the MINI-FE ciphertext for user <span class="math inline">\(N+i\)</span>, weight <span class="math inline">\(y_i\)</span> and tag <span class="math inline">\(id\)</span>.
+Given the <span class="math inline">\(2N\)</span> so computed ciphertexts (<span class="math inline">\(N\)</span> for the secret inputs <span class="math inline">\(x_i\)</span>&rsquo;s and <span class="math inline">\(N\)</span> for the public weights <span class="math inline">\(y_i\)</span>&rsquo;s) posted on the blockchain, anyone can then publicly compute the statistics <span class="math inline">\(\sum_{i\in[N]} x_i\cdot y_i \mod p\)</span>.</p>
+
+<p>The weights can be decided dynamically and collectively: the private data is made available daily (or hourly) while the weights for the statistics might be jointly decided by the companies only, e.g., at the end of each month.</p>
+
+<p>To understand why the solution in which each company waits until the end of each month to encode its private data directly in weighted form (i.e., like <span class="math inline">\(x_i\cdot y_i\)</span>) is not satisfactory let us explore the following example.
+The company could decide to change its input <span class="math inline">\(x_i\)</span> after knowing the weights <span class="math inline">\(y_i\)</span>&rsquo;s of all other companies. For this reason, the companies are required to commit to their private data <span class="math inline">\(x_i\)</span>&rsquo;s in the form of a MINI-FE ciphertext posted in the blockchain as soon as these values are available so as to guarantee that the choice of the weights is independent from the private data.</p>
+
+<h3>Quadratic-like boardroom voting</h3>
+
+<p>In boardroom voting, it is required that each member of an organization to participate in elections. In this setting, very strong privacy requiments can be attained. In particular it is possible to design e-voting protocols without any trusted parties and without requiring the voters to use anonymous channels (e.g. TOR) like in e-voting based on SNArKs and membership proofs.</p>
+
+<p>Quadratic voting is a novel voting procedure proposed by Lalley and Weyl to overcome several issues in social choice theory like the Condorcet paradox.
+In quadratic voting, each voter casts his own preference along with a weight and is required to pay a cost that is quadratic in his weight; after the tally of the election is announced, the collected revenue is shared, e.g., evenly among the voters.
+Researchers conducted an experiment that showed that when quadratic voting is employed in opinion polls, people tend to express less extreme preferences indicating that the preferences are closer to the actual ones.</p>
+
+<p>A MINI-FE for IP can be used to build a system that has features similar (though not identical) to secure quadratic voting system without trusted authorities in the following way.</p>
+
+<p>Each voter <span class="math inline">\(i\)</span> has a pair of public- and secret- keys for both user <span class="math inline">\(i\)</span> in the first group and user <span class="math inline">\(i\)</span> in the second group, that is a pair of keys for the user <span class="math inline">\(i\)</span> and another for the user <span class="math inline">\(N+i\)</span>.
+Voter <span class="math inline">\(i\in[N]\)</span> casts their preference <span class="math inline">\(x_i\)</span> computing a MINI-FE&rsquo;s ciphertext as the user <span class="math inline">\(i\)</span> of the first group. The preferences definition is flexible and could be for instance in the domain <span class="math inline">\({1,-1}\)</span> with the meaning of 1 as YES and -1 as NO.</p>
+
+<p>At a later point, the voter <span class="math inline">\(i\)</span> chooses its weight <span class="math inline">\(y_i\)</span> and pays for it the quantity <span class="math inline">\(y_i^2\)</span> and encodes a MINI-FE&rsquo;s ciphertext as the user <span class="math inline">\(N+i\)</span> from the second group. The weight could be for instance defined in the domain <span class="math inline">\(\{1,\ldots,10\}\)</span>.
+The ciphertexts are tallied according to the evaluation procedure of the MINI-FE protocol and thus the result is the inner-product <span class="math inline">\(\sum_{i\in[N]} x_i\cdot y_i\)</span> that measures how many of the voters are in favor or against a given proposal.</p>
+
+<p>The capability to cast the weights in separate ciphertexts gives more flexibility with respect to solutions in which preferences and weights are cast together: a voter first commits to its own preference and later on can decide its weight. The choice of the voters&rsquo; weights can be even done by means of a joint discussion when the preferences are already committed and cannot be longer changed. Indeed, having known how much voters are going to pay for their preferences could affect a voter&rsquo;s preference: our solution does not suffer from this issue.</p>
+
+<h2>MINI-FE: Construction for IP</h2>
+
+<p>Our construction of MINI-FE for the IP functionality is based on blinear maps and the interested reader is defered to this <a href="https://drive.google.com/file/d/1E6bmP5yhsAleeu34bBPRwtTEvflrKJf9/view?usp=sharing">preprint</a> that will appear in the proceedings of International Conference on Codes, Cryptology and Information Security (C2SI), Springer, 2023.</p>
+
+
+      <div style="text-align:center;margin-top:100px;">
+        <a href="/">Go to main</a>
+      </div>
+    </div>
+
+
+    <footer style="text-align:center; height:150px; margin-top:-140px;">
+      <div class="container">
+        <div style="margin-top:30px;padding-top:30px;">
+          <a href="/about" style="color:#ffffff;font-weight:bold;"><span style="font-weight:bold;">Aragon ZK Research</span></a> is a zk research group contributing to <a href="https://aragon.org" target="_blank" style="color:#ffffff;font-weight:bold;">Aragon</a> ecosystem.
+
+          <br><br>
+          <!-- <a href="https://research.aragon.org" target="_blank" style="color:#ffffff;margin:10px;" title="Blog" alt="Blog"><i class="bi bi-file-text-fill" style="font-size: 2rem;"></i></a> -->
+          <a href="https://github.com/aragonzkresearch" target="_blank" style="color:#ffffff;margin:10px;" title="Github" alt="Github"><i class="bi bi-github" style="font-size: 2rem;"></i></a>
+          <a href="https://twitter.com/aragon_zk" target="_blank" style="color:#ffffff;margin:10px;" title="Twitter" alt="Twitter"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script src="js/theme.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
