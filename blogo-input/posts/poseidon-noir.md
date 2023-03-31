@@ -1,4 +1,5 @@
 # The Poseidon hash function and its implementation in Noir
+*2023-03-31 by [Ahmad Afuni](https://github.com/ax0)*
 
 The Poseidon hash function, introduced by [Grassi, Khovratovich, Rechberger, Roy and Schofnegger](https://eprint.iacr.org/2019/458.pdf), is a hash function particularly suited to zero-knowledge applications, owing to its efficient implementation in terms of arithmetic circuits and thus in ZK languages more generally. In this blog post, we provide a brief description of this hash function, which provides a contrast with the SHA-2 family of hash functions discussed in a [previous post](sha512-noir.html), and discuss its implementation in Aztec's [Noir](https://noir-lang.org/) language.
 
