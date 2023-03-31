@@ -10,6 +10,11 @@
   "metaimg": "img/main-logo.svg",
   "posts": [
     {
+      "thumb": "poseidon-noir_thumb.md",
+      "md": "poseidon-noir.md",
+      "metadescr": "In this blog post, we provide a brief description of the Poseidon hash function, which provides a contrast with the SHA-2 family of hash functions discussed in a previous post, and discuss its implementation in Aztec's Noir language."
+    },
+    {
       "thumb": "minife_thumb.md",
       "md": "minife.md",
       "metadescr": "In this blog post we introduce MINI-FE, a cryptographich protocol to compute functions over private data without any trusted parties and with minimal interaction. We show applications to private stream aggregation and quadratic-like boardroom voting."
