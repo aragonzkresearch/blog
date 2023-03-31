@@ -8,7 +8,7 @@ The most notable cryptographic tools in this area so far are Multi-Party Computa
 
 In this blog post, we introduce a new cryptographic primitive called Multi-Input Non-Interactive Functional Encryption (MINI-FE). This primitive allows one party (the evaluator) to run a predetermined computational function over other parties' encrypted input and obtain a result in the clear. With infinite potential applications, this blog post in particular will describe the Quadratic-like boardroom voting application as well as Stream Aggregation solution.
 
-Compared to the current cryptographic tools, MINI-FE offers a perfect combination of simplicity and security. Unlike MPC, MINI-FE does not require complex interactive protocols in which the participants need to stay online for several rounds of interaction. Unlike FHE, it does not need advanced cryptographic primitives. And unlike regular FE, which MINI-FE is based on, there is no trusted party (authority) to provide original function encryption.
+Compared to the current cryptographic tools, MINI-FE offers a perfect combination of simplicity and security. Unlike MPC, MINI-FE does not require complex interactive protocols in which the participants need to stay online for several rounds of interaction. Unlike FHE, it does not need advanced cryptographic primitives and the result of the computation is returned in the clear. And unlike regular FE, which MINI-FE is based on, there is no trusted party (authority) to provide original function encryption.
 
 In the following part of the blog post, we first define the algorithms involved in a MINI-FE protocol, and then we present some of the motivating applications of this cryptographic primitive.
 
