@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="In this blog post, we provide a brief description of the Poseidon hash function, which provides a contrast with the SHA-2 family of hash functions discussed in a previous post, and discuss its implementation in Aztec's Noir language." />
+    <meta charset="utf-8">
+    <title> The Poseidon hash function and its implementation in Noir - Aragon ZK Research - blog</title>
+    <meta name="title" content=" The Poseidon hash function and its implementation in Noir - Aragon ZK Research - blog">
+    <meta name="description" content="In this blog post, we provide a brief description of the Poseidon hash function, which provides a contrast with the SHA-2 family of hash functions discussed in a previous post, and discuss its implementation in Aztec's Noir language.">
+
+    <meta property="og:title" content=" The Poseidon hash function and its implementation in Noir - Aragon ZK Research - blog" />
+    <meta property="og:description" content="In this blog post, we provide a brief description of the Poseidon hash function, which provides a contrast with the SHA-2 family of hash functions discussed in a previous post, and discuss its implementation in Aztec's Noir language." />
+    <meta property="og:url" content="https://research.aragon.com/poseidon-noir.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.com/" />
+    <meta name="twitter:title" content=" The Poseidon hash function and its implementation in Noir - Aragon ZK Research - blog">
+    <meta name="twitter:description" content="In this blog post, we provide a brief description of the Poseidon hash function, which provides a contrast with the SHA-2 family of hash functions discussed in a previous post, and discuss its implementation in Aztec's Noir language.">
+    <meta name="twitter:image" content="https://research.aragon.com/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3164FA; weight:bold;">
+          <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px;"/> ZK Research - Blog
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="/about" style="color:#000000;">
+            About us
+          </a>
+          <div class="onoffswitch" style="margin-left:20px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div id="article" class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:180px;">
+      <h1>The Poseidon hash function and its implementation in Noir</h1>
+
+<p><em>2023-03-31 by <a href="https://github.com/ax0">Ahmad Afuni</a></em></p>
+
+<p>The Poseidon hash function, introduced by <a href="https://eprint.iacr.org/2019/458.pdf">Grassi, Khovratovich, Rechberger, Roy and Schofnegger</a>, is a hash function particularly suited to zero-knowledge applications, owing to its efficient implementation in terms of arithmetic circuits and thus in ZK languages more generally. In this blog post, we provide a brief description of this hash function, which provides a contrast with the SHA-2 family of hash functions discussed in a <a href="sha512-noir.html">previous post</a>, and discuss its implementation in Aztec&rsquo;s <a href="https://noir-lang.org/">Noir</a> language.</p>
+
+<h1>The Poseidon permutation</h1>
+
+<p>There are various hash functions in circulation referred to as the <em>Poseidon hash function</em>. Underlying all of them is a certain parameter-dependent construction known as the <em>Poseidon permutation</em>, which we introduce in this section.</p>
+
+<p>Let <span class="math inline">\(\mathbb{F}\)</span> be a finite field of prime order <span class="math inline">\(p\)</span> and introduce the following constants:</p>
+
+<ul>
+<li><span class="math inline">\(t\in\mathbb{N}\)</span> at least <span class="math inline">\(2\)</span> (<em>width</em>)</li>
+<li><span class="math inline">\(R_{f}\in \mathbb{N}\)</span> even and <span class="math inline">\(R_{p}\in\mathbb{N}\)</span> (number of <em>full</em> and <em>partial</em> rounds respectively)</li>
+<li><span class="math inline">\(\alpha\in\mathbb{N}\)</span> (<em>S-box power</em>)</li>
+<li><span class="math inline">\(\textup{ark}:=\{\textup{ark}_{i}\in \mathbb{F}^{t}: i\in\{1,\dots, R_{f} + R_{p}\}\}\)</span> (<em>additive round keys</em> or <em>round constants</em>)</li>
+<li><span class="math inline">\(\textup{mds}:=\{\textup{mds}^{i}_{j}: i,j\in\{1,\dots,t\}\}\)</span> (<em>maximal distance separable (MDS) matrix</em>)</li>
+</ul>
+
+<p>We write these constants as a tuple <span class="math inline">\(\mathfrak{P}:=(t,R_{f},R_{p},\alpha,\textup{ark},\textup{mds})\)</span> and call it a <em>Poseidon permutation configuration</em>. Given such a configuration, we define for each <span class="math inline">\(i\in\{1,\dots, R_{p} + R_{f}\}\)</span> the so-called <span class="math inline">\(i\)</span>th <em>full</em> and <em>partial round functions</em> <span class="math inline">\(\rho_{f}(\mathfrak{P})_{i},\rho_{p}(\mathfrak{P})_{i}:\mathbb{F}^{t}\rightarrow\mathbb{F}^{t}\)</span> by</p>
+<p><span class="math display">\[\begin{aligned}\rho_{f}(\mathfrak{P})_{i}(x) &amp;= \textup{mds}(\textup{pow}(x+\textup{ark}_{i},\alpha))\\\rho_{p}(\mathfrak{P})_{i}(x) &amp;=\textup{mds}(\textup{pow}_{1}(x+\textup{ark}_{i},\alpha)), \end{aligned}\]</span></p><p>where <span class="math inline">\(\textup{pow}(\cdot, \alpha), \textup{pow}_{1}(\cdot,\alpha):\mathbb{F}^{t}\rightarrow\mathbb{F}^{t}\)</span> denote the <em>full</em> and <em>partial <a href="https://en.wikipedia.org/wiki/S-box">S-box</a> functions</em> obtained by raising all components of <span class="math inline">\(x\in\mathbb{F}^{t}\)</span> to the power <span class="math inline">\(\alpha\)</span> in the former case and raising only the first component to the power <span class="math inline">\(\alpha\)</span> in the latter case, i.e.</p>
+<p><span class="math display">\[\begin{aligned}\textup{pow}(x,\alpha)&amp;=((x^{1})^{\alpha},\dots,(x^{t})^{\alpha})\\ \textup{pow}_{1}(x,\alpha)&amp;= ((x^{1})^{\alpha},x^{2},\dots,x^{t}). \end{aligned}\]</span></p><p>With the above definitions in mind, the <em>Poseidon permutation</em> <span class="math inline">\(\pi(\mathfrak{P}):\mathbb{F}^{t}\rightarrow\mathbb{F}^{t}\)</span> is defined as the composition</p>
+<p><span class="math display">\[\pi(\mathfrak{P})=\rho_{f}(\mathfrak{P})_{R_{p}+R_{f}}\circ\dots\circ \rho_{f}(\mathfrak{P})_{R_{p} +\frac{R_{f}}{2} + 1}\circ\rho_{p}(\mathfrak{P})_{R_{p} + \frac{R_{f}}{2}}\circ\dots\circ\rho_{p}(\mathfrak{P})_{1 + \frac{R_{f}}{2}}\circ \rho_{p}(\mathfrak{P})_{\frac{R_{f}}{2}}\circ\dots\circ\rho_{p}(\mathfrak{P})_{1}.\]</span></p><p>In words, it subjects its input to a total of <span class="math inline">\(R_{f} + R_{p}\)</span> <em>rounds</em> of function applications, the first <span class="math inline">\(R_{f}/2\)</span> being <em>full rounds</em>, the next <span class="math inline">\(R_{p}\)</span> <em>partial rounds</em> and the last <span class="math inline">\(R_{f}/2\)</span> full rounds again.</p>
+
+<p>One possible definition of the Poseidon <em>hash</em> function is then the projection of the Poseidon <em>permutation</em> function onto its first component. However, this is not the only hash function used in practice (see the following section).</p>
+
+<p>While the definition above is fairly straightforward, it relies on a careful choice of the constants in <span class="math inline">\(\mathfrak{P}\)</span> to be useful in practice. In particular, they should be chosen in such a way that for a given input <span class="math inline">\(x\in \mathbb{F}^{t}\)</span>, <span class="math inline">\(\pi(\mathfrak{P})(x)\)</span> should look more or less random. Briefly, <span class="math inline">\(\alpha\)</span> should be chosen such that <span class="math inline">\(\textup{gcd}(\alpha,p-1)=1\)</span> and the <span class="math inline">\(\textup{mds}\)</span> matrix and additive round keys (thus also the number of rounds) are chosen in such a way as to mitigate invariant subspace attacks. <a href="https://extgit.iaik.tugraz.at/krypto/hadeshash">Sage scripts</a> are provided to generate appropriate constants so as to attain various levels of security and a discussion of this may be found in Appendix C  of the <a href="https://eprint.iacr.org/2019/458.pdf">paper</a>.</p>
+
+<p>While the Poseidon permutation is in widespread use in a number of ZK projects for fields such as those associated with the BN254 and BLS12-381 curves, there is no universally agreed upon collection of constants that define <em>the</em> Poseidon permutation for a given field and width. In the case of the field of the same order as the BN254 curve, the <em>de facto</em> standard permutation configuration is <a href="https://raw.githubusercontent.com/iden3/circomlib/master/circuits/poseidon_constants.circom">that used by the <em>Circom</em> project</a>, which is also used <a href="https://github.com/arnaucube/poseidon-rs">here</a>.</p>
+
+<p>Our implementation of <span class="math inline">\(\pi(\mathfrak{P})\)</span> in Noir is a straightforward adaptation of the above definition and is the function <code>permute</code> defined <a href="https://github.com/ax0/noir/blob/master/noir_stdlib/src/hash/poseidon.nr">here</a> for a general Poseidon permutation configuration and <a href="https://github.com/ax0/noir/blob/master/noir_stdlib/src/hash/poseidon/bn254.nr">here</a> for a version specialised to the configuration specific to the field of the same order as BN254 mentioned above. In both cases, we loop through the rounds, though in the more general one we have to embed an <code>if</code> statement in the <code>for</code> loop to use the round bounds due to a technical limitation. Moreover, the <span class="math inline">\(\textup{mds}\)</span> matrices and additive round keys used are implemented as arrays representing the underlying matrices in row-major form. The configurations used may be found <a href="https://github.com/ax0/noir/blob/master/noir_stdlib/src/hash/poseidon/bn254/consts.nr">here</a>.</p>
+
+<h1>The Poseidon sponge function</h1>
+
+<p>In certain applications, we may want to hash strings of elements of <span class="math inline">\(\mathbb{F}\)</span> of arbitrary length without instantiating a different Poseidon permutation for each such string; that is to say, we wish to fix a Poseidon permutation configuration <span class="math inline">\(\mathfrak{P}\)</span> once and for all, appropriately extend the corresponding permutation to a mapping <span class="math inline">\(\mathbb{F}^{\ast} = \bigcup_{i=1}^{\infty}\mathbb{F}^{i}\rightarrow\mathbb{F}^{t}\)</span> to &lsquo;absorb&rsquo; an arbitrary string, then further process the output to obtain the desired hash subject to appropriate security requirements. The sponge construction provides a natural method of doing so.</p>
+
+<p>The idea behind the <em>absorption</em> phase of the sponge construction in this context is as follows: We fix a constant <span class="math inline">\(r\in\{1,\dots, t-1\}\)</span>, called the <em>rate</em> of our sponge, call <span class="math inline">\(c:=t-r\)</span> the <em>capacity</em>, and fix a so-called <em>initial state</em> <span class="math inline">\(s\in\mathbb{F}^{t}\)</span>. Given a string <span class="math inline">\(x=(x^{1},\dots,x^{n})\in\mathbb{F}^{n}\)</span>, we take the first <span class="math inline">\(r\)</span> components of <span class="math inline">\(x\)</span>, add them to the <em>last</em> <span class="math inline">\(r\)</span> components of <span class="math inline">\(s\)</span> and apply <span class="math inline">\(\pi(\mathfrak{P})\)</span> to this element of <span class="math inline">\(\mathbb{F}^{t}\)</span>. If <span class="math inline">\(n &lt; t\)</span>, then we treat it as an element of <span class="math inline">\(\mathbb{F}^{r}\)</span> by tacking zeros on to the end of it. This gives rise to a new state <span class="math inline">\(s'\in\mathbb{F}^{t}\)</span> and a new string <span class="math inline">\((x^{r+1},\dots,x^{n})\)</span>, which may possibly be empty. This procedure is iterated until we are left with the empty string as our new string, the final state being the desired Poseidon absorption function output.</p>
+
+<p>More formally, given <span class="math inline">\(r,c\in\{1,\dots,t-1\}\)</span> with <span class="math inline">\(r+c = t\)</span> and <span class="math inline">\(\mathfrak{P}\)</span> a Poseidon permutation configuration as before, we call the symbol <span class="math inline">\(\mathfrak{P}_{r,c}\)</span> a <em>Poseidon sponge configuration</em> and define for each <em>initial state</em> <span class="math inline">\(s\in\mathbb{F}^{t}\)</span> the Poseidon absorption <span class="math inline">\(\pi(\mathfrak{P}_{c,r,s})(s,\cdot):\mathbb{F}^{\ast}\rightarrow\mathbb{F}^{t}\)</span> as follows: For the empty string <span class="math inline">\(()\)</span>,</p>
+<p><span class="math display">\[\pi(\mathfrak{P}_{r,c})(s,()) = s,\]</span></p><p>and whenever <span class="math inline">\(x=(x^{1},\dots,x^{n})\in\mathbb{F}^{n}\)</span>, if <span class="math inline">\(n \geq r\)</span>, then</p>
+<p><span class="math display">\[\pi(\mathfrak{P}_{r,c})(s,x) = \pi(\mathfrak{P}_{r,c})(\pi(\mathfrak{P}(s^{1},\dots,s^{c},s^{c+1}+x^{1},\dots,s^{c+r}+x^{r})),(x^{r+1},\dots,x^{t})),\]</span></p><p>else</p>
+<p><span class="math display">\[\pi(\mathfrak{P}_{r,c})(s,x) = \pi(\mathfrak{P}_{r,c})(s,(x^{1},\dots,x^{n},\underbrace{0,\dots,0}_{t-n\ \textup{times}})).\]</span></p><p>In addition to the absorption, a <em>squeezing</em> may be carried out as follows: Fix <span class="math inline">\(o\in\{1,\dots,r\}\)</span>, let <span class="math inline">\(y=\pi(\mathfrak{P}_{r,c})(s,x)\)</span> and define the sequence <span class="math inline">\(a_{i} = (\pi(\mathfrak{P})^{i}(y)^{1},\dots, \pi(\mathfrak{P})^{i}(y)^{o})\)</span>, i.e. we iterate the Poseidon permutation on the output of the absorption phase and select the first <span class="math inline">\(o\)</span> components of the resulting vector. Depending on the application and desired level of security, the vector obtained by concatenating <span class="math inline">\(a_{0},\dots, a_{N}\)</span> for some fixed <span class="math inline">\(N\)</span> may be defined as the output of a Poseidon hash function. An implementation of this sponge construction may be found in the <a href="https://github.com/arkworks-rs/crypto-primitives/tree/main/src/sponge/poseidon">Arkworks library</a>.</p>
+
+<p>We have implemented the absorption phase in Noir as the function <code>absorb</code> <a href="https://github.com/ax0/noir/blob/master/noir_stdlib/src/hash/poseidon.nr">here</a> for a general configuration and <a href="https://github.com/ax0/noir/blob/master/noir_stdlib/src/hash/poseidon/bn254.nr">here</a> for the field associated with BN254. Moreover, in the latter case, we have implemented the function <code>sponge</code> in accordance with a recommendation in §3 of the <a href="https://eprint.iacr.org/2019/458.pdf">paper</a>, which is the projection onto the second coordinate, i.e. the first coordinate of the &lsquo;rate part&rsquo;, of an absorption with width <span class="math inline">\(t=5\)</span> and rate <span class="math inline">\(r=4\)</span>; note that this contrasts with the convention typically used e.g. by Circom where the Poseidon hash function is defined to be the projection onto the first coordinate, i.e. the &lsquo;capacity part&rsquo; of the permutation.</p>
+
+<h1>Conclusions on Poseidon and ZK</h1>
+
+<p>An comparison of the above expressions to those defining hash functions such as those in the SHA-2 family reveals that the computation of a Poseidon hash function requires far fewer multiplications due to the lack of bit manipulations, and this is reflected in our implementations in Noir. This is a key factor in choosing Poseidon over other families of hash functions, since in the context of ZK proofs, it results in smaller proof sizes, thus more efficient programs. In fact, the above formulation may be optimised further by appropriately swapping the order of operations in the partial rounds and modifying the additive round keys appropriately. Details may be found in Appendix B of the <a href="https://eprint.iacr.org/2019/458.pdf">paper</a>.</p>
+
+<p>In our own ZK applications, we have employed the Poseidon hash function in the <a href="https://github.com/aragonzkresearch/ovote/blob/main/circuits">circuits</a> underlying <a href="https://forum.aragon.org/t/we-present-ovote-offchain-voting-with-onchain-trustless-execution/3603">OVOTE</a>. Moreover, we have submitted our <a href="https://github.com/noir-lang/noir/pull/768">implementation</a> of the Poseidon family of hash functions to Aztec&rsquo;s Noir project for inclusion in the Noir standard library and hope to make use of it in our future projects.</p>
+
+<p><a id="orgab7ab08"></a></p>
+
+<h1>References</h1>
+
+<ul>
+<li><a href="https://eprint.iacr.org/2019/458.pdf">Grassi et al. - Poseidon: A New Hash Function for Zero-Knowledge Proof Systems</a></li>
+<li><a href="https://eprint.iacr.org/2023/323.pdf">Grassi et al. - Poseidon2: A Faster Version of the PoseidonHash Function</a></li>
+<li><a href="https://spec.filecoin.io/algorithms/crypto/poseidon/">Poseidon | Filecoin Spec</a></li>
+</ul>
+
+
+      <div style="text-align:center;margin-top:100px;">
+        <a href="/">Go to main</a>
+      </div>
+    </div>
+
+
+    <footer style="text-align:center; height:150px; margin-top:-140px;">
+      <div class="container">
+        <div style="margin-top:30px;padding-top:30px;">
+          <a href="/about" style="color:#ffffff;font-weight:bold;"><span style="font-weight:bold;">Aragon ZK Research</span></a> is a zk research group contributing to <a href="https://aragon.org" target="_blank" style="color:#ffffff;font-weight:bold;">Aragon</a> ecosystem.
+
+          <br><br>
+          <!-- <a href="https://research.aragon.org" target="_blank" style="color:#ffffff;margin:10px;" title="Blog" alt="Blog"><i class="bi bi-file-text-fill" style="font-size: 2rem;"></i></a> -->
+          <a href="https://github.com/aragonzkresearch" target="_blank" style="color:#ffffff;margin:10px;" title="Github" alt="Github"><i class="bi bi-github" style="font-size: 2rem;"></i></a>
+          <a href="https://twitter.com/aragon_zk" target="_blank" style="color:#ffffff;margin:10px;" title="Twitter" alt="Twitter"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script src="js/theme.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
