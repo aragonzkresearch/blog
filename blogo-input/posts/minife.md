@@ -1,6 +1,6 @@
 # MINI-FE: computing functions on private data without trusted parties
 
-*2023-03-29 by [Artem Grigor and Vincenzo Iovino]*
+*2023-03-29 by [Artem Grigor](https://github.com/GurakG) and [Vincenzo Iovino](https://sites.google.com/site/vincenzoiovinoit)*
 
 Computing functions over private data is one of the key research directions in modern cryptography. 
 
