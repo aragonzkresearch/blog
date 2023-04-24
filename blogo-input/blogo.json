@@ -1,7 +1,7 @@
 {
   "title": "Aragon ZK Research - blog",
   "relativePath": "",
-  "absoluteUrl": "https://research.aragon.com",
+  "absoluteUrl": "https://research.aragon.org",
   "outputDir": "docs",
   "postsDir": "posts",
   "indexTemplate": "index.html",
