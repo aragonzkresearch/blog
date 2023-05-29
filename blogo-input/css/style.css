@@ -108,3 +108,13 @@ footer{
 .onoffswitch-checkbox:checked + .onoffswitch-label:before {
    right: 0px;
 }
+
+table{
+  margin: 10px;
+}
+table, th, td {
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: 1px hsla(210,18%,87%,1) solid;
+}
