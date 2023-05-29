@@ -10,6 +10,12 @@
   "metaimg": "img/main-logo.svg",
   "posts": [
     {
+      "thumb": "fast-consensus_thumb.md",
+      "md": "fast-consensus.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
+      "metadescr": "We explore conditions for achieving binary consensus in a single communication step when conditions are favourable. With leader-based protocols and known block producers this is possible with only a slight weakening of fault tolerance assumptions."
+    },
+    {
       "thumb": "poseidon-noir_thumb.md",
       "md": "poseidon-noir.md",
       "metaimg": "img/twitter-poseiden-hash.jpg",
