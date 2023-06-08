@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="In this note we summarize a review of the state of the art in e-voting that we published at Aragon ZK Research." />
+    <meta charset="utf-8">
+    <title> E-voting: State of the Art - Aragon ZK Research - blog</title>
+    <meta name="title" content=" E-voting: State of the Art - Aragon ZK Research - blog">
+    <meta name="description" content="In this note we summarize a review of the state of the art in e-voting that we published at Aragon ZK Research.">
+
+    <meta property="og:title" content=" E-voting: State of the Art - Aragon ZK Research - blog" />
+    <meta property="og:description" content="In this note we summarize a review of the state of the art in e-voting that we published at Aragon ZK Research." />
+    <meta property="og:url" content="https://research.aragon.org/evoting-review.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.org/img/twitter-blog-blank.jpg" />
+    <meta name="twitter:title" content=" E-voting: State of the Art - Aragon ZK Research - blog">
+    <meta name="twitter:description" content="In this note we summarize a review of the state of the art in e-voting that we published at Aragon ZK Research.">
+    <meta name="twitter:image" content="https://research.aragon.org/img/twitter-blog-blank.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3164FA; weight:bold;">
+          <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px;"/> ZK Research - Blog
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="/about" style="color:#000000;">
+            About us
+          </a>
+          <div class="onoffswitch" style="margin-left:20px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div id="article" class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:180px;">
+      <h1>E-voting: State of the Art</h1>
+
+<p><em>2023-06-08 by <a href="https://sites.google.com/site/vincenzoiovinoit">Vincenzo Iovino</a></em></p>
+
+<p>In this post we summarize a review of the state of the art in e-voting that we published  on <a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf">our github</a>.
+The review is meant to provide a background on the most popular cryptographic techniques and the desirable properties for e-voting, and to present e-voting solutions that are specifically suitable for web3, highlighting the main issues that arise in that setting.</p>
+
+<div style="text-align:center; margin:40px;">
+<a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf" target="_blank" class="alert alert-primary" role="alert">
+  <i class="bi bi-file-earmark-text" style="font-size: 1.5rem;"></i> E-voting: State of the Art.pdf
+</a>
+</div>
+
+<h2>Building cryptographic blocks</h2>
+
+<p>First, we summarize the topics we covered in the review starting from the cryptographic building blocks used to construct e-voting protocols.</p>
+
+<h3>TLS/HTTPS</h3>
+
+<p>Most e-voting protocols require the voters to communicate privately with a server or establish P2P channels with other parties. The popular TLS and HTTPS protocols serve this purpose and to establishment of private authenticated channels.</p>
+
+<h3>Bulletin boards</h3>
+
+<p>Bulletin boards are the core of modern e-voting protocols. They represent the source of truth where voters and authorities post their ballots and other cryptographic objects. Blockchains enable perfect bulletin boards in a decentralized way.</p>
+
+<h3>Cryptographic hash functions</h3>
+
+<p>Hash functions allow compression of information in a short string called the digest. Traditional hash functions like SHA256 have been replaced in anonymous voting protocols for web3 with more &ldquo;Zero-knowledge friendly&rdquo; hash functions like Pedersen and Poseidon/Poseidon2.</p>
+
+<h3>Digital signatures and public key encryption</h3>
+
+<p>These tools allow privacy and authentication and are the core of modern cryptographic protocols, including blockchains themselves that internally are based on digital signatures for authentication.
+Public key encryption (PKE) can be homomorphic: for instance ciphertexts encrypting different voting options can be tallied together to get a single ciphertext that encrypts the sum of the voting options. Several modern e-voting systems are based on homomorphic PKE.</p>
+
+<h3>Commitments</h3>
+
+<p>Commitments are the digital equivalent of locks where one can deposit a string that later on can be opened in a non-ambigous way and turn out to have many applications to e-voting.</p>
+
+<h3>Zero-knowledge Proof Systems</h3>
+
+<p>Zero-knowledge (ZK) is at the core of modern e-voting protocols and blockchain applications. A ZK protocol allows a prover Alice to convince a verifier Bob that she knows a secret without revealing any information to him.
+They can be used in e-voting for example to prove that a ciphertext encrypts a given message without need of disclosing the secret key of the PKE system (which would allow decryption of other ciphertexts).</p>
+
+<h3>Secret Sharing and Threshold Cryptography</h3>
+
+<p>Secret sharing is a protocol run by a set of participants to share a secrer in a way that no sufficiently large subset of participants can recover the secret.</p>
+
+<h2>Popular approaches to e-voting</h2>
+
+<p>We now summarize the most popular approaches to e-voting</p>
+
+<h3>Threshold and homomorpic PKE-based protocols</h3>
+
+<p>In a toy e-voting scheme, voters encrypt their voting options with respect to a public key (PK) of some authority and then the authority can decrypt the ciphertexts and compute the tally.
+There are two problems with this approach. The first one is that the authority can know which voting option each voter casted. The second problem is that the authority could cheat by announcing a fake tally result.</p>
+
+<p>The first problem can be solved using homomorphic PKE and secret sharing.
+The voters encrypt their voting options with a homomorphic PKE system. The ciphertexts are tallied together to get a single ciphertext encrypting the sum of the voting options, that is the tally of the election.
+Then one assumes that the secret key of the PKE system is shared among a set of authorities that can decrypt the ciphertext in a so called threshold way.</p>
+
+<p>The second problem can be solved using ZK proofs: the authorities are required to provide ZK proofs of correctness of their operations so they cannot subvert the election result.
+Also, the voters use ZK proofs to prove that their ciphertext encrypt valid voting options.</p>
+
+<h3>Shuffle-based e-voting</h3>
+
+<p>In shuffle-based protocols the voters submit their votes in encrypted form but the list of ciphertexts is subject to what is called a shuffle: the ciphertexts are re-randomized and permuted so to get a new list of ciphertexts.
+The reason is that if the authorities decrypt each ciphertext in the new list they will see voting options <span class="math inline">\(v\)</span> but the only information they can infer is that <span class="math inline">\(v\)</span> was casted by one of the many voters, but they may not know which one.
+The security is under the assumption that the authority cannot collude with the party who made the shuffle.
+The shuffle can be repeated by multiple parties so as to distribute the trust.</p>
+
+<h3>Everlasting privacy</h3>
+
+<p>In some situations it may be required that a voter&rsquo;s preference can never be disclosed. This property is called everlasting privacy and special techniques based on commitments can be used to that purpose. The voters commit to their voting options to the authorities in a threshold way so that the authorities can tally the voting options but if they do not collude all together they cannot get any information about individual voting preferences. The commitments are chosen to be statistically hiding to guarantee the everlasting property. We defer to the review for an example of e-voting system that achieves everlasting privacy.</p>
+
+<h3>Protocols based on membership proofs</h3>
+
+<p>A popular approach, especially in the web3 domain, is the following.</p>
+
+<p>One assumes that the census of the eligible voters is represented by a vector commitment <span class="math inline">\(T\)</span> whose values contain the public-keys of the voters for a digital signature scheme.
+A traditional choice for the vector commitment is Merkle trees but nowadays new and more efficient vector commitment schemes are available and can be used for this task, for example Verkle trees.
+In an election identified by a string <span class="math inline">\(id\)</span>, a voter with public-key <span class="math inline">\(PK\)</span> and corresponding secret key <span class="math inline">\(SK\)</span>, submits to the bulletin board the voting option <span class="math inline">\(v\)</span> in the clear, a value <span class="math inline">\(h=H(SK,id)\)</span>, where <span class="math inline">\(H\)</span> is a cryptographic hash function such as SHA256 or Poseidon, and a ZK proof of the following fact: there exists a signature <span class="math inline">\(\sigma\)</span> of <span class="math inline">\(v\)</span> with respect to a public-key <span class="math inline">\(PK\)</span> that is contained in the vector commitment <span class="math inline">\(T\)</span>.</p>
+
+<p>The value <span class="math inline">\(h\)</span> is called nullifier and it is used to prevent a voter casting their vote twice. If this occurred there would be two equal nullifiers <span class="math inline">\(h_1,h_2\)</span> appearing on the bulletin board and the corresponding votes will be discarded. Since the votes appear on the bulletin board in the clear, the tally can be easily computed.</p>
+
+<p>In the review we also present alternative approaches based on ring and group signatures.</p>
+
+<h3>Protocols based on blind signatures</h3>
+
+<p>In a blind signature protocol, two parties <span class="math inline">\(P_1,P_2\)</span> interact together in the following way: At the beginning of the interaction, <span class="math inline">\(P_1\)</span> has a private message <span class="math inline">\(m\)</span> and a public-key <span class="math inline">\(PK\)</span> for a digital signature scheme, and <span class="math inline">\(P_2\)</span> has the corresponding secret-key <span class="math inline">\(SK\)</span>. At the end of the interaction <span class="math inline">\(P_1\)</span> gets a signature of <span class="math inline">\(m\)</span> that is verified under <span class="math inline">\(PK\)</span> in a way that <span class="math inline">\(P_2\)</span> does not leak any information about <span class="math inline">\(m\)</span> and <span class="math inline">\(P_1\)</span> does not leak any information about <span class="math inline">\(SK\)</span>.</p>
+
+<p>This protocol can be used by a voter to request a digital signature of his voting option that later on can be posted on the bulletin board.
+In this way, anyone can check the eligibility of the voter but the authority cannot link any pair of voting option and signature to a specific voter.
+The authority must be decentralized, as in most e-voting protocols, to prevent the authority easily generating signatures of voting options.</p>
+
+<h2>E-voting in the web3 domain</h2>
+
+<p>In the web3 domain, e-voting is usually done not for political reasons, but to take decisions regarding financial decisions on DAOs.
+There are some peculiarities and features that are specific to the web3 domain:</p>
+
+<ul>
+<li><p>Scalability: In Ethereum any computation costs gas and this has to be minimized.</p></li>
+
+<li><p>Crypto primitives optimized for web3: Ethereum offers a limited number of cryptographic operations. Technically it is possible to implement any computer program in the Ethereum Virtual Machine (EVM) but it is preferable to make use of cryptographic tools that are optimized for Ethereum and specifically the precompiles. For example, only some specific bilinear groups are available on Ethereum as precompiles such as the bn128 curve.</p></li>
+
+<li><p>Token voting: In the context of web3, elections may be based on, e.g. NFT ownership. Here the census should be implicitly linked to the NFT ownership data stored on Ethereum.</p></li>
+
+<li><p>Hiding voting power: In voting based on NFT ownership, a desirable property is that it should not be possible to infer whether a given voter owns a large amount of tokens, hence &ldquo;whales&rdquo; should not be identifiable. In practice it may be known that Bob is the major token holder so knowing that a particular ballot was cast by someone with a very high amount of tokens implies that the relevant ballot was likely cast by Bob.</p>
+
+<ul>
+<li><p>Fairness: E-voting in the web3 domain is usually performed using proofs of membership as described before. If e-voting protocols based on simple membership proofs, voter preferences sent to the smart contract are publicly visible. This poses the problem of fairness: the voters who have not yet cast a ballot can be influenced by the partial tally that is publicly visible on the blockchain.</p></li>
+
+<li><p>Equity of costs: The gas fees are paid by whoever submits a transaction and this has consequences. In traditional e-voting systems, computing a tally at the end of the election carries a negligible cost. In Ethereum, however, one has to prefer solutions in which the cost of tallying the result is fairly divided among the voters. If, for instance, a system were such that the last voter needs to compute the tally on-chain in an expensive way, his transaction would cost more gas than for previous voters and this would raise an equity issue.</p></li>
+
+<li><p>Storage: The cost of storage in Ethereum is very high. Preference must therefore be given to solutions in which only a short digest is published on-chain,i.e. on Ethereum, and the full data is stored off-chain.</p></li>
+</ul>
+
+<p>The cost of storage also poses some equity problems. In a system where each voter needs to add an element to a set, if this cost grows linearly with the number of elements in the set and the number of voters is very high (<span class="math inline">\(&gt; 10k\)</span>), the last voters would pay more than the first voters.</p></li>
+</ul>
+
+<p>We defer to the <a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf">review</a> for a list of recent e-voting projects including one by <a href="https://research.aragon.org/">Aragon ZK Research</a> and by the <a href="https://vocdoni.io/">VocDoni</a> guild. The list has not be meant to be exhaustive and there are other ongoing projects. Moreover, we gave preference to the recent <a href="{https://prop.house/nouns/private-voting-research-sprint}">Nouns DAO</a> call to which we of Aragon ZK Research participated along with Aztec. This is ongoing research and we invite you to stay updated on our blog to see the next progress in the coming months.</p>
+
+<h2>Acknowledgements</h2>
+
+<p>The document was reviewed by Ivan Visconti (University of Salerno). We also thank Alex Kampa and Andrew Barnes for corrections and improvements.</p>
+
+<h2>References</h2>
+
+<p><a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf">E-voting: State of the Art</a></p>
+
+<div style="text-align:center; margin:40px;">
+<a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf" target="_blank" class="alert alert-primary" role="alert">
+  <i class="bi bi-file-earmark-text" style="font-size: 1.5rem;"></i> E-voting: State of the Art.pdf
+</a>
+</div>
+
+
+      <div style="text-align:center;margin-top:100px;">
+        <a href="/">Go to main</a>
+      </div>
+    </div>
+
+
+    <footer style="text-align:center; height:150px; margin-top:-140px;">
+      <div class="container">
+        <div style="margin-top:30px;padding-top:30px;">
+          <a href="/about" style="color:#ffffff;font-weight:bold;"><span style="font-weight:bold;">Aragon ZK Research</span></a> is a zk research group contributing to <a href="https://aragon.org" target="_blank" style="color:#ffffff;font-weight:bold;">Aragon</a> ecosystem.
+
+          <br><br>
+          <!-- <a href="https://research.aragon.org" target="_blank" style="color:#ffffff;margin:10px;" title="Blog" alt="Blog"><i class="bi bi-file-text-fill" style="font-size: 2rem;"></i></a> -->
+          <a href="https://github.com/aragonzkresearch" target="_blank" style="color:#ffffff;margin:10px;" title="Github" alt="Github"><i class="bi bi-github" style="font-size: 2rem;"></i></a>
+          <a href="https://twitter.com/aragon_zk" target="_blank" style="color:#ffffff;margin:10px;" title="Twitter" alt="Twitter"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script src="js/theme.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
