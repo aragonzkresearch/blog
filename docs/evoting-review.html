@@ -78,7 +78,7 @@ The review is meant to provide a background on the most popular cryptographic te
 
 <h3>TLS/HTTPS</h3>
 
-<p>Most e-voting protocols require the voters to communicate privately with a server or establish P2P channels with other parties. The popular TLS and HTTPS protocols serve this purpose and to establishment of private authenticated channels.</p>
+<p>Most e-voting protocols require the voters to communicate privately with a server or establish P2P channels with other parties. The popular TLS and HTTPS protocols serve this purpose and allow the establishment of private authenticated channels.</p>
 
 <h3>Bulletin boards</h3>
 
@@ -91,11 +91,11 @@ The review is meant to provide a background on the most popular cryptographic te
 <h3>Digital signatures and public key encryption</h3>
 
 <p>These tools allow privacy and authentication and are the core of modern cryptographic protocols, including blockchains themselves that internally are based on digital signatures for authentication.
-Public key encryption (PKE) can be homomorphic: for instance ciphertexts encrypting different voting options can be tallied together to get a single ciphertext that encrypts the sum of the voting options. Several modern e-voting systems are based on homomorphic PKE.</p>
+Public key encryption (PKE) can be homomorphic: for instance, ciphertexts encrypting different voting options can be tallied together to get a single ciphertext that encrypts the sum of the voting options. Several modern e-voting systems are based on homomorphic PKE.</p>
 
 <h3>Commitments</h3>
 
-<p>Commitments are the digital equivalent of locks where one can deposit a string that later on can be opened in a non-ambigous way and turn out to have many applications to e-voting.</p>
+<p>Commitments are the digital equivalent of locks where one can deposit a string that later on can be opened in a non-ambiguous way and turn out to have many applications to e-voting.</p>
 
 <h3>Zero-knowledge Proof Systems</h3>
 
@@ -104,23 +104,24 @@ They can be used in e-voting for example to prove that a ciphertext encrypts a g
 
 <h3>Secret Sharing and Threshold Cryptography</h3>
 
-<p>Secret sharing is a protocol run by a set of participants to share a secrer in a way that no sufficiently large subset of participants can recover the secret.</p>
+<p>Secret sharing is a protocol run by a set of participants to share a secret in a way that no sufficiently large subset of participants can recover the secret.</p>
 
 <h2>Popular approaches to e-voting</h2>
 
 <p>We now summarize the most popular approaches to e-voting</p>
 
-<h3>Threshold and homomorpic PKE-based protocols</h3>
+<h3>Threshold and homomorphic PKE-based protocols</h3>
 
 <p>In a toy e-voting scheme, voters encrypt their voting options with respect to a public key (PK) of some authority and then the authority can decrypt the ciphertexts and compute the tally.
-There are two problems with this approach. The first one is that the authority can know which voting option each voter casted. The second problem is that the authority could cheat by announcing a fake tally result.</p>
+There are two problems with this approach. The first one is that the authority can know which voting option each voter cast. The second problem is that the authority could cheat by announcing a fake tally result.</p>
 
 <p>The first problem can be solved using homomorphic PKE and secret sharing.
-The voters encrypt their voting options with a homomorphic PKE system. The ciphertexts are tallied together to get a single ciphertext encrypting the sum of the voting options, that is the tally of the election.
-Then one assumes that the secret key of the PKE system is shared among a set of authorities that can decrypt the ciphertext in a so called threshold way.</p>
+The voters encrypt their voting options with a homomorphic PKE system. The ciphertexts are tallied together to get a single ciphertext encrypting the sum of the voting options, that is the tally of the election.</p>
+
+<p>Then one assumes that the secret key of the PKE system is shared among a set of authorities that can decrypt the ciphertext in a so-called threshold way.</p>
 
 <p>The second problem can be solved using ZK proofs: the authorities are required to provide ZK proofs of correctness of their operations so they cannot subvert the election result.
-Also, the voters use ZK proofs to prove that their ciphertext encrypt valid voting options.</p>
+Also, the voters use ZK proofs to prove that their ciphertext encrypts valid voting options.</p>
 
 <h3>Shuffle-based e-voting</h3>
 
@@ -131,7 +132,7 @@ The shuffle can be repeated by multiple parties so as to distribute the trust.</
 
 <h3>Everlasting privacy</h3>
 
-<p>In some situations it may be required that a voter&rsquo;s preference can never be disclosed. This property is called everlasting privacy and special techniques based on commitments can be used to that purpose. The voters commit to their voting options to the authorities in a threshold way so that the authorities can tally the voting options but if they do not collude all together they cannot get any information about individual voting preferences. The commitments are chosen to be statistically hiding to guarantee the everlasting property. We defer to the review for an example of e-voting system that achieves everlasting privacy.</p>
+<p>In some situations, it may be required that a voter&rsquo;s preference can never be disclosed. This property is called everlasting privacy and special techniques based on commitments can be used to that purpose. The voters send a commitment of their voting option to the authorities in a threshold way. The authorities can then tally the votes but if they do not all collude they cannot get any information about individual voting preferences. The commitments are chosen to be statistically hiding to guarantee the everlasting property. We defer to the review for an example of e-voting system that achieves everlasting privacy.</p>
 
 <h3>Protocols based on membership proofs</h3>
 
@@ -149,8 +150,8 @@ In an election identified by a string <span class="math inline">\(id\)</span>, a
 
 <p>In a blind signature protocol, two parties <span class="math inline">\(P_1,P_2\)</span> interact together in the following way: At the beginning of the interaction, <span class="math inline">\(P_1\)</span> has a private message <span class="math inline">\(m\)</span> and a public-key <span class="math inline">\(PK\)</span> for a digital signature scheme, and <span class="math inline">\(P_2\)</span> has the corresponding secret-key <span class="math inline">\(SK\)</span>. At the end of the interaction <span class="math inline">\(P_1\)</span> gets a signature of <span class="math inline">\(m\)</span> that is verified under <span class="math inline">\(PK\)</span> in a way that <span class="math inline">\(P_2\)</span> does not leak any information about <span class="math inline">\(m\)</span> and <span class="math inline">\(P_1\)</span> does not leak any information about <span class="math inline">\(SK\)</span>.</p>
 
-<p>This protocol can be used by a voter to request a digital signature of his voting option that later on can be posted on the bulletin board.
-In this way, anyone can check the eligibility of the voter but the authority cannot link any pair of voting option and signature to a specific voter.
+<p>This protocol can be used by a voter to request a digital signature of his voting option that can be posted on the bulletin board later on.
+In this way, anyone can check the eligibility of the voter, but the authority cannot link any pair of voting option and signature to a specific voter.
 The authority must be decentralized, as in most e-voting protocols, to prevent the authority easily generating signatures of voting options.</p>
 
 <h2>E-voting in the web3 domain</h2>
@@ -165,20 +166,20 @@ There are some peculiarities and features that are specific to the web3 domain:<
 
 <li><p>Token voting: In the context of web3, elections may be based on, e.g. NFT ownership. Here the census should be implicitly linked to the NFT ownership data stored on Ethereum.</p></li>
 
-<li><p>Hiding voting power: In voting based on NFT ownership, a desirable property is that it should not be possible to infer whether a given voter owns a large amount of tokens, hence &ldquo;whales&rdquo; should not be identifiable. In practice it may be known that Bob is the major token holder so knowing that a particular ballot was cast by someone with a very high amount of tokens implies that the relevant ballot was likely cast by Bob.</p>
+<li><p>Hiding voting power: In voting based on NFT ownership, a desirable property is that it should not be possible to infer whether a given voter owns a large number of tokens, hence &ldquo;whales&rdquo; should not be identifiable. In practice it may be known that Bob is the major token holder so knowing that a particular ballot was cast by someone with a very high number of tokens implies that the relevant ballot was likely cast by Bob.</p>
 
 <ul>
-<li><p>Fairness: E-voting in the web3 domain is usually performed using proofs of membership as described before. If e-voting protocols based on simple membership proofs, voter preferences sent to the smart contract are publicly visible. This poses the problem of fairness: the voters who have not yet cast a ballot can be influenced by the partial tally that is publicly visible on the blockchain.</p></li>
+<li><p>Fairness: E-voting in the web3 domain is usually performed using proofs of membership as described before. If e-voting protocols are based on simple membership proofs, voter preferences sent to the smart contract are publicly visible. This poses the problem of fairness: the voters who have not yet cast a ballot can be influenced by the partial tally that is publicly visible on the blockchain.</p></li>
 
-<li><p>Equity of costs: The gas fees are paid by whoever submits a transaction and this has consequences. In traditional e-voting systems, computing a tally at the end of the election carries a negligible cost. In Ethereum, however, one has to prefer solutions in which the cost of tallying the result is fairly divided among the voters. If, for instance, a system were such that the last voter needs to compute the tally on-chain in an expensive way, his transaction would cost more gas than for previous voters and this would raise an equity issue.</p></li>
+<li><p>Equity of costs: The gas fees are paid by whoever submits a transaction and this has consequences. In traditional e-voting systems, computing a tally at the end of the election carries a negligible cost. In Ethereum, however, one has to prefer solutions in which the cost of tallying the result is fairly divided among the voters. If, for instance, a system was such that the last voter needs to compute the tally on-chain in an expensive way, his transaction would cost more gas than for previous voters and this would raise an equity issue.</p></li>
 
-<li><p>Storage: The cost of storage in Ethereum is very high. Preference must therefore be given to solutions in which only a short digest is published on-chain,i.e. on Ethereum, and the full data is stored off-chain.</p></li>
+<li><p>Storage: The cost of storage in Ethereum is very high. Preference must therefore be given to solutions in which only a short digest is published on-chain, i.e. on Ethereum, and the full data is stored off-chain.</p></li>
 </ul>
 
 <p>The cost of storage also poses some equity problems. In a system where each voter needs to add an element to a set, if this cost grows linearly with the number of elements in the set and the number of voters is very high (<span class="math inline">\(&gt; 10k\)</span>), the last voters would pay more than the first voters.</p></li>
 </ul>
 
-<p>We defer to the <a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting-review.pdf">review</a> for a list of recent e-voting projects including one by <a href="https://research.aragon.org/">Aragon ZK Research</a> and by the <a href="https://vocdoni.io/">VocDoni</a> guild. The list has not be meant to be exhaustive and there are other ongoing projects. Moreover, we gave preference to the recent <a href="{https://prop.house/nouns/private-voting-research-sprint}">Nouns DAO</a> call to which we of Aragon ZK Research participated along with Aztec. This is ongoing research and we invite you to stay updated on our blog to see the next progress in the coming months.</p>
+<p>We defer to the <a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting-review.pdf">review</a> for a list of recent e-voting projects including one by <a href="https://research.aragon.org/">Aragon ZK Research</a> and by the <a href="https://vocdoni.io/">Vocdoni</a> guild. The list has not be meant to be exhaustive and there are other ongoing projects. Moreover, we gave preference to the recent <a href="{https://prop.house/nouns/private-voting-research-sprint}">Nouns DAO</a> call to which we of Aragon ZK Research participated along with Aztec. This is ongoing research, and we invite you to stay updated on our blog to see the next progress in the coming months.</p>
 
 <h2>Acknowledgements</h2>
 
