@@ -5,6 +5,13 @@
 In this post we summarize a review of the state of the art in e-voting that we published  on [our github](https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf).
 The review is meant to provide a background on the most popular cryptographic techniques and the desirable properties for e-voting, and to present e-voting solutions that are specifically suitable for web3, highlighting the main issues that arise in that setting. 
 
+<div style="text-align:center; margin:40px;">
+<a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf" target="_blank" class="alert alert-primary" role="alert">
+  <i class="bi bi-file-earmark-text" style="font-size: 1.5rem;"></i> E-voting: State of the Art.pdf
+</a>
+</div>
+
+
 ## Building cryptographic blocks
 
 First, we summarize the topics we covered in the review starting from the cryptographic building blocks used to construct e-voting protocols.
@@ -100,3 +107,9 @@ The document was reviewed by Ivan Visconti (University of Salerno). We also than
 
 ## References
 [E-voting: State of the Art](https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf)
+
+<div style="text-align:center; margin:40px;">
+<a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf" target="_blank" class="alert alert-primary" role="alert">
+  <i class="bi bi-file-earmark-text" style="font-size: 1.5rem;"></i> E-voting: State of the Art.pdf
+</a>
+</div>
