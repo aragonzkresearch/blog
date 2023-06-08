@@ -70,6 +70,7 @@ In a blind signature protocol, two parties $P_1,P_2$ interact together in the fo
 This protocol can be used by a voter to request a digital signature of his voting option that later on can be posted on the bulletin board.
 In this way, anyone can check the eligibility of the voter but the authority cannot link any pair of voting option and signature to a specific voter.
 The authority must be decentralized, as in most e-voting protocols, to prevent the authority easily generating signatures of voting options.
+
 ## E-voting in the web3 domain
 
 In the web3 domain, e-voting is usually done not for political reasons, but to take decisions regarding financial decisions on DAOs.
@@ -91,10 +92,11 @@ There are some peculiarities and features that are specific to the web3 domain:
 
     The cost of storage also poses some equity problems. In a system where each voter needs to add an element to a set, if this cost grows linearly with the number of elements in the set and the number of voters is very high ($> 10k$), the last voters would pay more than the first voters.
     
-    ## E-voting projects and the Nouns DAO call
     
-    We defer to the [review](https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf) for a list of recent e-voting projects including one by [Aragon ZK Research](https://research.aragon.org/) and by the [VocDoni](https://vocdoni.io/) guild. The list has not be meant to be exhaustive and there are other ongoing projects. Moreover, we gave preference to the recent [Nouns DAO]({https://prop.house/nouns/private-voting-research-sprint}) call to which we of Aragon ZK Research participated along with Aztec. This is ongoing research and we invite you to stay updated on our blog to see the next progress in the coming months!
-    ## Acknowledgements
-    The document was reviewed by Ivan Visconti (University of Salerno). We also thank Alex Kampa and Andrew Barnes for corrections and improvements.
-    ## References
-    [E-voting: State of the Art](https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf)
+We defer to the [review](https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf) for a list of recent e-voting projects including one by [Aragon ZK Research](https://research.aragon.org/) and by the [VocDoni](https://vocdoni.io/) guild. The list has not be meant to be exhaustive and there are other ongoing projects. Moreover, we gave preference to the recent [Nouns DAO]({https://prop.house/nouns/private-voting-research-sprint}) call to which we of Aragon ZK Research participated along with Aztec. This is ongoing research and we invite you to stay updated on our blog to see the next progress in the coming months.
+
+## Acknowledgements
+The document was reviewed by Ivan Visconti (University of Salerno). We also thank Alex Kampa and Andrew Barnes for corrections and improvements.
+
+## References
+[E-voting: State of the Art](https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf)
