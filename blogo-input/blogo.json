@@ -1,7 +1,7 @@
 {
   "title": "Aragon ZK Research - blog",
   "relativePath": "",
-  "absoluteUrl": "https://research.aragon.com",
+  "absoluteUrl": "https://research.aragon.org",
   "outputDir": "docs",
   "postsDir": "posts",
   "indexTemplate": "index.html",
@@ -10,98 +10,128 @@
   "metaimg": "img/main-logo.svg",
   "posts": [
     {
+      "thumb": "fast-consensus_thumb.md",
+      "md": "fast-consensus.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
+      "metadescr": "We explore conditions for achieving binary consensus in a single communication step when conditions are favourable. With leader-based protocols and known block producers this is possible with only a slight weakening of fault tolerance assumptions."
+    },
+    
+    {
+      "thumb": "poseidon-noir_thumb.md",
+      "md": "poseidon-noir.md",
+      "metaimg": "img/twitter-poseiden-hash.jpg",
+      "metadescr": "In this blog post, we provide a brief description of the Poseidon hash function, which provides a contrast with the SHA-2 family of hash functions discussed in a previous post, and discuss its implementation in Aztec's Noir language."
+    },
+    
+    {
       "thumb": "minife_thumb.md",
       "md": "minife.md",
-      "metadescr": "In this blog post we introduce MINI-FE, a cryptographich protocol to compute functions over private data without any trusted parties and with minimal interaction. We show applications to private stream aggregation and quadratic-like boardroom voting."
+      "metaimg": "img/twitter-blog-blank.jpg",
+      "metadescr": "In this blog post we introduce MINI-FE, a cryptographic protocol to compute functions over private data without any trusted parties and with minimal interaction. We show applications to private stream aggregation and quadratic-like boardroom voting."
     },
+    
     {
       "thumb": "nouns-proposal_thumb.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "Aragon and Aztec join forces to bring private voting to NounsDAO",
       "outsideArticle": "https://prop.house/nouns/private-voting-research-sprint/3954"
     },
 
-
     {
       "thumb": "batravot_imp_thumb.md",
       "md": "batravot_imp.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "BatRaVot is a trustless voting protocol that allows for both on-chain and off-chain voting with on-chain results, making it a cost-effective and versatile solution for various types of voting scenarios on the Ethereum blockchain. In the blog post we explain the protocol and present our implementation that you can already use today."
     },
 
     {
       "thumb": "math_notes_thumb.md",
       "md": "math_notes.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "In this blog post, we discuss new math notes."
     },
-
     {
       "thumb": "crypto-notes_thumb.md",
       "md": "crypto-notes.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "This note introduces the cryptographic notes."
     },
     {
       "thumb": "sum-argument_thumb.md",
       "md": "sum-argument.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "This note introduces a Rust implementation of the sum argument section of DualRing."
     },
     {
       "thumb": "private-voting_thumb.md",
       "md": "private-voting.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "This note introduces the private voting technical report, which is a summary of various directions that could be taken to implement private, decentralised, blockchain-based voting."
     },
     {
       "thumb": "sha512-noir_thumb.md",
       "md": "sha512-noir.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "In this blog post, we discuss the SHA512 hash function and its implementation in Aztec's Noir, a domain-specific language for constructing and verifying zero-knowledge proofs."
     },
-
     {
       "thumb": "snarv_thumb.md",
       "md": "snarv.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "Announcing SNARV: succinct non-interactive arguments of voting."
     },
     {
       "thumb": "blind-ovote_thumb.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "Blind-OVOTE is a L2 voting solution which combines the validity rollup (~“zkRollup”) ideas with blind signatures over elliptic curves inside zkSNARK, to provide gasless anonymous voting with onchain binding execution on Ethereum.",
       "outsideArticle": "https://forum.aragon.org/t/blind-ovote-ovote-with-blind-signatures-for-voter-anonymity/3881"
     },
     {
       "thumb": "oomp_thumb.md",
       "md": "oomp.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "One of many proofs are at their heart a membership proof, also know as a ring signature. In other words, whereas a normal digital signature attests to the statement 'I know the private key that corresponds to this public key', ring signatures prove the statement 'I know the private key that corresponds to one of the public keys in this list', without revealing which of the public keys that it is."
     },
     {
       "thumb": "simple-soundness_thumb.md",
       "md": "simple-soundness.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "Soundness proofs tend to be quite long and technical. We describe a general method to significantly simplify such proofs if some specific conditions are met."
     },
     {
       "thumb": "weil-projective_thumb.md",
       "md": "weil-projective.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "This Maths Seminar note provides a self-contained proof of the Weil reciprocity on athe projective line of a field, together with concrete examples. A good grasp of the concepts explained here will help with understanding elliptic curve pairings."
     },
     {
       "thumb": "ovote_thumb.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "OVOTE (Offchain Voting with Onchain Trustless Execution) is a L2 design for voting using validity-proofs (zkSNARK proofs), which is similar to zkRollups. The main idea is that the votes are aggregated offchain, and proved onchain through a zkSNARK proof, resulting in constant gas costs while scaling up to thousands of voters through a single Ethereum transaction.",
       "outsideArticle": "https://forum.aragon.org/t/we-present-ovote-offchain-voting-with-onchain-trustless-execution/3603"
     },
     {
       "thumb": "ecdsa-akd_thumb.md",
       "md": "ecdsa-akd.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "Additive key derivation and ECDSA presignatures are used widely throughout the cryptocurrency space, but a security proof for the construction was missing until this point. Shoup and Groth find an attack on threshold ECDSA when using AKD and presignatures, and present a solution."
     },
     {
       "thumb": "votedelegation_thumb.md",
       "md": "votedelegation.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "Anonymous e-voting schemes are a promising tool in the current and future digital society. We propose a simple and elegant way to add delegation capabilities to such schemes."
     },
     {
       "thumb": "oblivious-transfer_thumb.md",
       "md": "oblivious-transfer.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "Oblivious transfer (OT) is a cryptographical primitive that is fundamental for secure multiparty computation. We give a brief introduction to the Bellare-Micali OT protocol, which is particularly simple and elegant."
     },
     {
       "thumb": "lagrange_thumb.md",
       "md": "lagrange.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "Our first Maths Seminar note is about Lagrange bases in subgroups of $F_p^*$ which happen to have a simple and explicit formula. Numerous examples as well as detailed proofs of the main results are provied. We note that these particular Langrange bases have been used in the construction of the well-known PLONK zk scheme."
     }
   ],
@@ -113,6 +143,3 @@
     "docs"
   ]
 }
-
-
-
