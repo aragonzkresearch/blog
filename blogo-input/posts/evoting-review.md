@@ -2,7 +2,7 @@
 
 *2023-06-08 by [Vincenzo Iovino](https://sites.google.com/site/vincenzoiovinoit)*
 
-In this post we summarize a review of the state of the art in e-voting that we published  on [our github](https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf).
+In this post we summarize a review of the state of the art in e-voting that we published  on [our github](https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting-review.pdf).
 The review is meant to provide a background on the most popular cryptographic techniques and the desirable properties for e-voting, and to present e-voting solutions that are specifically suitable for web3, highlighting the main issues that arise in that setting. 
 
 <div style="text-align:center; margin:40px;">
@@ -100,13 +100,13 @@ There are some peculiarities and features that are specific to the web3 domain:
     The cost of storage also poses some equity problems. In a system where each voter needs to add an element to a set, if this cost grows linearly with the number of elements in the set and the number of voters is very high ($> 10k$), the last voters would pay more than the first voters.
     
     
-We defer to the [review](https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf) for a list of recent e-voting projects including one by [Aragon ZK Research](https://research.aragon.org/) and by the [VocDoni](https://vocdoni.io/) guild. The list has not be meant to be exhaustive and there are other ongoing projects. Moreover, we gave preference to the recent [Nouns DAO]({https://prop.house/nouns/private-voting-research-sprint}) call to which we of Aragon ZK Research participated along with Aztec. This is ongoing research and we invite you to stay updated on our blog to see the next progress in the coming months.
+We defer to the [review](https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting-review.pdf) for a list of recent e-voting projects including one by [Aragon ZK Research](https://research.aragon.org/) and by the [VocDoni](https://vocdoni.io/) guild. The list has not be meant to be exhaustive and there are other ongoing projects. Moreover, we gave preference to the recent [Nouns DAO]({https://prop.house/nouns/private-voting-research-sprint}) call to which we of Aragon ZK Research participated along with Aztec. This is ongoing research and we invite you to stay updated on our blog to see the next progress in the coming months.
 
 ## Acknowledgements
 The document was reviewed by Ivan Visconti (University of Salerno). We also thank Alex Kampa and Andrew Barnes for corrections and improvements.
 
 ## References
-[E-voting: State of the Art](https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf)
+[E-voting: State of the Art](https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting-review.pdf)
 
 <div style="text-align:center; margin:40px;">
 <a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting_review.pdf" target="_blank" class="alert alert-primary" role="alert">
