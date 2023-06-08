@@ -15,30 +15,35 @@
       "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "We explore conditions for achieving binary consensus in a single communication step when conditions are favourable. With leader-based protocols and known block producers this is possible with only a slight weakening of fault tolerance assumptions."
     },
+    
     {
       "thumb": "poseidon-noir_thumb.md",
       "md": "poseidon-noir.md",
       "metaimg": "img/twitter-poseiden-hash.jpg",
       "metadescr": "In this blog post, we provide a brief description of the Poseidon hash function, which provides a contrast with the SHA-2 family of hash functions discussed in a previous post, and discuss its implementation in Aztec's Noir language."
     },
+    
     {
       "thumb": "minife_thumb.md",
       "md": "minife.md",
       "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "In this blog post we introduce MINI-FE, a cryptographic protocol to compute functions over private data without any trusted parties and with minimal interaction. We show applications to private stream aggregation and quadratic-like boardroom voting."
     },
+    
     {
       "thumb": "nouns-proposal_thumb.md",
       "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "Aragon and Aztec join forces to bring private voting to NounsDAO",
       "outsideArticle": "https://prop.house/nouns/private-voting-research-sprint/3954"
     },
+
     {
       "thumb": "batravot_imp_thumb.md",
       "md": "batravot_imp.md",
       "metaimg": "img/twitter-blog-blank.jpg",
       "metadescr": "BatRaVot is a trustless voting protocol that allows for both on-chain and off-chain voting with on-chain results, making it a cost-effective and versatile solution for various types of voting scenarios on the Ethereum blockchain. In the blog post we explain the protocol and present our implementation that you can already use today."
     },
+
     {
       "thumb": "math_notes_thumb.md",
       "md": "math_notes.md",
