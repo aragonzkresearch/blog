@@ -10,6 +10,12 @@
   "metaimg": "img/main-logo.svg",
   "posts": [
     {
+      "thumb": "evoting-review_thumb.md",
+      "md": "evoting-review.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
+      "metadescr": "In this note we summarize a review of the state of the art in e-voting that we published at Aragon ZK Research."
+    },
+    {
       "thumb": "fast-consensus_thumb.md",
       "md": "fast-consensus.md",
       "metaimg": "img/twitter-blog-blank.jpg",
