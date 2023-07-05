@@ -10,6 +10,12 @@
   "metaimg": "img/main-logo.svg",
   "posts": [
     {
+      "thumb": "timelock_thumb.md",
+      "md": "timelock.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
+      "metadescr": "TLCS protocols for time-locked encryption"
+    },
+    {
       "thumb": "evoting-review_thumb.md",
       "md": "evoting-review.md",
       "metaimg": "img/twitter-blog-blank.jpg",
