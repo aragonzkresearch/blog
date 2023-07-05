@@ -16,9 +16,3 @@ We then present our *timelock.zone* service, which will be based on the TLCS pro
 * Possibility of public participation;
 * The correctness and security of the scheme is guaranteed as long as a single party participating in the public key computation is honest;
 * These parties do not need to be present when the private key is revealed.
-
-<div style="text-align:center; margin:40px;">
-<a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/evoting-review.pdf" target="_blank" class="alert alert-primary" role="alert">
-  <i class="bi bi-file-earmark-text" style="font-size: 1.5rem;"></i> E-voting: State of the Art.pdf
-</a>
-</div>
