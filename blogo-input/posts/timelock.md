@@ -2,7 +2,7 @@
 
 *2023-07-05*
 
-While working on a private voting project for Nouncs DAO, we realised that it would be very useful to have a time-lock service. We therefore developed two time-locked cryptgraphy protocols, as well as the concept of a public time-locked encryption service. This is described in a paper published on [our github](https://github.com/aragonzkresearch/blog/blob/main/pdf/azkr-timelock-zone.pdf).
+While working on a private voting project for Nouncs DAO, we realised that it would be very useful to have a time-lock service. We therefore developed two time-locked cryptgraphy protocols, as well as the concept of a public time-locked encryption service. This is described in a paper published on **[our github](https://github.com/aragonzkresearch/blog/blob/main/pdf/azkr-timelock-zone.pdf)**.
 
 ### Summary
 
