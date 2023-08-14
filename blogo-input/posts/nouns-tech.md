@@ -7,6 +7,13 @@ This is a technical description of the outcomes of the work done by Aragon ZK Re
 
 This document is part of the final documentation. Read the [Final report](==TODO add link==) for further information.
 
+
+<div style="border:1px solid black;border-radius:10px;padding:5px;">
+
+This is a research project. The outputs are strictly preliminary results.
+
+</div>
+
 :::warning
 This is a research project. The outputs are strictly preliminary results.
 :::
@@ -325,7 +332,7 @@ The previous sections describe the voting protocol. In this one we intend to pro
 <div class="row" style="margin-bottom:30px;">
   <div class="column">
 
-++Voter++
+**Voter**
 
 1. $\sigma=DS.Sign(VR_{sk},(NFT_{id},id)),~\\\tau=DS.Sign(VR_{sk},v),$
 2. $N=H_s(\sigma)$.
@@ -340,7 +347,7 @@ The VSC computes $\color{purple}{B_K} = H_e(\color{violet}{B_i}, H_e(\color{viol
   </div>
   <div class="column" style="border-left:1px solid black;">
 
-++Tally++
+**Tally**
 
 1. fetch
     - from VSC history: $\color{orange}{A_i}, \color{violet}{B_i} ~\forall i \in \{1, \ldots, n\}$
@@ -361,7 +368,7 @@ The VSC computes $\color{purple}{B_K} = H_e(\color{violet}{B_i}, H_e(\color{viol
 As we can see, the Tally proof must include all the voters $\color{violet}{B_i}$ that have been sent by voters to the VSC, in order to pass the proof verification.
 In order to obtain the valid $\color{violet}{B_i}$, the tally prover needs first to obtain the valid $\color{blue}{K_i}$, which can only be obtained once the $\color{teal}{T_{sk}}$ from the timelock.zone is published, by computing $\color{blue}{K_i} = \color{orange}{A_i}^{\color{teal}{T_{sk}}}$.
 
-```mermaid
+<pre class="mermaid">
 flowchart LR
 Tsk[Tₛₖ]
   style Tsk color:teal
@@ -386,7 +393,6 @@ subgraph voteri[Voter i]
     Tpk-->Ki
     Ki-->Bi
 end
-style voteri fill:#000,stroke:#333,stroke-width:4px
 
 subgraph voteri1[Voter i+1]
     etc-->Bi1
@@ -396,11 +402,11 @@ subgraph VSC
     Bi-->Bk
     Bi1-->Bk
 end
-```
+</pre>
 
 ### Full flow
 
-```mermaid
+<pre class="mermaid">
 sequenceDiagram
     Participant NFT as NFT / Token
     Participant zkRegistry
@@ -429,7 +435,7 @@ sequenceDiagram
         VSC->>Anyone: A_i B_i B_k
         Anyone->>VSC: Tally + proof
     end
-```
+</pre>
 
 
 ## Further work
@@ -501,3 +507,21 @@ Main tasks:
 - [tlcs-rust](https://github.com/aragonzkresearch/tlcs-rust): Timelock Cryptographic Service Protocol rust implementation (to be used in Timelock.zone when put in production)
 - [tlcs-chain](https://github.com/aragonzkresearch/tlcs-chain): Cosmos Blockchain which provides a Time Lock Cryptography Service
 - [zk-registry-ui-demo](https://github.com/aragonzkresearch/zk-registry-ui-demo): Web based UI using MetaMask for zk registry registration
+
+<style>
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+</style>

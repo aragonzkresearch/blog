@@ -67,12 +67,17 @@
 
 <p>This is a technical description of the outcomes of the work done by Aragon ZK Research (AZKR) during the exectution of the <a href="https://prop.house/nouns/private-voting-research-sprint/3954">joint proposal</a> submitted to the Nouns DAO <a href="https://prop.house/nouns/private-voting-research-sprint">Private Voting Research Sprint</a> by Aztec Labs and AZKR.</p>
 
-<dl>
-<dt>This document is part of the final documentation. Read the <a href="==TODO add link==">Final report</a> for further information.</dt>
-<dt>:::warning
+<p>This document is part of the final documentation. Read the <a href="==TODO add link==">Final report</a> for further information.</p>
+
+<div style="border:1px solid black;border-radius:10px;padding:5px;">
+
 This is a research project. The outputs are strictly preliminary results.
-:::</dt>
-</dl>
+
+</div>
+
+<p>:::warning
+This is a research project. The outputs are strictly preliminary results.
+:::</p>
 
 <h3>Properties of the e-voting system and security assumptions</h3>
 
@@ -464,7 +469,7 @@ Inputs (to verify the proof):
 <div class="row" style="margin-bottom:30px;">
   <div class="column">
 
-++Voter++
+**Voter**
 
 1. $\sigma=DS.Sign(VR_{sk},(NFT_{id},id)),~\\\tau=DS.Sign(VR_{sk},v),$
 2. $N=H_s(\sigma)$.
@@ -479,7 +484,7 @@ The VSC computes $\color{purple}{B_K} = H_e(\color{violet}{B_i}, H_e(\color{viol
   </div>
   <div class="column" style="border-left:1px solid black;">
 
-++Tally++
+**Tally**
 
 1. fetch
     - from VSC history: $\color{orange}{A_i}, \color{violet}{B_i} ~\forall i \in \{1, \ldots, n\}$
@@ -500,7 +505,8 @@ The VSC computes $\color{purple}{B_K} = H_e(\color{violet}{B_i}, H_e(\color{viol
 <p>As we can see, the Tally proof must include all the voters <span class="math inline">\(\color{violet}{B_i}\)</span> that have been sent by voters to the VSC, in order to pass the proof verification.
 In order to obtain the valid <span class="math inline">\(\color{violet}{B_i}\)</span>, the tally prover needs first to obtain the valid <span class="math inline">\(\color{blue}{K_i}\)</span>, which can only be obtained once the <span class="math inline">\(\color{teal}{T_{sk}}\)</span> from the timelock.zone is published, by computing <span class="math inline">\(\color{blue}{K_i} = \color{orange}{A_i}^{\color{teal}{T_{sk}}}\)</span>.</p>
 
-<pre><code class="language-mermaid">flowchart LR
+<pre class="mermaid">
+flowchart LR
 Tsk[Tₛₖ]
   style Tsk color:teal
 Tpk[Tₚₖ]
@@ -514,31 +520,31 @@ Bi[Bᵢ]
 Bk[Bₖ]
   style Bk color:purple
 
-Bi1[&quot;Bᵢ₊₁&quot;]
+Bi1["Bᵢ₊₁"]
   style Bi1 color:violet
 etc[...]
 
 subgraph voteri[Voter i]
-    Ai--&gt;Ki
-    Tsk--&gt;Tpk
-    Tpk--&gt;Ki
-    Ki--&gt;Bi
+    Ai-->Ki
+    Tsk-->Tpk
+    Tpk-->Ki
+    Ki-->Bi
 end
-style voteri fill:#000,stroke:#333,stroke-width:4px
 
 subgraph voteri1[Voter i+1]
-    etc--&gt;Bi1
+    etc-->Bi1
 end
 
 subgraph VSC
-    Bi--&gt;Bk
-    Bi1--&gt;Bk
+    Bi-->Bk
+    Bi1-->Bk
 end
-</code></pre>
+</pre>
 
 <h3>Full flow</h3>
 
-<pre><code class="language-mermaid">sequenceDiagram
+<pre class="mermaid">
+sequenceDiagram
     Participant NFT as NFT / Token
     Participant zkRegistry
     actor Voter
@@ -547,26 +553,26 @@ end
     Participant VSC
     
     alt Registry phase (once for all DAOs)
-        Voter-&gt;&gt;zkRegistry: VR_pk
+        Voter->>zkRegistry: VR_pk
     end
     alt Process creation
-        TLCS-&gt;&gt;Anyone: T_pk
-        Anyone-&gt;&gt;VSC: newProcess
+        TLCS->>Anyone: T_pk
+        Anyone->>VSC: newProcess
     end
     alt Voting phase
-        zkRegistry-&gt;&gt;Voter: storageProof
-        NFT-&gt;&gt;Voter: storageProof
-        TLCS-&gt;&gt;Voter: T_pk
-        Voter-&gt;&gt;VSC: Vote
+        zkRegistry->>Voter: storageProof
+        NFT->>Voter: storageProof
+        TLCS->>Voter: T_pk
+        Voter->>VSC: Vote
     end
     Note over VSC: Ethereum end blocknumber
     Note over TLCS: T_sk released
     alt Tally phase
-        TLCS-&gt;&gt;Anyone: T_sk
-        VSC-&gt;&gt;Anyone: A_i B_i B_k
-        Anyone-&gt;&gt;VSC: Tally + proof
+        TLCS->>Anyone: T_sk
+        VSC->>Anyone: A_i B_i B_k
+        Anyone->>VSC: Tally + proof
     end
-</code></pre>
+</pre>
 
 <h2>Further work</h2>
 
@@ -644,6 +650,24 @@ Main objective:
 <li><a href="https://github.com/aragonzkresearch/tlcs-chain">tlcs-chain</a>: Cosmos Blockchain which provides a Time Lock Cryptography Service</li>
 <li><a href="https://github.com/aragonzkresearch/zk-registry-ui-demo">zk-registry-ui-demo</a>: Web based UI using MetaMask for zk registry registration</li>
 </ul>
+
+<p><style></p>
+
+<p>/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px;
+}</p>
+
+<p>/* Clear floats after the columns */
+.row:after {
+  content: &ldquo;&rdquo;;
+  display: table;
+  clear: both;
+}</p>
+
+<p></style></p>
 
 
       <div style="text-align:center;margin-top:100px;">
