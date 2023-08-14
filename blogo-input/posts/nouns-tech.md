@@ -8,38 +8,37 @@ This is a technical description of the outcomes of the work done by Aragon ZK Re
 This document is part of the final documentation. Read the [Final report](==TODO add link==) for further information.
 
 
-<div style="border:1px solid black;border-radius:10px;padding:5px;">
+<div class="warning">
 
 This is a research project. The outputs are strictly preliminary results.
 
 </div>
 
-:::warning
-This is a research project. The outputs are strictly preliminary results.
-:::
-
 
 ### Properties of the e-voting system and security assumptions
 As specified in the proposal, the system has been designed to meet the following properties:
-* **Ballot secrecy** It is impossible to link a voter with a choice
-* **Eligibility** Only legitimate voters can vote
-* **Eligibility verifiability** Anyone can verify that each vote in the set of all cast votes was cast by an eligible voter
-* **Fairness** No early results can be obtained which could influence the remaining voters
-* **Individual verifiability (IV)** A voter can verify that her vote is included in the set of all cast votes
-* **Proxy vote** An eligible voter may delegate their voting power to a representative
-* **Robustness** The system should be robust to a certain degree of malfunction or corruption and still deliver correct results
-* **Unconditional privacy** Nobody should be able to learn any additional information even several centuries after the voting process
-* **Universal verifiability (UV)** Anyone can check that the election outcome corresponds to the ballots published on the bulletin board
-* **Uniqueness** No voter should be able to vote more than one time
-* **Weighted voting** votes inherently vary in strength depending on the voter
+
+- **Ballot secrecy** It is impossible to link a voter with a choice
+- **Eligibility** Only legitimate voters can vote
+- **Eligibility verifiability** Anyone can verify that each vote in the set of all cast votes was cast by an eligible voter
+- **Fairness** No early results can be obtained which could influence the remaining voters
+- **Individual verifiability (IV)** A voter can verify that her vote is included in the set of all cast votes
+- **Proxy vote** An eligible voter may delegate their voting power to a representative
+- **Robustness** The system should be robust to a certain degree of malfunction or corruption and still deliver correct results
+- **Unconditional privacy** Nobody should be able to learn any additional information even several centuries after the voting process
+- **Universal verifiability (UV)** Anyone can check that the election outcome corresponds to the ballots published on the bulletin board
+- **Uniqueness** No voter should be able to vote more than one time
+- **Weighted voting** votes inherently vary in strength depending on the voter
 
 Security assumptions:
-* Same as in Ethereum.
-* Fairness also depends on League of Entropy.
+
+- Same as in Ethereum.
+- Fairness also depends on League of Entropy.
 
 ### Components overview
 
 Main components:
+
 - *zkRegistry*
 - *Voter client*
 - *Tally CLI*
@@ -57,9 +56,11 @@ Main components:
     Webapp: https://zkreg.com/keygen
 
     Main inputs:
+
     * Wallet address
 
     Main outputs:
+
     * Public key (stored in the regsitry)
     * Private key
      
@@ -69,22 +70,27 @@ Main components:
     Demo (steps 1-4): [nouns-cli](https://hackmd.io/5vFz0a1BRTikynTf7ga-eg?view)
 
     Main inputs:
+
     * IPFS link to proposal
     * Start delay (i.e. time from process submission to beginning of voting period)
     * End date
     
     Main outputs
+
     * Process ID
     
     Gas cost: ~700k
 2. **Vote generation (one per NFT)** Allowed registered wallets (i.e. holding NFTs -either non-delegated owned or delegated, at the time of the process creation) can generate the ballot and the corresponding proofs. 
+
     Main inputs:
+
     * Voting process ID
     * NFT ID
     * Private key
     * Choice
     
     Main outputs:
+
     * Vote (i.e. Random Baby Jubjub public key + ballot encrypted using shared secret between random key and Timelock.zone key + proofs of NFT ownership or delegation)
 
     Total computation time (zkRegistry + NFT ownership + delegation proofs): ~12 minutes (modern laptop with i7 U-series processor and 32GB RAM)
@@ -94,9 +100,11 @@ Main components:
     > **Note:** Users are highly recommended to use a fresh/anonymous address to submit the ballot, in order to avoid leaking ballot secrecy.
 
     Main inputs:
+
     * Vote (generated in the previous step)
     
     Main outputs:
+
     * None
 
     Gas costs: ~690k
@@ -104,9 +112,11 @@ Main components:
 4. **Tally**
 
     Main inputs:
+
     * Process ID
     
     Main outputs:
+
     * Results + proof of correctness
     
     Gas costs: ~522k (submission of the proof that the tally is correct)
@@ -115,8 +125,8 @@ Main components:
     
     > **Note:** Only one entity has to carry out the generation and submission of the tallying proof.
     
-    * Census up to 16 NFTs: 106k constrains => ~5 minutes (new laptop with i7 U-series processor and 32GB RAM)
-    * 256 NFTs : 1.5m constrains => ~2 hours (new laptop with i7 U-series processor and 32GB RAM)
+    * Census up to 16 NFTs: 106k constrains => ~5 minutes (laptop with i7 U-series processor and 32GB RAM)
+    * 256 NFTs : 1.5m constrains => ~2 hours (laptop with i7 U-series processor and 32GB RAM)
 
 > **Future work**: The computation time is expected to decrease significantly with the upcoming optimisations and new features of Noir
 
@@ -166,6 +176,7 @@ Timelock.zone is a public time-locked cryptographic service enabling anyone to e
 We use TLE to ensure that no one has access to the choices of the ballots before the end of the voting period. timelock.zone was started as part of the nouns private voting period but it has been developed as an independent service, given the number of potential applications it has beyond e-voting. We call the protocol TLCS (Time Lock Cryptographic Service) and the service timelock.zone.
 
 Key features:
+
 1. Public keys for periods far into the future are always available;
 2. Support for many cryptographic schemes;
 3. Relies on trusted randomness (Drand beacon) published by the [League of Entropy](https://www.cloudflare.com/leagueofentropy/);
@@ -179,9 +190,11 @@ For technical details see:
 * [Timelock.zone paper](https://github.com/aragonzkresearch/blog/blob/main/pdf/azkr-timelock-zone.pdf)
 * [Initial concept note](https://hackmd.io/WYp7A-jPQvK8xSB1pyH7hQ?view)
 
-:::warning
+<div class="warning">
+
 The Timelock.zone service and the TLCS protocol are in early alpha stage.
-:::
+
+</div>
 
 Website: [Timelock.zone](https://www.timelock.zone/)
 API: https://hackmd.io/WVF0GVWgQZmPFIV_lT9F4A
@@ -194,6 +207,7 @@ API: https://hackmd.io/WVF0GVWgQZmPFIV_lT9F4A
 
 ### Setup
 The following subsections will assume that the different parties have access to:
+
 - timelock.zone:
    - Public key for time $t$: $T_{pk}$
 - zkRegistry: has the relation between the Voter Ethereum Address and its Registry Public Key: $V_{ADDR} \longleftrightarrow VR_{pk}$
@@ -205,6 +219,7 @@ The following subsections will assume that the different parties have access to:
 For simplicity, we define the string $id$ as follows, $id=\{chain_{ID}, process_{ID}, contract_{ADDR}\}$.
 
 Algorithms used:
+
 - $H_s$: a snark friendly hash function (in constraint number).
 - $H_e$: a EVM friendly hash function (in gas costs).
 - $DS$: a snark friendly signature scheme.
@@ -218,6 +233,7 @@ In order to create a new process, anyone can send a tx calling the `newProcess` 
 > **Customization** Restrictions/checks can be added to the VSC to avoid spam (e.g. just NFT holders can call `newProcess`).
 
 Data sent to the VSC to create a process:
+
 - IPFS CIDv1 link to proposal (raw binary; sha2-256 digest)
 - Token StorageRoot: $R_{token}$
 - zkRegistry StorageRoot: $R_{zkreg}$
@@ -237,7 +253,8 @@ Both $R_{token}, R_{zkreg}$ must be under the same Ethereum Storage Root for the
 
 ### Voter proof
 
-++Vote's choice (Noir). Run by the voter in a 'personal' server++:
+<u>Vote's choice (Noir). Run by the voter in a 'personal' server</u>:
+
 1. Signatures $\sigma=DS.Sign(VR_{sk},~(NFT_{id},id)),~ \tau=DS.Sign(VR_{sk},v),$ where $v$ is the voter's choice and $VR_{sk}$ is used as signing key (so that $VR_{pk}$ will be the corresponding verification key).
 2. nullifier $N=H_s(\sigma)$.
 3. $A=g^{r},~ K={T_{pk}}^{r}$, for some randomness $r\in Z_p$.
@@ -248,9 +265,10 @@ Both $R_{token}, R_{zkreg}$ must be under the same Ethereum Storage Root for the
 
 The voter sends to the 'personal' server the tuple $(VR_{pk},N,id,NFT_id,h_{id},r,v,A,K,B,\sigma,\tau,p_1,p_2,p_3)$.
 
-++Vote's proof generation (Noir). Run by the voter in a 'personal' server++:
-Public inputs: $(A,B,N,id,R, T_{pk})$
-Private inputs: $(v,\sigma,address,\tau, NFT_{id}, h_{id}, K,VR_{pk},p_1,p_2,p_3)$
+<u>Vote's proof generation (Noir). Run by the voter in a 'personal' server</u>:
+
+Public inputs: $(A,B,N,id,R, T_{pk})$<br>
+Private inputs: $(v,\sigma,address,\tau, NFT_{id}, h_{id}, K,VR_{pk},p_1,p_2,p_3)$<br>
 Output: proof $\pi$ computed as follows:
 
 1. Check that $DS.Ver(VR_{pk},\sigma,(NFT_{id},id))=1$, that is that $\sigma$ is a signature of $(NFT_{id},id)$ under pubk $VR_{pk}$.
@@ -263,7 +281,7 @@ Output: proof $\pi$ computed as follows:
     - 5.3. $v\in\{0,1,2\}$.
 6. Use the path $p_1$ to check that the Ethereum state committed to in $R$ includes in the zkRegistry $RCK_i$ that is associated with a voter's Ethereum address.
 7. Use the path $p_2$ to check that the Ethereum state committed to in $R$ contains a token with identifier $NFT_{id}$ owned by some address $a$.
-8. If the value associated with proof $p_3$ is null (i.e. there is no delegation), check that $a = \mbox{address}$. Else, verify storage proof $p_3$ and confirm that tokens belonging to address $a$ have been delegated to $\mbox{address}$.
+8. If the value associated with proof $p_3$ is null (i.e. there is no delegation), check that $a = \text{address}$. Else, verify storage proof $p_3$ and confirm that tokens belonging to address $a$ have been delegated to $\text{address}$.
 9. **(Not yet implemented)** Check that signature randomness is deterministic $r = H_s(msg ~||~ H_s(VR_{sk}))$
 
 > **Future work**: According to the proposal, our goal is to move the 'personal' server computations to in-browser computations when Noir allows to do so. During the sprint Aztec has made significant progress in this regard.
@@ -287,7 +305,8 @@ A nullifier ensures uniqueness of the vote.
 $t$: time to decrypt votes, known by the VSC
 Ethereum end blocknum: Ethereum block until which voters can submit votes
 
-++Tally (Noir). Can be run by anyone++:
+<u>Tally (Noir). Can be run by anyone</u>:
+
 1. Fetch data from the VSC
     - Fetch $A_i$ for $\forall i \in \{1, \ldots, n\}$
     - Fetch $B_i$ for $\forall i \in \{1, \ldots, n\}$
@@ -299,24 +318,29 @@ Ethereum end blocknum: Ethereum block until which voters can submit votes
          - $B_i = H_s(K_i, v_i, id)$. (We will be able to find such value $v_i$ because the voter's ZK proof was verified successfully.)
 3. Prove vote aggregation:
     - Sum all $v_i$ for each vote option to compute an array $vote_{count}$ storing # votes for, # votes against, # votes abstain.
+
     $$
     \text{no} = |v_i| ~\text{s.t.}~ v_i==0\\
     \text{yes} = |v_i| ~\text{s.t.}~ v_i==1\\
     \text{abs} = |v_i| ~\text{s.t.}~ v_i==2
     $$
+    
     - Given public inputs $B_K$, $chain_{ID}$, $process_{ID}$, $contract_{ADDR}$, $vote_{count}$ and witnesses $(K_i,v_i)$ we generate a zk proof of the following program:
         - For all $i\in[n]$, the program computes $B_i = H_s(K_i, v_i, id)$
         - Compute $B_K' = H_e(B_i, H_e(B_{i-1}, H_e(...)) ~\forall i \in [n]$ and verify that $B_K = B_K'$
         - Verify that the votes have been correctly counted, i.e. all $j\in{0,1,2}$ $vote_{count}[j]$ equals $|\{v_i|v_i=j\}|$
         - Output $1$ iff all verifications passed
     
-++Verifier (Solidity). Part of the Voting Smart Contract (VSC):++
+<u>Verifier (Solidity). Part of the Voting Smart Contract (VSC):</u>
+
 Inputs (to verify the proof):
+
 - `vote_count [(uint256, uint256, uint256)]`  Triple storing # votes for, # votes against, # votes abstain)
 - `ballots_hash [uint256]` aggregated $B_K$ of all ballots known to smart contract
 - `tally_proof`
 
 In addition, the VSC has access to the following information:
+
 - `process_id`
 - `chain_id`
 - `contract_addr`
@@ -332,7 +356,11 @@ The previous sections describe the voting protocol. In this one we intend to pro
 <div class="row" style="margin-bottom:30px;">
   <div class="column">
 
-**Voter**
+<u>Voter</u><br>
+
+<div>
+<!-- empty div to make the next bullet lists work -->
+</div>
 
 1. $\sigma=DS.Sign(VR_{sk},(NFT_{id},id)),~\\\tau=DS.Sign(VR_{sk},v),$
 2. $N=H_s(\sigma)$.
@@ -347,7 +375,7 @@ The VSC computes $\color{purple}{B_K} = H_e(\color{violet}{B_i}, H_e(\color{viol
   </div>
   <div class="column" style="border-left:1px solid black;">
 
-**Tally**
+<u>Tally</u><br>
 
 1. fetch
     - from VSC history: $\color{orange}{A_i}, \color{violet}{B_i} ~\forall i \in \{1, \ldots, n\}$
@@ -442,10 +470,13 @@ sequenceDiagram
 From now on, AZKR will continue developing the key components of this project in order to make available a voting system with at least the current properties (trustless, ballot secrecy, fairness, etc.) to [Aragon OSX](https://aragon.org/aragonosx) as a plugin. The code name is likely to be zk-POPVOTE (zk Proof-based On-chain Private Voting).
 
 **zkRegistry**
+
 Main objectives:
+
 * Transform it into a more generic service
 
 Main tasks:
+
 * Review design
 * Invite other partners to join efforts
 * Consider to submit a proposal of an EIP
@@ -453,44 +484,59 @@ Main tasks:
 Note that in the long term this component may become obsolete if something like [Plume](https://eprint.iacr.org/2022/1255.pdf) becomes available in hardware wallets and Metamask.
 
 **Timelock.zone**
+
 Main objectives:
+
 * Put the service in beta
 * Set up a minimal participants coalition
 
 Main tasks:
+
 * Peer-review design and security proof
 * Software testing
 * Node deployment
 * Governance: Coalition agreement
 
 **Protocol**
+
 Main objective:
+
 * Provide a user-friendly experience (simple UX, vote generation for several NFTs, vote generation time < 2 minutes)
 
 Main tasks:
+
 * Reduce computation costs
 * Generic (non-Nouns specific)
 
 **Delay-relayer service**
+
 Main objective:
+
 * To have the service in place by year-end
 
 Main tasks:
+
 * Find suitable partner to implement this
 * Review current design, in particular concerning payment of gas costs
 
 **Ethereum evolution**
+
 Main objective:
+
 * keep compatibility along new releases
 
 Main tasks:
+
 * Adapt to new Ethereum block header
 
 **Ballot batching**
+
 Main objective:
+
 * Enable weighted voting (without braking any other property e.g ballot-secrecy)
 
 Main tasks:
+
 * Research for a solution (most likely, it will impact on almost every existing component)
 * Implement the solution
 
@@ -524,4 +570,14 @@ Main tasks:
   clear: both;
 }
 
+/* Warning box */
+.warning{
+    border:1px solid #faebcc;
+    border-radius:5px;
+    background: #fcf8e3;
+    color: #8a6d3b;
+    padding:10px;
+    padding-left:20px;
+    margin: 20px;
+}
 </style>
