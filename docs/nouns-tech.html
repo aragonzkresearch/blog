@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="Nouns sprint technical report" />
+    <meta charset="utf-8">
+    <title> Nouns sprint technical report - Aragon ZK Research - blog</title>
+    <meta name="title" content=" Nouns sprint technical report - Aragon ZK Research - blog">
+    <meta name="description" content="Nouns sprint technical report">
+
+    <meta property="og:title" content=" Nouns sprint technical report - Aragon ZK Research - blog" />
+    <meta property="og:description" content="Nouns sprint technical report" />
+    <meta property="og:url" content="https://research.aragon.org/nouns-tech.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.org/img/twitter-blog-blank.jpg" />
+    <meta name="twitter:title" content=" Nouns sprint technical report - Aragon ZK Research - blog">
+    <meta name="twitter:description" content="Nouns sprint technical report">
+    <meta name="twitter:image" content="https://research.aragon.org/img/twitter-blog-blank.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3164FA; weight:bold;">
+          <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px;"/> ZK Research - Blog
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="/about" style="color:#000000;">
+            About us
+          </a>
+          <div class="onoffswitch" style="margin-left:20px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div id="article" class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:180px;">
+      <h1>Nouns sprint technical report</h1>
+
+<p><em>2022-08-21</em></p>
+
+<h2>Introduction</h2>
+
+<p>This is a technical description of the outcomes of the work done by Aragon ZK Research (AZKR) during the exectution of the <a href="https://prop.house/nouns/private-voting-research-sprint/3954">joint proposal</a> submitted to the Nouns DAO <a href="https://prop.house/nouns/private-voting-research-sprint">Private Voting Research Sprint</a> by Aztec Labs and AZKR.</p>
+
+<dl>
+<dt>This document is part of the final documentation. Read the <a href="==TODO add link==">Final report</a> for further information.</dt>
+<dt>:::warning
+This is a research project. The outputs are strictly preliminary results.
+:::</dt>
+</dl>
+
+<h3>Properties of the e-voting system and security assumptions</h3>
+
+<p>As specified in the proposal, the system has been designed to meet the following properties:
+* <strong>Ballot secrecy</strong> It is impossible to link a voter with a choice
+* <strong>Eligibility</strong> Only legitimate voters can vote
+* <strong>Eligibility verifiability</strong> Anyone can verify that each vote in the set of all cast votes was cast by an eligible voter
+* <strong>Fairness</strong> No early results can be obtained which could influence the remaining voters
+* <strong>Individual verifiability (IV)</strong> A voter can verify that her vote is included in the set of all cast votes
+* <strong>Proxy vote</strong> An eligible voter may delegate their voting power to a representative
+* <strong>Robustness</strong> The system should be robust to a certain degree of malfunction or corruption and still deliver correct results
+* <strong>Unconditional privacy</strong> Nobody should be able to learn any additional information even several centuries after the voting process
+* <strong>Universal verifiability (UV)</strong> Anyone can check that the election outcome corresponds to the ballots published on the bulletin board
+* <strong>Uniqueness</strong> No voter should be able to vote more than one time
+* <strong>Weighted voting</strong> votes inherently vary in strength depending on the voter</p>
+
+<p>Security assumptions:
+* Same as in Ethereum.
+* Fairness also depends on League of Entropy.</p>
+
+<h3>Components overview</h3>
+
+<p>Main components:
+- <em>zkRegistry</em>
+- <em>Voter client</em>
+- <em>Tally CLI</em>
+- <em>Timelock.zone</em>
+- <em>Delay relayer</em> (included in the proposal, but not started yet -not shown in the diagram)</p>
+
+<p><img src="https://hackmd.io/_uploads/ByhaFpP9n.png" alt="" /></p>
+
+<h3>Flow overview</h3>
+
+<ol>
+<li><p><strong>Wallet registration (strictly only once per wallet)</strong> Every wallet must have been registered before the voting process is created. This must only be done once per address. The owner of the wallet does not need to save any extra data because  the key pair is generated deterministically.</p>
+
+<p>Demo: <a href="https://timelock.zone/MakeKeysAndRegister.mp4">zkRegistry using MetaMask</a></p>
+
+<p>Webapp: <a href="https://zkreg.com/keygen">https://zkreg.com/keygen</a></p>
+
+<p>Main inputs:</p>
+
+<ul>
+<li>Wallet address</li>
+</ul>
+
+<p>Main outputs:
+* Public key (stored in the regsitry)
+* Private key</p>
+
+<p>Gas cost: ~45k</p></li>
+
+<li><p><strong>Voting process setup</strong> Anyone can create a voting process.</p>
+
+<p>Demo (steps 1-4): <a href="https://hackmd.io/5vFz0a1BRTikynTf7ga-eg?view">nouns-cli</a></p>
+
+<p>Main inputs:</p>
+
+<ul>
+<li>IPFS link to proposal</li>
+<li>Start delay (i.e. time from process submission to beginning of voting period)</li>
+<li>End date</li>
+</ul>
+
+<p>Main outputs
+* Process ID</p>
+
+<p>Gas cost: ~700k</p></li>
+
+<li><p><strong>Vote generation (one per NFT)</strong> Allowed registered wallets (i.e. holding NFTs -either non-delegated owned or delegated, at the time of the process creation) can generate the ballot and the corresponding proofs.
+Main inputs:</p>
+
+<ul>
+<li>Voting process ID</li>
+<li>NFT ID</li>
+<li>Private key</li>
+<li>Choice</li>
+</ul>
+
+<p>Main outputs:
+* Vote (i.e. Random Baby Jubjub public key + ballot encrypted using shared secret between random key and Timelock.zone key + proofs of NFT ownership or delegation)</p>
+
+<p>Total computation time (zkRegistry + NFT ownership + delegation proofs): ~12 minutes (modern laptop with i7 U-series processor and 32GB RAM)</p></li>
+
+<li><p><strong>Submission</strong> The vote can be submitted to the voting <em>Nouns voting</em> smart contract (VSC) during the voting period. Steps 2. and 3. are performed together by the CLI.</p>
+
+<blockquote>
+<p><strong>Note:</strong> Users are highly recommended to use a fresh/anonymous address to submit the ballot, in order to avoid leaking ballot secrecy.</p>
+</blockquote>
+
+<p>Main inputs:</p>
+
+<ul>
+<li>Vote (generated in the previous step)</li>
+</ul>
+
+<p>Main outputs:
+* None</p>
+
+<p>Gas costs: ~690k</p></li>
+
+<li><p><strong>Tally</strong></p>
+
+<p>Main inputs:</p>
+
+<ul>
+<li>Process ID</li>
+</ul>
+
+<p>Main outputs:
+* Results + proof of correctness</p>
+
+<p>Gas costs: ~522k (submission of the proof that the tally is correct)</p>
+
+<p>Constraints:</p>
+
+<blockquote>
+<p><strong>Note:</strong> Only one entity has to carry out the generation and submission of the tallying proof.</p>
+</blockquote>
+
+<ul>
+<li>Census up to 16 NFTs: 106k constrains =&gt; ~5 minutes (new laptop with i7 U-series processor and 32GB RAM)</li>
+<li>256 NFTs : 1.5m constrains =&gt; ~2 hours (new laptop with i7 U-series processor and 32GB RAM)</li>
+</ul></li>
+</ol>
+
+<blockquote>
+<p><strong>Future work</strong>: The computation time is expected to decrease significantly with the upcoming optimisations and new features of Noir</p>
+</blockquote>
+
+<h3>Main achievements</h3>
+
+<ul>
+<li>Overall, the main requirements of the call have been met:
+
+<ul>
+<li>Trustless token-holder census using Ethereum storage proofs</li>
+<li>Full anonymity (as long as votes are submitted via an anonymized address)</li>
+<li>Tally fairness with minimal trust: results cannot be known until the end of the voting process</li>
+</ul></li>
+<li>These results were achieved via:
+
+<ul>
+<li>Leveraging new features of Aztec&rsquo;s Noir language to achieve EthTrieProof inside the zkSNARK circuit</li>
+<li>Creating TLCS, an efficient cryptographical time-lock protocol which will be used in the timelock.zone service and used by the voting protocol to achieve fairness.</li>
+<li>Creating an on-chain zkRegistry to make the voter&rsquo;s registration ZK-friendly; this registry is of independent interest for future applications.</li>
+<li>Developing a voting scheme that combines zkSNARKs with encryption and digital signatures to simultaneously achieve full anonymity and fairness.</li>
+</ul></li>
+</ul>
+
+<h3>Current limitations</h3>
+
+<ul>
+<li>The PoC mostly via CLI
+
+<ul>
+<li>The demo is based on a script</li>
+<li>Timelock.zone is available with API access or Web interface</li>
+<li>The ZK Registry is available with CLI or Web interface</li>
+</ul></li>
+<li>Multisig support excluded in the proposal</li>
+<li>Delay-relayer service excluded during the sprint due to lack of time/resources
+
+<ul>
+<li>1 vote per NFT. No ballot aggregation.</li>
+</ul></li>
+<li>Performance limitations:
+
+<ul>
+<li>Vote generation takes several minutes per NFT (there is room for optimization)</li>
+<li>Tally generation: over 10 minutes for a census of 256 NFTs (can be improved; not so worrying as the vote generation time because this can be run on powerful servers)</li>
+</ul></li>
+</ul>
+
+<h3>Main next steps</h3>
+
+<ul>
+<li>Noir proving speed-ups via:
+
+<ul>
+<li>Multi-threading</li>
+<li>WebGPU</li>
+<li>also considering alternatives</li>
+</ul></li>
+<li>Delay-relayer service (through partnerships)</li>
+<li>Multisig support</li>
+<li>In-browser version (23Q4 in Aragon OSX): all user journey in-browser
+
+<ul>
+<li>Pending for Noir recursion in browser</li>
+</ul></li>
+</ul>
+
+<h2>zkRegistry</h2>
+
+<p>This is the first component of the system the user must interact with. It is a registry that stores a map between Ethereum Addresses and Public Keys or Commitments. This allows the users to register a new Secret Key for their wallet, that can be then efficiently used by cryptographic protocols.</p>
+
+<p>The current design allows to use new types of Secret Keys, besides the Ethereum Secp256k1 Private Key. This can make protocols, especially working with ZK, a lot more efficient. In this project, we are particularly interested in the first point, which allows us to use BabyJubJub keys. Specifically, the commitment is a BJJ public key which corresponds to a private key that is obtained from the signature (via hardware wallet or Metamask) of a pre-established text.</p>
+
+<p>Website: <a href="https://zkreg.com">https://zkreg.com</a></p>
+
+<h2>Timelock.zone</h2>
+
+<p>Timelock.zone is a public time-locked cryptographic service enabling anyone to encrypt data for decryption in the future, with support for the most common cryptographic schemes. Time-locked cryptography (TLE) are cryptographic systems which guarantee that ciphertexts will be decipherable only at a certain time in the future. Such systems are also variously referred to as time-lapse, time-based, time-dependent, delayed unlocking etc. cryptographic protocols.</p>
+
+<p>We use TLE to ensure that no one has access to the choices of the ballots before the end of the voting period. timelock.zone was started as part of the nouns private voting period but it has been developed as an independent service, given the number of potential applications it has beyond e-voting. We call the protocol TLCS (Time Lock Cryptographic Service) and the service timelock.zone.</p>
+
+<p>Key features:
+1. Public keys for periods far into the future are always available;
+2. Support for many cryptographic schemes;
+3. Relies on trusted randomness (Drand beacon) published by the <a href="https://www.cloudflare.com/leagueofentropy/">League of Entropy</a>;
+4. Possibility of public participation;
+5. The correctness and security of the scheme is guaranteed as long as a single party participating in the public key computation is honest;
+6. These parties do not need to be present when the private key is revealed.</p>
+
+<p>From a pragmatic standpoint, here we just look at timelock.service as a service that provides public keys for encrypting the ballots ensuring that the corresponding private keys are only made available once the voting period is finished.</p>
+
+<dl>
+<dd><a href="https://hackmd.io/WYp7A-jPQvK8xSB1pyH7hQ?view">Initial concept note</a></dd>
+<dt>:::warning
+The Timelock.zone service and the TLCS protocol are in early alpha stage.
+:::</dt>
+</dl>
+
+<p>Website: <a href="https://www.timelock.zone/">Timelock.zone</a>
+API: <a href="https://hackmd.io/WVF0GVWgQZmPFIV_lT9F4A">https://hackmd.io/WVF0GVWgQZmPFIV_lT9F4A</a></p>
+
+<blockquote>
+<p><strong>Future work</strong>: We plan to launch Timelock.zone by year-end.</p>
+</blockquote>
+
+<h2>Voting protocol</h2>
+
+<ul>
+<li><a href="https://hackmd.io/8572_wduTQiXNWNCwIu5-A">Initial concept note</a></li>
+</ul>
+
+<h3>Setup</h3>
+
+<p>The following subsections will assume that the different parties have access to:
+- timelock.zone:
+   - Public key for time <span class="math inline">\(t\)</span>: <span class="math inline">\(T_{pk}\)</span>
+- zkRegistry: has the relation between the Voter Ethereum Address and its Registry Public Key: <span class="math inline">\(V_{ADDR} \longleftrightarrow VR_{pk}\)</span>
+- Voter
+    - Voter zkRegistry secret key: <span class="math inline">\(VR_{sk}\)</span>
+    - Voter zkRegistry public key: <span class="math inline">\(VR_{pk} = g^{VR_{sk}}\)</span>
+- TokenContract storage root &amp; zkRegistryContract storage root <span class="math inline">\(R_{token}, R_{zkreg}\)</span></p>
+
+<p>For simplicity, we define the string <span class="math inline">\(id\)</span> as follows, <span class="math inline">\(id=\{chain_{ID}, process_{ID}, contract_{ADDR}\}\)</span>.</p>
+
+<p>Algorithms used:
+- <span class="math inline">\(H_s\)</span>: a snark friendly hash function (in constraint number).
+- <span class="math inline">\(H_e\)</span>: a EVM friendly hash function (in gas costs).
+- <span class="math inline">\(DS\)</span>: a snark friendly signature scheme.
+    The Sign algorithm is for a DS scheme that has the following property: it is hard for an adversary to produce two different signatures of the same message (BLS and RSA have this property).
+    In other words, <span class="math inline">\(\sigma\)</span> is for a deterministic unique signature. Alternatively we can use PLUME in future. For the moment we will use EdDSA.</p>
+
+<h3>Process creation</h3>
+
+<p>In order to create a new process, anyone can send a tx calling the <code>newProcess</code> method from the VSC.</p>
+
+<blockquote>
+<p><strong>Customization</strong> Restrictions/checks can be added to the VSC to avoid spam (e.g. just NFT holders can call <code>newProcess</code>).</p>
+</blockquote>
+
+<p>Data sent to the VSC to create a process:
+- IPFS CIDv1 link to proposal (raw binary; sha2-256 digest)
+- Token StorageRoot: <span class="math inline">\(R_{token}\)</span>
+- zkRegistry StorageRoot: <span class="math inline">\(R_{zkreg}\)</span>
+- Block number at which the census is taken
+- Block number at which the voting period begins
+- Voting period duration in Ethereum blocks
+- Timelock.zone PublicKey: <span class="math inline">\(T_{pk}\)</span>
+- Timelock.zone round number</p>
+
+<p>Both <span class="math inline">\(R_{token}, R_{zkreg}\)</span> must be under the same Ethereum Storage Root for the given EthBlockNumber (i.e. the one that establishes the census for the given process).</p>
+
+<blockquote>
+<p><strong>Future work</strong>: In the current iteration it is left to the users to ensure that the values match (which is done automatically by the provided library). But in a future iteration, when creating a new process the tx will include also a SNARK proof proving that <span class="math inline">\(R_{token}, R_{zkreg}\)</span> are included in the Ethereum State (under Ethereum&rsquo;s state root) for the given block number.</p>
+
+<p><strong>Customization</strong>: In the current implementation, for simplicity, the processes are started immediately. An extra parameter can be added to delay the beginning of the voting process until a specific Ethereum start block number.</p>
+
+<p><strong>Future work</strong>: Modify the design to allow the registration at the zkRegistry between the process creation and the start of the voting period.</p>
+</blockquote>
+
+<h3>Voter proof</h3>
+
+<p>++Vote&rsquo;s choice (Noir). Run by the voter in a &lsquo;personal&rsquo; server++:
+1. Signatures <span class="math inline">\(\sigma=DS.Sign(VR_{sk},~(NFT_{id},id)),~ \tau=DS.Sign(VR_{sk},v),\)</span> where <span class="math inline">\(v\)</span> is the voter&rsquo;s choice and <span class="math inline">\(VR_{sk}\)</span> is used as signing key (so that <span class="math inline">\(VR_{pk}\)</span> will be the corresponding verification key).
+2. nullifier <span class="math inline">\(N=H_s(\sigma)\)</span>.
+3. <span class="math inline">\(A=g^{r},~ K={T_{pk}}^{r}\)</span>, for some randomness <span class="math inline">\(r\in Z_p\)</span>.
+    - note that <span class="math inline">\(K = g^{r\cdot T_{sk}}\)</span>
+4. <span class="math inline">\(B=H_s(K, v, id)\)</span>
+5. <span class="math inline">\(h_{id}=H_s(NFT_{id},id)\)</span>
+6. The path <span class="math inline">\(p_1\)</span> from the root <span class="math inline">\(R_{token}\)</span> to the relevant information needed to prove ownership of the token <span class="math inline">\(NFT_{id}\)</span> and the path <span class="math inline">\(p_2\)</span> to the zkRegistry commitment key <span class="math inline">\(RCK_i\)</span> under <span class="math inline">\(R_{zkreg}\)</span>, and the path(s) <span class="math inline">\(p_3\)</span> needed to prove that <span class="math inline">\(NFT_{id}\)</span> is not delegated under the <span class="math inline">\(R_{token}\)</span>.</p>
+
+<p>The voter sends to the &lsquo;personal&rsquo; server the tuple <span class="math inline">\((VR_{pk},N,id,NFT_id,h_{id},r,v,A,K,B,\sigma,\tau,p_1,p_2,p_3)\)</span>.</p>
+
+<p>++Vote&rsquo;s proof generation (Noir). Run by the voter in a &lsquo;personal&rsquo; server++:
+Public inputs: <span class="math inline">\((A,B,N,id,R, T_{pk})\)</span>
+Private inputs: <span class="math inline">\((v,\sigma,address,\tau, NFT_{id}, h_{id}, K,VR_{pk},p_1,p_2,p_3)\)</span>
+Output: proof <span class="math inline">\(\pi\)</span> computed as follows:</p>
+
+<ol>
+<li>Check that <span class="math inline">\(DS.Ver(VR_{pk},\sigma,(NFT_{id},id))=1\)</span>, that is that <span class="math inline">\(\sigma\)</span> is a signature of <span class="math inline">\((NFT_{id},id)\)</span> under pubk <span class="math inline">\(VR_{pk}\)</span>.</li>
+<li>Check that <span class="math inline">\(DS.Ver(VR_{pk},\tau,v)=1\)</span>, that is that <span class="math inline">\(\tau\)</span> is a signature of <span class="math inline">\(v\)</span> under pubk <span class="math inline">\(VR_{pk}\)</span>.</li>
+<li>Check that <span class="math inline">\(h_{id}=H_s(NFT_{id},id)\)</span>.</li>
+<li>Check that <span class="math inline">\(N=H_s(\sigma)\)</span>.</li>
+<li>Check correct encryption of the vote:
+
+<ul>
+<li>5.1. <span class="math inline">\(g^{r}=A\)</span> and <span class="math inline">\(K={T_{pk}}^{r}\)</span>.</li>
+<li>5.2. <span class="math inline">\(B =H_s(K, v,id)\)</span>.</li>
+<li>5.3. <span class="math inline">\(v\in\{0,1,2\}\)</span>.</li>
+</ul></li>
+<li>Use the path <span class="math inline">\(p_1\)</span> to check that the Ethereum state committed to in <span class="math inline">\(R\)</span> includes in the zkRegistry <span class="math inline">\(RCK_i\)</span> that is associated with a voter&rsquo;s Ethereum address.</li>
+<li>Use the path <span class="math inline">\(p_2\)</span> to check that the Ethereum state committed to in <span class="math inline">\(R\)</span> contains a token with identifier <span class="math inline">\(NFT_{id}\)</span> owned by some address <span class="math inline">\(a\)</span>.</li>
+<li>If the value associated with proof <span class="math inline">\(p_3\)</span> is null (i.e. there is no delegation), check that <span class="math inline">\(a = \mbox{address}\)</span>. Else, verify storage proof <span class="math inline">\(p_3\)</span> and confirm that tokens belonging to address <span class="math inline">\(a\)</span> have been delegated to <span class="math inline">\(\mbox{address}\)</span>.</li>
+<li><strong>(Not yet implemented)</strong> Check that signature randomness is deterministic <span class="math inline">\(r = H_s(msg ~||~ H_s(VR_{sk}))\)</span></li>
+</ol>
+
+<blockquote>
+<p><strong>Future work</strong>: According to the proposal, our goal is to move the &lsquo;personal&rsquo; server computations to in-browser computations when Noir allows to do so. During the sprint Aztec has made significant progress in this regard.</p>
+</blockquote>
+
+<p>The voter sends to the VSC <span class="math inline">\((A,B,N,\pi)\)</span>.</p>
+
+<p>The VSC keeps a value <span class="math inline">\(B_K\)</span> that is initialised to zero. For each received ballot <span class="math inline">\((A,B,N,\pi)\)</span> with a valid proof, we assign <span class="math inline">\(B_K \leftarrow H_e(B_K,B)\)</span>.</p>
+
+<p>If <span class="math inline">\(N\)</span> voters submitted valid proofs we call <span class="math inline">\((A_i,B_i,N_i,\pi_i)\)</span>, for <span class="math inline">\(i\in[N]\)</span>, the values such voter sent to the VSC.</p>
+
+<p>A nullifier ensures uniqueness of the vote.</p>
+
+<blockquote>
+<p><strong>Future work</strong>: Modify the design to allow vote recast (currently seen as the most effective anti-coercion measure).</p>
+
+<p><strong>Future work</strong>: Modify the design to make the proof non-deterministic (probably an (the most?) effective anti-vote-buying measure).</p>
+
+<p><strong>Future work</strong>: Modify the design to merge the two previous enhancements.</p>
+</blockquote>
+
+<h3>Tally proof</h3>
+
+<p><span class="math inline">\(t\)</span>: time to decrypt votes, known by the VSC
+Ethereum end blocknum: Ethereum block until which voters can submit votes</p>
+
+<p>++Tally (Noir). Can be run by anyone++:
+1. Fetch data from the VSC
+    - Fetch <span class="math inline">\(A_i\)</span> for <span class="math inline">\(\forall i \in \{1, \ldots, n\}\)</span>
+    - Fetch <span class="math inline">\(B_i\)</span> for <span class="math inline">\(\forall i \in \{1, \ldots, n\}\)</span>
+    - Fetch secret key of timelock.zone <span class="math inline">\(T_{sk}\)</span>
+    - Fetch value <span class="math inline">\(B_K\)</span> from the VSC.
+2. For each voter, get option for a voter <span class="math inline">\(i\)</span>:
+    - Compute <span class="math inline">\(A_i^{T_{sk}} = g^{r_i T_{sk}} = K_i\)</span>.
+    - Find the first value <span class="math inline">\(v_i\in \{0,1,2\}\)</span> such that
+         - <span class="math inline">\(B_i = H_s(K_i, v_i, id)\)</span>. (We will be able to find such value <span class="math inline">\(v_i\)</span> because the voter&rsquo;s ZK proof was verified successfully.)
+3. Prove vote aggregation:
+    - Sum all <span class="math inline">\(v_i\)</span> for each vote option to compute an array <span class="math inline">\(vote_{count}\)</span> storing # votes for, # votes against, # votes abstain.
+    $<span class="math inline">\(
+    \text{no} = |v_i| ~\text{s.t.}~ v_i==0\\
+    \text{yes} = |v_i| ~\text{s.t.}~ v_i==1\\
+    \text{abs} = |v_i| ~\text{s.t.}~ v_i==2
+    \)</span><span class="math inline">\(
+    - Given public inputs \)</span>B<em>K<span class="math inline">\(, \)</span>chain</em>{ID}<span class="math inline">\(, \)</span>process<em>{ID}<span class="math inline">\(, \)</span>contract</em>{ADDR}<span class="math inline">\(, \)</span>vote_{count}<span class="math inline">\( and witnesses \)</span>(K_i,v_i)<span class="math inline">\( we generate a zk proof of the following program:
+        - For all \)</span>i\in[n]<span class="math inline">\(, the program computes \)</span>B_i = H_s(K_i, v_i, id)<span class="math inline">\(
+        - Compute \)</span>B_K&rsquo; = H_e(B_i, H<em>e(B</em>{i-1}, H_e(&hellip;)) ~\forall i \in [n]<span class="math inline">\( and verify that \)</span>B_K = B<em>K&rsquo;<span class="math inline">\(
+        - Verify that the votes have been correctly counted, i.e. all \)</span>j\in{0,1,2}<span class="math inline">\( \)</span>vote</em>{count}[j]<span class="math inline">\( equals \)</span>|{v_i|v_i=j}|<span class="math inline">\(
+        - Output \)</span>1$ iff all verifications passed</p>
+
+<p>++Verifier (Solidity). Part of the Voting Smart Contract (VSC):++
+Inputs (to verify the proof):
+- <code>vote_count [(uint256, uint256, uint256)]</code>  Triple storing # votes for, # votes against, # votes abstain)
+- <code>ballots_hash [uint256]</code> aggregated <span class="math inline">\(B_K\)</span> of all ballots known to smart contract
+- <code>tally_proof</code></p>
+
+<p>In addition, the VSC has access to the following information:
+- <code>process_id</code>
+- <code>chain_id</code>
+- <code>contract_addr</code></p>
+
+<p>If the <code>tally_proof</code> is correct, the VSC then sets the tally fields with the provided voting result, which can be then be publicly queried by other smart contracts.</p>
+
+<p>A check in the VSC prevents from accepting a second tally.</p>
+
+<h3>Connecting Voter proof with Tally proof</h3>
+
+<p>The previous sections describe the voting protocol. In this one we intend to provide a visual representation to help understanding the relation between the different variables defined. We use different font colors to this end.</p>
+
+<div class="row" style="margin-bottom:30px;">
+  <div class="column">
+
+++Voter++
+
+1. $\sigma=DS.Sign(VR_{sk},(NFT_{id},id)),~\\\tau=DS.Sign(VR_{sk},v),$
+2. $N=H_s(\sigma)$.
+3. $\color{orange}{A}=g^{r},~ \color{blue}{K}={\color{teal}{T_{pk}}}^{r}$, for $r\in^R Z_p$.
+    - note that $\color{blue}{K} = g^{r\cdot \color{teal}{T_{sk}}}$
+4. $\color{violet}{B}=H_s(\color{blue}{K}, v, id)$
+5. $h_{id}=H_s(NFT_{id},id)$
+6. fetch $p_1,p_2,p_3$
+
+The VSC computes $\color{purple}{B_K} = H_e(\color{violet}{B_i}, H_e(\color{violet}{B_{i-1}}, H_e(...)) ~\forall i \in [n]$
+
+  </div>
+  <div class="column" style="border-left:1px solid black;">
+
+++Tally++
+
+1. fetch
+    - from VSC history: $\color{orange}{A_i}, \color{violet}{B_i} ~\forall i \in \{1, \ldots, n\}$
+    - from timelock.zone: $\color{teal}{T_{sk}}$
+    - from VSC state: $\color{purple}{B_K}$
+3. $\forall i \in [n]$:
+    - Compute $\color{orange}{A_i}^{\color{teal}{T_{sk}}} = \color{orange}{g}^{\color{orange}{r_i} \color{teal}{T_{sk}}} = \color{blue}{K_i}$.
+    - Find $v_i\in \{0,1,2\}$ s.t.
+         - $\color{violet}{B_i} = H_s(\color{blue}{K_i}, v_i, id)$
+4. zkproof proving (among other checks) that
+    - $\forall i\in[n]$: $\color{violet}{B_i} = H_s(\color{blue}{K_i}, v_i, id)$
+    - $\color{purple}{B_K'} = H_e(\color{violet}{B_i}, H_e(\color{violet}{B_{i-1}}, H_e(...)) \forall i \in [n]$
+    - check $\color{purple}{B_K} = \color{purple}{B_K'}$
+
+  </div>
+</div>
+
+<p>As we can see, the Tally proof must include all the voters <span class="math inline">\(\color{violet}{B_i}\)</span> that have been sent by voters to the VSC, in order to pass the proof verification.
+In order to obtain the valid <span class="math inline">\(\color{violet}{B_i}\)</span>, the tally prover needs first to obtain the valid <span class="math inline">\(\color{blue}{K_i}\)</span>, which can only be obtained once the <span class="math inline">\(\color{teal}{T_{sk}}\)</span> from the timelock.zone is published, by computing <span class="math inline">\(\color{blue}{K_i} = \color{orange}{A_i}^{\color{teal}{T_{sk}}}\)</span>.</p>
+
+<pre><code class="language-mermaid">flowchart LR
+Tsk[Tₛₖ]
+  style Tsk color:teal
+Tpk[Tₚₖ]
+  style Tpk color:teal
+Ai[Aᵢ]
+  style Ai color:orange
+Ki[Kᵢ]
+  style Ki color:blue
+Bi[Bᵢ]
+  style Bi color:violet
+Bk[Bₖ]
+  style Bk color:purple
+
+Bi1[&quot;Bᵢ₊₁&quot;]
+  style Bi1 color:violet
+etc[...]
+
+subgraph voteri[Voter i]
+    Ai--&gt;Ki
+    Tsk--&gt;Tpk
+    Tpk--&gt;Ki
+    Ki--&gt;Bi
+end
+style voteri fill:#000,stroke:#333,stroke-width:4px
+
+subgraph voteri1[Voter i+1]
+    etc--&gt;Bi1
+end
+
+subgraph VSC
+    Bi--&gt;Bk
+    Bi1--&gt;Bk
+end
+</code></pre>
+
+<h3>Full flow</h3>
+
+<pre><code class="language-mermaid">sequenceDiagram
+    Participant NFT as NFT / Token
+    Participant zkRegistry
+    actor Voter
+    Participant TLCS as Timelock.zone
+    actor Anyone
+    Participant VSC
+    
+    alt Registry phase (once for all DAOs)
+        Voter-&gt;&gt;zkRegistry: VR_pk
+    end
+    alt Process creation
+        TLCS-&gt;&gt;Anyone: T_pk
+        Anyone-&gt;&gt;VSC: newProcess
+    end
+    alt Voting phase
+        zkRegistry-&gt;&gt;Voter: storageProof
+        NFT-&gt;&gt;Voter: storageProof
+        TLCS-&gt;&gt;Voter: T_pk
+        Voter-&gt;&gt;VSC: Vote
+    end
+    Note over VSC: Ethereum end blocknumber
+    Note over TLCS: T_sk released
+    alt Tally phase
+        TLCS-&gt;&gt;Anyone: T_sk
+        VSC-&gt;&gt;Anyone: A_i B_i B_k
+        Anyone-&gt;&gt;VSC: Tally + proof
+    end
+</code></pre>
+
+<h2>Further work</h2>
+
+<p>From now on, AZKR will continue developing the key components of this project in order to make available a voting system with at least the current properties (trustless, ballot secrecy, fairness, etc.) to <a href="https://aragon.org/aragonosx">Aragon OSX</a> as a plugin. The code name is likely to be zk-POPVOTE (zk Proof-based On-chain Private Voting).</p>
+
+<p><strong>zkRegistry</strong>
+Main objectives:
+* Transform it into a more generic service</p>
+
+<p>Main tasks:
+* Review design
+* Invite other partners to join efforts
+* Consider to submit a proposal of an EIP</p>
+
+<p>Note that in the long term this component may become obsolete if something like <a href="https://eprint.iacr.org/2022/1255.pdf">Plume</a> becomes available in hardware wallets and Metamask.</p>
+
+<p><strong>Timelock.zone</strong>
+Main objectives:
+* Put the service in beta
+* Set up a minimal participants coalition</p>
+
+<p>Main tasks:
+* Peer-review design and security proof
+* Software testing
+* Node deployment
+* Governance: Coalition agreement</p>
+
+<p><strong>Protocol</strong>
+Main objective:
+* Provide a user-friendly experience (simple UX, vote generation for several NFTs, vote generation time &lt; 2 minutes)</p>
+
+<p>Main tasks:
+* Reduce computation costs
+* Generic (non-Nouns specific)</p>
+
+<p><strong>Delay-relayer service</strong>
+Main objective:
+* To have the service in place by year-end</p>
+
+<p>Main tasks:
+* Find suitable partner to implement this
+* Review current design, in particular concerning payment of gas costs</p>
+
+<p><strong>Ethereum evolution</strong>
+Main objective:
+* keep compatibility along new releases</p>
+
+<p>Main tasks:
+* Adapt to new Ethereum block header</p>
+
+<p><strong>Ballot batching</strong>
+Main objective:
+* Enable weighted voting (without braking any other property e.g ballot-secrecy)</p>
+
+<p>Main tasks:
+* Research for a solution (most likely, it will impact on almost every existing component)
+* Implement the solution</p>
+
+<h2>Implementation</h2>
+
+<h3>Quirks</h3>
+
+<ul>
+<li><strong>Archive node requirement</strong>. With the exception of very short voting processes, the census block will lie more than 256 blocks in the past, which means the two storage proofs needed for vote submission will have to be fetched from an <em>archive node</em>. Fortunately, Infura provides storage nodes (free to use for up to 25k archive requests per day), and their nodes are used by MetaMask by default.</li>
+<li><strong>Ethereum fork requirement</strong>. As part of the census snapshot that is taken at process creation time, a zero-knowledge proof that the storage hashes submitted arise from the block hash of the corresponding block, and this entails providing the block header to the circuit as private input. Part of this proof involves checking that this block header is a valid block header, which means a choice of Ethereum fork must be made. Currently, we assume that the underlying blockchain is the <em>Shanghai fork</em>. Later this year, there will be a new fork &ndash; the <em>Cancún fork</em> &ndash; and our code will have to be updated appropriately by taking the new block header fields into account. Note also that certain local blockchain implementations (e.g. <a href="https://github.com/trufflesuite/ganache/issues/2099">Ganache</a>) do not implement the Shanghai fork.</li>
+</ul>
+
+<h3>Repositories</h3>
+
+<ul>
+<li><a href="https://github.com/aragonzkresearch/nouns-anonymous-voting">nouns-anonymous-voting</a>: voter client library, tally CLI, and smart contracts (including zkRegistry)</li>
+<li><a href="https://github.com/aragonzkresearch/noir-trie-proofs">noir-trie-proofs</a>: RLP decoding and Ethereum state and storage proof verification in Noir</li>
+<li><a href="https://github.com/aragonzkresearch/tlcs-c">tlcs-c</a>: Timelock Cryptographic Service Protocol C implementation (currently used in Timelock.zone)</li>
+<li><a href="https://github.com/aragonzkresearch/tlcs-rust">tlcs-rust</a>: Timelock Cryptographic Service Protocol rust implementation (to be used in Timelock.zone when put in production)</li>
+<li><a href="https://github.com/aragonzkresearch/tlcs-chain">tlcs-chain</a>: Cosmos Blockchain which provides a Time Lock Cryptography Service</li>
+<li><a href="https://github.com/aragonzkresearch/zk-registry-ui-demo">zk-registry-ui-demo</a>: Web based UI using MetaMask for zk registry registration</li>
+</ul>
+
+
+      <div style="text-align:center;margin-top:100px;">
+        <a href="/">Go to main</a>
+      </div>
+    </div>
+
+
+    <footer style="text-align:center; height:150px; margin-top:-140px;">
+      <div class="container">
+        <div style="margin-top:30px;padding-top:30px;">
+          <a href="/about" style="color:#ffffff;font-weight:bold;"><span style="font-weight:bold;">Aragon ZK Research</span></a> is a zk research group contributing to <a href="https://aragon.org" target="_blank" style="color:#ffffff;font-weight:bold;">Aragon</a> ecosystem.
+
+          <br><br>
+          <!-- <a href="https://research.aragon.org" target="_blank" style="color:#ffffff;margin:10px;" title="Blog" alt="Blog"><i class="bi bi-file-text-fill" style="font-size: 2rem;"></i></a> -->
+          <a href="https://github.com/aragonzkresearch" target="_blank" style="color:#ffffff;margin:10px;" title="Github" alt="Github"><i class="bi bi-github" style="font-size: 2rem;"></i></a>
+          <a href="https://twitter.com/aragon_zk" target="_blank" style="color:#ffffff;margin:10px;" title="Twitter" alt="Twitter"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script src="js/theme.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
