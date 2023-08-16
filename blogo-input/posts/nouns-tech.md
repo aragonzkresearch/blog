@@ -1,11 +1,11 @@
 # Nouns sprint technical report
 
-*2022-08-21*
+*2022-08-21 by AZKR*
 
-## Introduction
+## 1 Introduction
 This is a technical description of the outcomes of the work done by Aragon ZK Research (AZKR) during the exectution of the [joint proposal](https://prop.house/nouns/private-voting-research-sprint/3954) submitted to the Nouns DAO [Private Voting Research Sprint](https://prop.house/nouns/private-voting-research-sprint) by Aztec Labs and AZKR.
 
-This document is part of the final documentation. Read the [Final report](==TODO add link==) for further information.
+This document is part of the final documentation. Read the [Final report](nouns.html) for further information.
 
 
 <div class="warning">
@@ -15,7 +15,7 @@ This is a research project. The outputs are strictly preliminary results.
 </div>
 
 
-### Properties of the e-voting system and security assumptions
+### 1.1 Properties of the e-voting system and security assumptions
 As specified in the proposal, the system has been designed to meet the following properties:
 
 - **Ballot secrecy** It is impossible to link a voter with a choice
@@ -35,7 +35,7 @@ Security assumptions:
 - Same as in Ethereum.
 - Fairness also depends on League of Entropy.
 
-### Components overview
+### 1.2 Components overview
 
 Main components:
 
@@ -48,89 +48,63 @@ Main components:
 ![](https://hackmd.io/_uploads/ByhaFpP9n.png)
 
 
-### Flow overview
-0. **Wallet registration (strictly only once per wallet)** Every wallet must have been registered before the voting process is created. This must only be done once per address. The owner of the wallet does not need to save any extra data because  the key pair is generated deterministically.
+### 1.3 Flow overview
+1. **Wallet registration (strictly only once per wallet)** Every wallet must have been registered before the voting process is created. This must only be done once per address. The owner of the wallet does not need to save any extra data because  the key pair is generated deterministically.
 
-    Demo: [zkRegistry using MetaMask](https://timelock.zone/MakeKeysAndRegister.mp4)
+    * Demo: [zkRegistry using MetaMask](https://timelock.zone/MakeKeysAndRegister.mp4)
+    * Webapp: https://zkreg.com/keygen
+    * Main inputs:
+        * Wallet address
+    * Main outputs:
+        * Public key (stored in the regsitry)
+        * Private key
+    * Gas cost: ~45k
+ 
+2. **Voting process setup** Anyone can create a voting process.
+    * Demo (steps 2-5): [nouns-cli](https://hackmd.io/5vFz0a1BRTikynTf7ga-eg?view)
+    * Main inputs:
+        * IPFS link to proposal
+        * Start delay (i.e. time from process submission to beginning of voting period)
+        * End date
+    * Main outputs:
+        * Process ID
+    * Gas cost: ~700k
+
+3. **Vote generation (one per NFT)** Allowed registered wallets (i.e. holding NFTs -either non-delegated owned or delegated, at the time of the process creation) can generate the ballot and the corresponding proofs. 
+
+    * Main inputs:
+        * Voting process ID
+        * NFT ID
+        * Private key
+        * Choice
+    * Main outputs:
+        * Vote (i.e. Random Baby Jubjub public key + ballot encrypted using shared secret between random key and Timelock.zone key + proofs of NFT ownership or delegation)
+    * Total computation time (zkRegistry + NFT ownership + delegation proofs): ~12 minutes (modern laptop with i7 U-series processor and 32GB RAM)
     
-    Webapp: https://zkreg.com/keygen
-
-    Main inputs:
-
-    * Wallet address
-
-    Main outputs:
-
-    * Public key (stored in the regsitry)
-    * Private key
-     
-    Gas cost: ~45k
-1. **Voting process setup** Anyone can create a voting process.
-
-    Demo (steps 1-4): [nouns-cli](https://hackmd.io/5vFz0a1BRTikynTf7ga-eg?view)
-
-    Main inputs:
-
-    * IPFS link to proposal
-    * Start delay (i.e. time from process submission to beginning of voting period)
-    * End date
-    
-    Main outputs
-
-    * Process ID
-    
-    Gas cost: ~700k
-2. **Vote generation (one per NFT)** Allowed registered wallets (i.e. holding NFTs -either non-delegated owned or delegated, at the time of the process creation) can generate the ballot and the corresponding proofs. 
-
-    Main inputs:
-
-    * Voting process ID
-    * NFT ID
-    * Private key
-    * Choice
-    
-    Main outputs:
-
-    * Vote (i.e. Random Baby Jubjub public key + ballot encrypted using shared secret between random key and Timelock.zone key + proofs of NFT ownership or delegation)
-
-    Total computation time (zkRegistry + NFT ownership + delegation proofs): ~12 minutes (modern laptop with i7 U-series processor and 32GB RAM)
-    
-3. **Submission** The vote can be submitted to the voting *Nouns voting* smart contract (VSC) during the voting period. Steps 2. and 3. are performed together by the CLI.
+4. **Submission** The vote can be submitted to the voting *Nouns voting* smart contract (VSC) during the voting period. Steps 2. and 3. are performed together by the CLI.
     
     > **Note:** Users are highly recommended to use a fresh/anonymous address to submit the ballot, in order to avoid leaking ballot secrecy.
 
-    Main inputs:
+    * Main inputs:
+        * Vote (generated in the previous step)
+    * Main outputs:
+        * None
+    * Gas costs: ~690k
 
-    * Vote (generated in the previous step)
-    
-    Main outputs:
+5. **Tally** Anyone can carry out the generation and submission of the tallying proof. This must only be done once.
 
-    * None
-
-    Gas costs: ~690k
-
-4. **Tally**
-
-    Main inputs:
-
-    * Process ID
-    
-    Main outputs:
-
-    * Results + proof of correctness
-    
-    Gas costs: ~522k (submission of the proof that the tally is correct)
-    
-    Constraints:
-    
-    > **Note:** Only one entity has to carry out the generation and submission of the tallying proof.
-    
+    * Main inputs:
+        * Process ID
+    * Main outputs:
+        * Results + proof of correctness
+    * Gas costs: ~522k (submission of the proof that the tally is correct)
+    * Constraints:
     * Census up to 16 NFTs: 106k constrains => ~5 minutes (laptop with i7 U-series processor and 32GB RAM)
     * 256 NFTs : 1.5m constrains => ~2 hours (laptop with i7 U-series processor and 32GB RAM)
 
-> **Future work**: The computation time is expected to decrease significantly with the upcoming optimisations and new features of Noir
+    > **Future work**: The computation time is expected to decrease significantly with the upcoming optimisations and new features of Noir
 
-### Main achievements
+### 1.4 Main achievements
 * Overall, the main requirements of the call have been met:
     * Trustless token-holder census using Ethereum storage proofs
     * Full anonymity (as long as votes are submitted via an anonymized address)
@@ -141,7 +115,7 @@ Main components:
     * Creating an on-chain zkRegistry to make the voter's registration ZK-friendly; this registry is of independent interest for future applications.
     * Developing a voting scheme that combines zkSNARKs with encryption and digital signatures to simultaneously achieve full anonymity and fairness.
 
-### Current limitations
+### 1.5 Current limitations
 * The PoC mostly via CLI
     * The demo is based on a script
     * Timelock.zone is available with API access or Web interface
@@ -153,7 +127,7 @@ Main components:
     * Vote generation takes several minutes per NFT (there is room for optimization)
     * Tally generation: over 10 minutes for a census of 256 NFTs (can be improved; not so worrying as the vote generation time because this can be run on powerful servers)
 
-### Main next steps
+### 1.6 Main next steps
 * Noir proving speed-ups via:
     * Multi-threading
     * WebGPU
@@ -163,14 +137,14 @@ Main components:
 * In-browser version (23Q4 in Aragon OSX): all user journey in-browser
     * Pending for Noir recursion in browser
 
-## zkRegistry
+## 2 zkRegistry
 This is the first component of the system the user must interact with. It is a registry that stores a map between Ethereum Addresses and Public Keys or Commitments. This allows the users to register a new Secret Key for their wallet, that can be then efficiently used by cryptographic protocols.
 
 The current design allows to use new types of Secret Keys, besides the Ethereum Secp256k1 Private Key. This can make protocols, especially working with ZK, a lot more efficient. In this project, we are particularly interested in the first point, which allows us to use BabyJubJub keys. Specifically, the commitment is a BJJ public key which corresponds to a private key that is obtained from the signature (via hardware wallet or Metamask) of a pre-established text.
 
 Website: https://zkreg.com
 
-## Timelock.zone
+## 3 Timelock.zone
 Timelock.zone is a public time-locked cryptographic service enabling anyone to encrypt data for decryption in the future, with support for the most common cryptographic schemes. Time-locked cryptography (TLE) are cryptographic systems which guarantee that ciphertexts will be decipherable only at a certain time in the future. Such systems are also variously referred to as time-lapse, time-based, time-dependent, delayed unlocking etc. cryptographic protocols.
 
 We use TLE to ensure that no one has access to the choices of the ballots before the end of the voting period. timelock.zone was started as part of the nouns private voting period but it has been developed as an independent service, given the number of potential applications it has beyond e-voting. We call the protocol TLCS (Time Lock Cryptographic Service) and the service timelock.zone.
@@ -202,10 +176,10 @@ API: https://hackmd.io/WVF0GVWgQZmPFIV_lT9F4A
 
 > **Future work**: We plan to launch Timelock.zone by year-end.
 
-## Voting protocol
+## 4 Voting protocol
 * [Initial concept note](https://hackmd.io/8572_wduTQiXNWNCwIu5-A)
 
-### Setup
+### 4.1 Setup
 The following subsections will assume that the different parties have access to:
 
 - timelock.zone:
@@ -226,7 +200,7 @@ Algorithms used:
     The Sign algorithm is for a DS scheme that has the following property: it is hard for an adversary to produce two different signatures of the same message (BLS and RSA have this property).
     In other words, $\sigma$ is for a deterministic unique signature. Alternatively we can use PLUME in future. For the moment we will use EdDSA. 
 
-### Process creation
+### 4.2 Process creation
 
 In order to create a new process, anyone can send a tx calling the `newProcess` method from the VSC.
 
@@ -251,7 +225,7 @@ Both $R_{token}, R_{zkreg}$ must be under the same Ethereum Storage Root for the
 
 > **Future work**: Modify the design to allow the registration at the zkRegistry between the process creation and the start of the voting period.
 
-### Voter proof
+### 4.3 Voter proof
 
 <u>Vote's choice (Noir). Run by the voter in a 'personal' server</u>:
 
@@ -300,7 +274,7 @@ A nullifier ensures uniqueness of the vote.
 
 > **Future work**: Modify the design to merge the two previous enhancements.
 
-### Tally proof
+### 4.4 Tally proof
 
 $t$: time to decrypt votes, known by the VSC
 Ethereum end blocknum: Ethereum block until which voters can submit votes
@@ -350,7 +324,7 @@ If the `tally_proof` is correct, the VSC then sets the tally fields with the pro
 A check in the VSC prevents from accepting a second tally.
 
 
-### Connecting Voter proof with Tally proof
+### 4.5 Connecting Voter proof with Tally proof
 The previous sections describe the voting protocol. In this one we intend to provide a visual representation to help understanding the relation between the different variables defined. We use different font colors to this end.
 
 <div class="row" style="margin-bottom:30px;">
@@ -432,7 +406,7 @@ subgraph VSC
 end
 </pre>
 
-### Full flow
+### 4.6 Full flow
 
 <pre class="mermaid">
 sequenceDiagram
@@ -466,7 +440,7 @@ sequenceDiagram
 </pre>
 
 
-## Further work
+## 5 Further work
 From now on, AZKR will continue developing the key components of this project in order to make available a voting system with at least the current properties (trustless, ballot secrecy, fairness, etc.) to [Aragon OSX](https://aragon.org/aragonosx) as a plugin. The code name is likely to be zk-POPVOTE (zk Proof-based On-chain Private Voting).
 
 **zkRegistry**
@@ -540,13 +514,13 @@ Main tasks:
 * Research for a solution (most likely, it will impact on almost every existing component)
 * Implement the solution
 
-## Implementation
+## 6 Implementation
 
-### Quirks
+### 6.1 Quirks
 * **Archive node requirement**. With the exception of very short voting processes, the census block will lie more than 256 blocks in the past, which means the two storage proofs needed for vote submission will have to be fetched from an *archive node*. Fortunately, Infura provides storage nodes (free to use for up to 25k archive requests per day), and their nodes are used by MetaMask by default.
 * **Ethereum fork requirement**. As part of the census snapshot that is taken at process creation time, a zero-knowledge proof that the storage hashes submitted arise from the block hash of the corresponding block, and this entails providing the block header to the circuit as private input. Part of this proof involves checking that this block header is a valid block header, which means a choice of Ethereum fork must be made. Currently, we assume that the underlying blockchain is the *Shanghai fork*. Later this year, there will be a new fork -- the *Cancún fork* -- and our code will have to be updated appropriately by taking the new block header fields into account. Note also that certain local blockchain implementations (e.g. [Ganache](https://github.com/trufflesuite/ganache/issues/2099)) do not implement the Shanghai fork.
 
-### Repositories
+### 6.2 Repositories
 - [nouns-anonymous-voting](https://github.com/aragonzkresearch/nouns-anonymous-voting): voter client library, tally CLI, and smart contracts (including zkRegistry)
 - [noir-trie-proofs](https://github.com/aragonzkresearch/noir-trie-proofs): RLP decoding and Ethereum state and storage proof verification in Noir
 - [tlcs-c](https://github.com/aragonzkresearch/tlcs-c): Timelock Cryptographic Service Protocol C implementation (currently used in Timelock.zone)
@@ -579,5 +553,6 @@ Main tasks:
     padding:10px;
     padding-left:20px;
     margin: 20px;
+    text-align: center;
 }
 </style>
