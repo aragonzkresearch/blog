@@ -1,4 +1,4 @@
-# Nouns Private Voting Research Sprint Report
+# Nouns Private Voting Research Sprint - General Report
 
 *2022-08-21 by AZKR*
 
@@ -116,7 +116,7 @@ Technically speaking, we were looking for an e-voting system with the following 
 
 
 
-* **Ballot secrecy **It is impossible to link a voter with a choice.
+* **Ballot secrecy** It is impossible to link a voter with a choice.
 * **Eligibility** Only legitimate voters can vote.
 * **Eligibility verifiability** Anyone can verify that each vote in the set of all cast votes was cast by an eligible voter.
 * **Fairness** No early results can be obtained which could influence the remaining voters.

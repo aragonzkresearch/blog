@@ -1,4 +1,4 @@
-# Nouns sprint technical report
+# Nouns Private Voting Research Sprint - Technical Report
 
 *2022-08-21 by AZKR*
 
