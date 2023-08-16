@@ -37,16 +37,10 @@ Security assumptions:
 
 ### 1.2 Components overview
 
-Main components:
+![](img/nouns_components.png)
 
-- *zkRegistry*
-- *Voter client*
-- *Tally CLI*
-- *Timelock.zone*
-- *Delay relayer* (included in the proposal, but not started yet -not shown in the diagram)
 
-![](https://hackmd.io/_uploads/ByhaFpP9n.png)
-
+> The *Delayre-layer* was included in the proposal, but it's development has not yet started, thus it is not shown in the diagram
 
 ### 1.3 Flow overview
 1. **Wallet registration (strictly only once per wallet)** Every wallet must have been registered before the voting process is created. This must only be done once per address. The owner of the wallet does not need to save any extra data because  the key pair is generated deterministically.
