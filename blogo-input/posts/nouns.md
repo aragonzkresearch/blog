@@ -4,12 +4,12 @@
 
 ## 1 Abstract
 
-This report presents the results of the joint work done by Aragon ZK Research Association and Aztec Labs to implement a private voting proof of concept (PoC) for NounsDAO. These two organizations submitted a proposal to the NounsDAO in March 2023 [Private Voting Research Sprint](https://prop.house/nouns/private-voting-research-sprint) and have been working closely together on the implementation. This report also describes what remains to be done to achieve a private voting MVP for Nouns DAO, and provides an estimation of the efforts required to do so.
+This report presents the results of the joint work done by Aragon ZK Research Association and Aztec Labs to implement a private voting proof of concept (PoC) for NounsDAO. These two organizations submitted a proposal to the NounsDAO in March 2023 and have been working closely together on the implementation. This report also describes what remains to be done to achieve a private voting MVP for Nouns DAO, and provides an estimation of the efforts required to do so.
 
 
 ## 2 Introduction
 
-In February 2023, the [Nouns DAO](https://nouns.wtf/) launched a call for proposals to fund 3 research projects – "Calling all ZK/cryptography researchers to research solutions to private voting for Nouns DAO and beyond!"[^1]. The set of requirements that the solutions had to meet made this a very significant challenge. 
+In February 2023, the [Nouns DAO](https://nouns.wtf/) launched a call for proposals to fund 3 research projects – "Calling all ZK/cryptography researchers to research solutions to private voting for Nouns DAO and beyond!": [Private Voting Research Sprint](https://prop.house/nouns/private-voting-research-sprint). The set of requirements that the solutions had to meet made this a very significant challenge. 
 
 [Aragon ZK Research Association (AZKR)](https://research.aragon.org/) has been doing research on e-voting since early 2022. Our experience indicated that the use of Storage Proofs would lead to an elegant design for a private voting implementation. However, the major obstacle at the time was that, to the best of our knowledge, there were no production-ready software solutions implementing such proofs. Building on previous collaborative work between AZKR and [Aztec Labs](https://aztec.network/), this research sprint presented an ideal scenario to tackle the challenge. Aztec Labs focused on the core research regarding the technology and necessary primitives that would unlock storage proofs in Noir, a Rust-like programming language enabling safe, seamless construction of privacy-preserving zero-knowledge circuits. For its part, AZKR focused on the design and implementation of a comprehensive voting solution leveraging these proofs.
 
@@ -241,9 +241,4 @@ AZKR will continue developing the key components of this project in order to mak
 ### 10.2 Aztec Labs
 
 Aztec Labs will continue contributing to Noir’s development to enhance both the developer and user experiences with trustless private voting. From getting Recursive Aggregation in web browsers, researching in-browser proving optimizations, all the way to developing the next version of our proving backend, we excitedly look forward to the blossoming of ZK DAO Governance that would be unlocked with the technologies.
-
-### Notes
-
-[^1]:
-     [https://prop.house/nouns/private-voting-research-sprint](https://prop.house/nouns/private-voting-research-sprint) 
 
