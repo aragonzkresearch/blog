@@ -1,6 +1,6 @@
 # Nouns Private Voting Research Sprint - General Report
 
-*2022-08-21 by AZKR*
+*2022-08-17 by AZKR*
 
 ## 1 Abstract
 
