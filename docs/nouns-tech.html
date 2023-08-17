@@ -65,7 +65,7 @@
 
 <h2>1 Introduction</h2>
 
-<p>This is a technical description of the outcomes of the work done by Aragon ZK Research (AZKR) during the exectution of the <a href="https://prop.house/nouns/private-voting-research-sprint/3954">joint proposal</a> submitted to the Nouns DAO <a href="https://prop.house/nouns/private-voting-research-sprint">Private Voting Research Sprint</a> by Aztec Labs and AZKR.</p>
+<p>This is a technical description of the outcomes of the work done by Aragon ZK Research (AZKR) during the execution of the <a href="https://prop.house/nouns/private-voting-research-sprint/3954">joint proposal</a> submitted to the Nouns DAO <a href="https://prop.house/nouns/private-voting-research-sprint">Private Voting Research Sprint</a> by Aztec Labs and AZKR.</p>
 
 <p>This document is part of the final documentation. Read the <a href="nouns.html">Final report</a> for further information.</p>
 
@@ -105,13 +105,13 @@ This is a research project. The outputs are strictly preliminary results.
 <p><img src="img/nouns_components.png" alt="" /></p>
 
 <blockquote>
-<p>The <em>Delayre-layer</em> was included in the proposal, but it&rsquo;s development has not yet started, thus it is not shown in the diagram</p>
+<p>The <em>Delay-Relayer</em> was included in the proposal, but its development has not yet started, thus it is not shown in the diagram</p>
 </blockquote>
 
 <h3>1.3 Flow overview</h3>
 
 <ol>
-<li><p><strong>Wallet registration (strictly only once per wallet)</strong> Every wallet must have been registered before the voting process is created. This must only be done once per address. The owner of the wallet does not need to save any extra data because  the key pair is generated deterministically.</p>
+<li><p><strong>Wallet registration (only once per wallet address)</strong> Every wallet must have been registered before the voting process is created. This must only be done once per address. The owner of the wallet does not need to save any extra data because  the key pair is generated deterministically.</p>
 
 <ul>
 <li>Demo: <a href="https://timelock.zone/MakeKeysAndRegister.mp4">zkRegistry using MetaMask</a></li>
@@ -124,7 +124,7 @@ This is a research project. The outputs are strictly preliminary results.
 <li>Main outputs:
 
 <ul>
-<li>Public key (stored in the regsitry)</li>
+<li>Public key (stored in the registry)</li>
 <li>Private key</li>
 </ul></li>
 <li>Gas cost: ~45k</li>
@@ -280,7 +280,7 @@ This is a research project. The outputs are strictly preliminary results.
 
 <p>This is the first component of the system the user must interact with. It is a registry that stores a map between Ethereum Addresses and Public Keys or Commitments. This allows the users to register a new Secret Key for their wallet, that can be then efficiently used by cryptographic protocols.</p>
 
-<p>The current design allows to use new types of Secret Keys, besides the Ethereum Secp256k1 Private Key. This can make protocols, especially working with ZK, a lot more efficient. In this project, we are particularly interested in the first point, which allows us to use BabyJubJub keys. Specifically, the commitment is a BJJ public key which corresponds to a private key that is obtained from the signature (via hardware wallet or Metamask) of a pre-established text.</p>
+<p>The current design allows to use new types of Secret Keys, besides the Ethereum Secp256k1 Private Key. This can make protocols, especially working with ZK, a lot more efficient. In this project, we are particularly interested in the first point, which allows us to use BabyJubJub keys. Specifically, the commitment is a BJJ public key which corresponds to a private key that is obtained from the signature (via hardware wallet or MetaMask) of a pre-established text.</p>
 
 <p>Website: <a href="https://zkreg.com">https://zkreg.com</a></p>
 
@@ -301,7 +301,7 @@ This is a research project. The outputs are strictly preliminary results.
 <li>These parties do not need to be present when the private key is revealed.</li>
 </ol>
 
-<p>From a pragmatic standpoint, here we just look at timelock.service as a service that provides public keys for encrypting the ballots ensuring that the corresponding private keys are only made available once the voting period is finished.</p>
+<p>From a pragmatic standpoint, here we just look at timelock.zone as a service that provides public keys for encrypting the ballots ensuring that the corresponding private keys are only made available once the voting period is finished.</p>
 
 <p>For technical details see:
 * <a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/azkr-timelock-zone.pdf">Timelock.zone paper</a>
@@ -442,7 +442,7 @@ Output: proof <span class="math inline">\(\pi\)</span> computed as follows:</p>
 
 <p>If <span class="math inline">\(N\)</span> voters submitted valid proofs we call <span class="math inline">\((A_i,B_i,N_i,\pi_i)\)</span>, for <span class="math inline">\(i\in[N]\)</span>, the values such voter sent to the VSC.</p>
 
-<p>A nullifier ensures uniqueness of the vote.</p>
+<p>A nullifier ensures the uniqueness of the vote.</p>
 
 <blockquote>
 <p><strong>Future work</strong>: Modify the design to allow vote recast (currently seen as the most effective anti-coercion measure).</p>
@@ -679,7 +679,7 @@ sequenceDiagram
 <li>Consider to submit a proposal of an EIP</li>
 </ul>
 
-<p>Note that in the long term this component may become obsolete if something like <a href="https://eprint.iacr.org/2022/1255.pdf">Plume</a> becomes available in hardware wallets and Metamask.</p>
+<p>Note that in the long term this component may become obsolete if something like <a href="https://eprint.iacr.org/2022/1255.pdf">Plume</a> becomes available in hardware wallets and MetaMask.</p>
 
 <p><strong>Timelock.zone</strong></p>
 
