@@ -4,16 +4,16 @@
 
 ## 1 Abstract
 
-This document is a summary report detailing the results of the joint implementation between Aragon ZK Research Association and Aztec Labs to implement a private voting proof of concept (PoC) for NounsDAO. These two organizations submitted a joint proposal to the NounsDAO [Private Voting Research Sprint](https://prop.house/nouns/private-voting-research-sprint) and have been working closely together on the implementation. This summary report also describes what remains to be done to achieve a private voting MVP for Nouns DAO, and makes an estimation of the efforts required to do so.
+This report presents the results of the joint work done by Aragon ZK Research Association and Aztec Labs to implement a private voting proof of concept (PoC) for NounsDAO. These two organizations submitted a proposal to the NounsDAO in March 2023 [Private Voting Research Sprint](https://prop.house/nouns/private-voting-research-sprint) and have been working closely together on the implementation. This report also describes what remains to be done to achieve a private voting MVP for Nouns DAO, and provides an estimation of the efforts required to do so.
 
 
 ## 2 Introduction
 
-In February 2023, the [Nouns DAO](https://nouns.wtf/) launched a call for proposals to fund 3 research projects – "Calling all ZK/cryptography researchers to research solutions to private voting for Nouns DAO and beyond!"[^1]. The set of requirements that the solutions had to meet made the challenge enormous. 
+In February 2023, the [Nouns DAO](https://nouns.wtf/) launched a call for proposals to fund 3 research projects – "Calling all ZK/cryptography researchers to research solutions to private voting for Nouns DAO and beyond!"[^1]. The set of requirements that the solutions had to meet made this a very significant challenge. 
 
-[Aragon ZK Research Association (AZKR)](https://research.aragon.org/) has been doing research on e-voting since early 2022. Our experience indicated that the use of Storage Proofs would lead to an elegant design for a private voting implementation. However, the major obstacle at the time was that, to the best of our knowledge, there were no production-ready software solutions implementing such proofs. Building on previous collaborative work between AZKR and [Aztec Labs](https://aztec.network/), this research sprint presented an ideal scenario to tackle the challenge. Aztec Labs focused on the core research regarding the technology and necessary primitives that would unlock storage proofs in Noir, Rust-based programming language enabling safe, seamless construction of privacy-preserving zero-knowledge circuits, while AZKR focused on the design and implementation of a comprehensive voting solution leveraging these proofs.
+[Aragon ZK Research Association (AZKR)](https://research.aragon.org/) has been doing research on e-voting since early 2022. Our experience indicated that the use of Storage Proofs would lead to an elegant design for a private voting implementation. However, the major obstacle at the time was that, to the best of our knowledge, there were no production-ready software solutions implementing such proofs. Building on previous collaborative work between AZKR and [Aztec Labs](https://aztec.network/), this research sprint presented an ideal scenario to tackle the challenge. Aztec Labs focused on the core research regarding the technology and necessary primitives that would unlock storage proofs in Noir, a Rust-like programming language enabling safe, seamless construction of privacy-preserving zero-knowledge circuits. For its part, AZKR focused on the design and implementation of a comprehensive voting solution leveraging these proofs.
 
-Under this premise, our teams created a [joint proposal](https://prop.house/nouns/private-voting-research-sprint/3954), which received the second most votes from NounsDAO holders  (thus, becoming one of the three proposals that were formally selected). During the execution phase of the last 3 months, we have issued 4 progress reports and have had 3 meetings with the sponsor; one at the beginning, one at mid term, and one at the end. 
+Based on this approach, our teams created a [joint proposal](https://prop.house/nouns/private-voting-research-sprint/3954), which received the second most votes from NounsDAO holders, thus becoming one of the three selected proposals. During an execution phase that lasted roughly 3 months, we have issued 4 progress reports and have had 3 meetings with the sponsor: one at the beginning, one at mid term, and one at the end. 
 
 For technical details, this report references our final technical report, which is part of the deliverables of this project. Along the development phase, we have made several modifications to the initial proposed design to accommodate our findings and to incorporate comments we have received from third parties. In this report, we only refer to the latest versions of the design and of the implementations.
 
@@ -25,16 +25,15 @@ The main goal of any research project is to answer a set of research questions a
 
 
 1. Up to which point is it possible to build a **user-friendly**, **trustless** (decentralized), **fair** (no one can count votes before a given time), **weighed** (voting power depends on the amount of tokens hold/delegated) and **ballot-secret** (it is impossible to link a voter with a choice) voting system in Ethereum?
-2. If all these properties cannot be met at once, which are incompatible and why?
+2. If all these properties cannot be met at once, which ones are incompatible and why?
 3. If all these properties cannot be met at once, what are the recommended trade-offs  and why?
 4. What is needed to make the recommended combination available to the Nouns community? (Resources needed, roadmap, etc.)
 
 The expected progress in the state of the art was twofold:
 
 
-
 1. Advances in storage proof technology.
-2. Leverage these advances to finally achieve an e-voting system with a set of clearly-defined properties that had never been implemented together before our project.. More precisely, our main priority was to meet the following properties jointly: ballot-secrecy and fairness in a highly trustless manner. We believe that these are the hardest properties to put together – thus, these are the right ones to start from for creating a base system, and once these are met, it should be possible to achieve additional properties through modifications and enhancements of this base system.
+2. Leverage these advances to finally achieve an e-voting system with a set of clearly-defined properties that had never been implemented together before our project. More precisely, our main priority was to meet the following properties jointly: ballot-secrecy and fairness in a highly trustless manner. We believe that these are the hardest properties to put together – thus, these are the right ones to start from for creating a base system, and once these are met, it should be possible to achieve additional properties through modifications and enhancements of this base system.
 
 
 ## 4 Methodology
@@ -50,21 +49,22 @@ The project has the following main deliverables:
 
 1. Documentation
     1. **This report**, which has the answers to our research questions and can be used as a hub to the rest of outputs of the project.
-    2. The [**Final technical report**](nouns-tech.html), which provides the technicalities of the work done.
+    2. The [**Final technical report**](nouns-tech.html), which provides technical details of the work done.
     3. The [Timelock.zone blog post](https://research.aragon.org/timelock.html).
     4. The [Interim Progress reports](https://hackmd.io/130yRfVARSC5AU5aT2w8Lw).
+
 2. Software
     5. The following experimental software repositories maintained by AZKR:
         1. **[Nouns-anonymous-voting](https://github.com/aragonzkresearch/nouns-anonymous-voting)**: voter client library, tally CLI, and smart contracts (including zkRegistry)
         2. **[Noir-trie-proofs](https://github.com/aragonzkresearch/noir-trie-proofs)**: RLP decoding and Ethereum state and storage proof verification in Noir
-        3. **[tlcs-c](https://github.com/aragonzkresearch/tlcs-c)**: Timelock Cryptographic Service Protocol C implementation (currently used in Timelock.zone)
-        4. **[tlcs-rust](https://github.com/aragonzkresearch/tlcs-rust)**: Timelock Cryptographic Service Protocol rust implementation (to be used in Timelock.zone when put in production)
+        3. **[tlcs-c](https://github.com/aragonzkresearch/tlcs-c)**: Timelock Cryptographic Service Protocol implementation in C (currently used in Timelock.zone)
+        4. **[tlcs-rust](https://github.com/aragonzkresearch/tlcs-rust)**: Timelock Cryptographic Service Protocol implementation in Rust (to be used in Timelock.zone when put in production)
         5. **[tlcs-chain](https://github.com/aragonzkresearch/tlcs-chain)**: Cosmos Blockchain which provides a Time Lock Cryptography Service
         6. **[zk-registry-ui](https://github.com/aragonzkresearch/zk-registry-ui-demo)**: Simple web UI for users to register their keys in the ZK Registry smart contract. Relies on MetaMask.
     6. A few highlights of what Aztec Labs R&D’d as a part of the sprint:
         7. **[UltraPlonk in Noir](https://github.com/noir-lang/noir/pull/1114)**: Improvements in the proving speed of Noir programs with an UltraPlonk proving system with optimizations like custom gates and lookup tables.
         8. **[Recursive Aggregation in Noir](https://github.com/noir-lang/noir/blob/9b417da0eef28a29dbe0f339ee19b8dd9859dc4d/noir_stdlib/src/lib.nr#L27-L28)**: Unlocks aggregation of multiple proofs into one and unlocks parallel proving for further speed-ups. For this research particularly, it unlocks proving of complex Noir programs (e.g. Ethereum storage proofs) in web browsers, circumventing memory limits in web browsers through incremental proving.
-        9. **[Keccak256 in Noir](https://github.com/noir-lang/noir/pull/1249)**: Unlocks proving of Keccak256 hashes (commonly seen on Ethereum, both within its architecture as well as across smart contracts). For this research particularly it unlocks Ethereum storage proofs in Noir which taps into Ethereum’s architecture that uses Keccak256 hashes.
+        9. **[Keccak256 in Noir](https://github.com/noir-lang/noir/pull/1249)**: Unlocks proving of Keccak256 hashes (used in Ethereum, both within its architecture as well as across smart contracts). For this research particularly it unlocks Ethereum storage proofs in Noir which taps into Ethereum’s architecture that uses Keccak256 hashes.
         10. **[ECDSA verification in Noir](https://github.com/noir-lang/noir/pull/1294)**: Unlocks verifying of Ethereum wallet signatures directly in Noir, smoothening users’ experience with the authentication of ZK dApps transactions (e.g. authenticating votes in this research).
         11. **Technical optimizations**: a considerable number of optimizations were also introduced in both Noir and UltraPlonk to unlock the use case of research, including but not limited to [plookup dynamic arrays](https://github.com/noir-lang/noir/pull/1282), [multi-threaded proving](https://github.com/AztecProtocol/barretenberg/pull/434), [low constraint Recursive Aggregation](https://github.com/AztecProtocol/barretenberg/pull/414), etc. 
 3. Demos:
@@ -82,13 +82,12 @@ The project has the following main deliverables:
 This section outlines how a voting process using the POC code would work in practice. 
 
 
-
-1.  **Wallet registration (strictly only once per wallet)**: 
+1.  **Wallet registration (once per Ethereum address)**: 
 
     Every wallet must have been registered before the voting process is created. This must only be done once per address. The owner of the wallet does not need to save any extra data because the key pair is generated deterministically.
 
 
-    Connect metamask to the zkRegistry [webapp](https://zkreg.com/keygen), register the public key, and copy the private key (needed for voting).
+    Connect MetaMask to the zkRegistry [webapp](https://zkreg.com/keygen), register the public key, and copy the private key (needed for voting).
 
 2.  **Voting process setup (a.k.a Proposal creation)**: 
 
@@ -99,14 +98,13 @@ This section outlines how a voting process using the POC code would work in prac
 
 3.  **Vote cast**: 
 
-    Registered wallets that meet the eligibility requirements (i.e. holding NFTs -either non-delegated owned or delegated, at the time of the process creation) can generate a ballot and the corresponding proofs. The vote can be submitted to the voting Nouns voting smart contract (VSC) during the voting period. Vote generation (ballot + proofs)  and submission are performed together through  the CLI. Each wallet can vote only once per voting process with the full weight of their voting power (it is not possible to split the vote between options).
-
+    Registered wallets that meet the eligibility requirements (i.e. holding NFTs, either owned directy or delegated, at the time of the process creation) can generate a vote and the corresponding proofs. The vote can be submitted to the Nouns voting smart contract (VSC) during the voting period. Vote generation (ballot + proofs) and submission are performed together through the CLI.
 
     Done via CLI with the `vote` subcommand.
 
 4. **Tally**:
 
-    After the voting period ends and the decryption key is released anyone can verify the outcome of the voting process by tallying the results. This is done via CLI with the `tally` subcommand. The subcomand does not return an output if called before the end of the voting period.
+    After the voting period ends and the decryption key is released, anyone can verify the outcome of the voting process by tallying the results. This is done via CLI with the `tally` subcommand. The subcommand does not return an output if called before the end of the voting period.
 
 
 
@@ -156,16 +154,16 @@ Security assumptions:
 
 
 
-1. **Lack of multisig**: Multisig support was a requirement of the research sprint that was explicitly excluded in our proposal. Multisig support is part of our future research in this domain.
-2. **Ballot batching**: In order to enable weighted voting without leaking information through voting power, we proposed a batching system (e.g. Tornado cash) in the first instance. However, given the amount of research effort we believe this solution requires, we explicitly excluded its development during the sprint. AZKR can join efforts if some other party is interested in exploring this option.
+1. **Lack of multisig**: Multisig support was a requirement of the research sprint that was explicitly excluded in our proposal. Multisig support will be the subject of future research.
+2. **Ballot batching**: In order to enable weighted voting without leaking information through voting power, we suggested to use a delaying and batching system ("delay-relayer"). However, given the amount of research effort we believe this solution requires, we explicitly excluded its development during the sprint. AZKR can join efforts if some other party is interested in exploring this option.
 
 
 ### 8.2 Deviations from our proposal
 
 
 
-3. **Addition of _zkRegistry_**: At the time of the proposal, we believed that our design would not require this component. However, during the sprint we realized that we could not avoid it with the current state of the art. The practical consequence is that every voter must register their wallet once to a smart contract before the first voting process that she wants to participate in is created. The voter is not required to store any additional information. **For clarity, only one registration per wallet is ever required**.
-4. **Exclusion of the _Relay-delayer_**: In our design, the main functionalities of the Relay-delayer are: i) enable aggregation of ballots (weighted voting), ii) allow for gas costs payment by third parties, and iii) potentially could add a mixnet layer. During the execution phase, we decided to not develop it due to the lack of time. A practical consequence is the simplification of the voting process phases, because with the relay-delayer model, in order to neutralize the censorship capacity of the nodes, the voting period is split into subphases. In the first one, votes can be cast (to the voting smart contract) either directly or indirectly through relay-delayer nodes. In the second phase, those who have cast through a relay-delayer must check (through a nullifier) that their ballots have been indeed aggregated by the node and if that is not the case, they can cast them directly. 
+3. **Addition of _zkRegistry_**: At the time of the proposal, we believed that our design would not require this component. However, during the sprint we realized that we could not avoid it with the current state of the art. The practical consequence is that every voter must register their wallet once in a smart contract before the first voting process that she wants to participate in is created. The voter is not required to store any additional information. **For clarity, only one registration per wallet is ever required**.
+4. **Exclusion of the _Relay-delayer_**: In our design, the main functionalities of the Relay-delayer are: i) enable aggregation of ballots (weighted voting), ii) allow for gas costs payment by third parties, and iii) potentially could add a mixnet layer. During the execution phase, we decided to not develop it due to the lack of time. A practical consequence is the simplification of the voting process phases, because with the relay-delayer model, to neutralize the censorship capacity of the nodes, the voting period is split into subphases. In the first one, votes can be cast (to the voting smart contract) either directly or indirectly through relay-delayer nodes. In the second phase, those who have cast through a relay-delayer must check (through a nullifier) that their ballots have been indeed aggregated by the node and if that is not the case, they can cast them directly. 
 
 
 ## 9 Answer to the research questions
@@ -177,16 +175,16 @@ Security assumptions:
     **Short Answer**: With the promising progress on both research and development achieved throughout the sprint, it is very possible.
 
 
-    **Longer Answer**: The key contribution of our work is having achieved fairness and ballot-secrecy in a highly trustless manner, as our design only depends on the League of Entropy. This is groundbreaking because, to the best of our knowledge, it is the first time fairness and ballot-secrecy are achieved together in such a trustless manner.
+    **Longer Answer**: The key contribution of our work is having achieved fairness and ballot-secrecy in a highly trustless manner, as our design only depends on the League of Entropy. This is groundbreaking because, to the best of our knowledge, it is the first time fairness and ballot-secrecy on Ethereum are achieved together in such a trustless manner.
 
 
-    However, in terms of user experience drawbacks, our solution i) requires only a one-time additional step (registration of the wallet to the zkRegistry) from the minimum ones (voting process creation, vote cast, tally). ii) It is one-vote per NFT, and, as discussed in Section “Deviations from our proposal”, iii) our proposal to support weighted voting (i.e. the inclusion of a relay-delayer service) involves the addition of extra steps for those who use it. iv) It still lacks in-browser support, and v) vote generation proving times are still considerably high (currently 12 minutes in a i7 U-series processor and 32GB RAM laptop) and vi) ballots must be submitted by fresh addresses. In the near future, although we don’t foresee changes in i) as we don’t consider it a major issue and removing it would increase complexity significantly, expect significant progress can be made to improve ii) to v).
+    However, in terms of user experience drawbacks, our solution i) requires a one-time additional step, which is the registration of the wallet with the zkRegistry; ii) is one-vote per NFT; iii) our proposal to facilitate weighted voting via the inclusion of a relay-delayer service will involve extra steps for those who use it; iv) It still lacks in-browser support; v) vote generation times are still quite long (currently 12 minutes on a laptop with an i7 processor and 32GB RAM); vi) in the absence of a delay-relayer, ballots must be submitted via addresses that cannot be linked to the NFT holder address; vii) finally, voting consumes a significant amount of gas. In the near future, we expect that significant progress can be made to improve ii) to v).
 
 
     Mobile browser support, in extension to desktop browser support, would also be an interesting challenge to tackle given the even stricter WASM memory restrictions (4GB → 1GB). One intermediate solution could be proving on desktop while signing from mobile via [WalletConnect](https://walletconnect.com/).
 
 
-    Overcoming vi) requires specific research, which we propose to be carried out leveraging existing mixnet solutions.
+    Overcoming iii) and vi) requires specific research, which we propose to be carried out leveraging existing mixnet solutions.
 
 
 
@@ -200,7 +198,7 @@ Security assumptions:
 
 4. _What is needed to make the recommended combination available to the Nouns community? (Resources needed, roadmap, etc.)_
 
-    **Short answer**: On the one hand, bring to production the components researched during the sprint and, on the other hand, research a solution for multisig support and develop the proposed solution for vote aggregation to eventually bring them to production. Some of the tasks are already part of AZKR’s and Aztec Labs’ roadmaps (e.g. private voting related components/technologies), but some other works would require further facilitation by the Nouns DAO (essentially customisation and integration with Nouns DAO’s governance system). The tasks of AZKR and Aztec Labs roadmaps are be expected to be finished by the end of 2023.
+    **Short answer**: On the one hand, bring to production the components researched during the sprint and, on the other hand, research a solution for multisig support and develop the proposed solution for vote aggregation to eventually bring them to production. Some of the tasks are already part of AZKR’s and Aztec Labs’ roadmaps (e.g. private voting related components/technologies), but some other works would require further facilitation by the Nouns DAO (essentially customisation and integration with Nouns DAO’s governance system). The tasks of AZKR and Aztec Labs roadmaps are expected to be finished by the end of 2023.
 
 
     **Longer answer**:
@@ -227,7 +225,7 @@ Security assumptions:
         11. (AZKR, Aztec Labs + others) Launch and maintain it
     5. Delay-relayer service
         12. (Nouns, with the support of AZKR and through third parties)
-    6. In addition, AZKR can look into ballot batching, i.e. explore the possibility of aggregating several votes into one. As this will have an impact on all system components, this will also require a separate feasibility study..
+    6. In addition, AZKR can look into ballot batching, i.e. explore the possibility of aggregating several votes into one. As this will have an impact on all system components, this will also require a separate feasibility study.
 
 
 ## 10 Future work
@@ -242,7 +240,7 @@ AZKR will continue developing the key components of this project in order to mak
 
 ### 10.2 Aztec Labs
 
-Aztec Labs will continue contributing to Noir’s development to enhance both the developer and user experiences with trustless private voting. From getting Recursive Aggregation in web browsers, researching in-browser proving optimizations, all the way to R&Ding the next version of our proving backend, we excitedly look forward to the blossoming of ZK DAO Governance that would be unlocked with the technologies.
+Aztec Labs will continue contributing to Noir’s development to enhance both the developer and user experiences with trustless private voting. From getting Recursive Aggregation in web browsers, researching in-browser proving optimizations, all the way to developing the next version of our proving backend, we excitedly look forward to the blossoming of ZK DAO Governance that would be unlocked with the technologies.
 
 ### Notes
 
