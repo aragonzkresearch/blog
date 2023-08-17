@@ -10,6 +10,16 @@
   "metaimg": "img/main-logo.svg",
   "posts": [
     {
+      "thumb": "nouns_thumb.md",
+      "md": "nouns.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
+      "metadescr": "Nouns sprint report"
+    },    {
+      "thumb": "nouns-tech_thumb.md",
+      "md": "nouns-tech.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
+      "metadescr": "Nouns sprint technical report"
+    },    {
       "thumb": "timelock_thumb.md",
       "md": "timelock.md",
       "metaimg": "img/twitter-blog-blank.jpg",

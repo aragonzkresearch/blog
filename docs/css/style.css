@@ -22,6 +22,15 @@ body {
   width: 100%;
 }
 
+code {
+  background:rgba(0,0,0,.04);
+  color: #000000;
+  padding-top:.2em;
+  padding-bottom:.2em;
+  border-radius: 3px;
+  font-size:85%;
+}
+
 a {
   text-decoration:none!important;
   color: #3164FA;
