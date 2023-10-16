@@ -1,6 +1,6 @@
 # Nouns Private Voting Research Sprint - Technical Report
 
-*2022-08-17 by AZKR*
+*2023-08-17 by AZKR*
 
 ## 1 Introduction
 This is a technical description of the outcomes of the work done by Aragon ZK Research (AZKR) during the execution of the [joint proposal](https://prop.house/nouns/private-voting-research-sprint/3954) submitted to the Nouns DAO [Private Voting Research Sprint](https://prop.house/nouns/private-voting-research-sprint) by Aztec Labs and AZKR.
