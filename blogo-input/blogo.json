@@ -10,6 +10,11 @@
   "metaimg": "img/main-logo.svg",
   "posts": [
     {
+      "thumb": "obfuscation_thumb.md",
+      "md": "obfuscation.md",
+      "metaimg": "img/twitter-blog-blank.jpg",
+      "metadescr": "Indistinguishability obfuscation (iO) for general circuits"
+    },    {
       "thumb": "nouns_thumb.md",
       "md": "nouns.md",
       "metaimg": "img/twitter-blog-blank.jpg",
