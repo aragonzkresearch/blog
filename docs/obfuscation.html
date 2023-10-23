@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta name="description" content="Indistinguishability obfuscation (iO) for general circuits" />
+    <meta charset="utf-8">
+    <title> Indistinguishability obfuscation (iO) for general circuits - Aragon ZK Research - blog</title>
+    <meta name="title" content=" Indistinguishability obfuscation (iO) for general circuits - Aragon ZK Research - blog">
+    <meta name="description" content="Indistinguishability obfuscation (iO) for general circuits">
+
+    <meta property="og:title" content=" Indistinguishability obfuscation (iO) for general circuits - Aragon ZK Research - blog" />
+    <meta property="og:description" content="Indistinguishability obfuscation (iO) for general circuits" />
+    <meta property="og:url" content="https://research.aragon.org/obfuscation.html" />
+    <meta property="og:type" content="article" />
+    <meta property="og:image" content="https://research.aragon.org/img/twitter-blog-blank.jpg" />
+    <meta name="twitter:title" content=" Indistinguishability obfuscation (iO) for general circuits - Aragon ZK Research - blog">
+    <meta name="twitter:description" content="Indistinguishability obfuscation (iO) for general circuits">
+    <meta name="twitter:image" content="https://research.aragon.org/img/twitter-blog-blank.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="author" content="aragon research">
+    <link rel="icon" type="image/svg" href="img/main-logo.svg">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- highlightjs -->
+    <link rel="stylesheet" href="js/highlightjs/atom-one-dark.css">
+    <script src="js/highlightjs/highlight.pack.js"></script>
+
+    <!-- katex -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc" crossorigin="anonymous">
+  </head>
+
+  <body>
+
+    <!-- o_gradient_background" -->
+    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <a href="/" style="color:#3164FA; weight:bold;">
+          <img src="img/main-logo-with-name.png" style="height:35px;margin-right:10px;"/> ZK Research - Blog
+        </a>
+        <div style="float:right;margin-top:-6px;">
+          <a href="/about" style="color:#000000;">
+            About us
+          </a>
+          <div class="onoffswitch" style="margin-left:20px;display:inline-block;" title="Change theme">
+            <input onclick="switchTheme()" type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+              id="themeSwitcher">
+            <label class="onoffswitch-label" for="themeSwitcher"></label>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div id="article" class="container" style="margin-top:40px;max-width:800px; min-height:calc(100vh - 100px); padding-bottom:180px;">
+      <h1>Indistinguishability obfuscation (iO) for general circuits</h1>
+
+<p><em>2023-10-23 by Razvan Rosie</em></p>
+
+<p>Links: <a href="https://github.com/aragonzkresearch/blog/blob/main/pdf/CAN23_p27.pdf"><strong>Paper</strong></a></p>
+
+<p>In this blogpost, we propose a construction for indistinguishability obfuscation (iO) for general circuits. The scheme is concocted from four main ingredients: (1) selectively indistinguishably-secure functional encryption for general circuits having its encryption procedure in complexity class NC1; (2) universal circuits; (3) puncturable pseudorandom functions having evaluation in NC1; (4) indistinguishably-secure affine-determinant programs, a notion proposed by works in submission that particularizes iO for specific circuit classes and acts as &ldquo;depleted&rdquo; obfuscators. The scheme can be used to build iO for all polynomial-sized circuits in a simplified way. Instantiations can be obtained from sub-exponentially secure learning with errors (LWE).</p>
+
+<p>Indistinguishability obfuscation (iO) is a central goal in the cryptographic community. Its prime purpose is to make functionally equivalent circuits indistinguishable. Its plethora of applications includes functional encryption, searchable encryption or non-interactive key-exchange protocols. iO can be realized from multilinear maps, multi-input functional encryption or compact functional encryption. Nowadays schemes achieving security under well-established assumptions exist.</p>
+
+<p><strong>Functional encryption and iO.</strong> Functional encryption(FE) provides targeted access over encrypted data. Using the public parameters (abbreviated <span class="math inline">\(mpk\)</span>), any input <span class="math inline">\(inp\)</span> taken from a specified domain can be encrypted as ciphertext CT. Using FE&rsquo;s secret key (abbreviated <span class="math inline">\(msk\)</span>), a functional key - <span class="math inline">\(sk_f\)</span> - can be issued for any function f represented as a polynomial-sized circuit C. One recovers <span class="math inline">\(C(inp)\)</span> whenever CT is decrypted under <span class="math inline">\(sk_f\)</span> . The major security notion to be accomplished is indistinguishability: as long as <span class="math inline">\(C(m_0) = C(m_1)\)</span> for two different messages <span class="math inline">\(m_0\)</span> and <span class="math inline">\(m_1\)</span>, it is hard for any computationally bounded adversary to distinguish if CT encrypts <span class="math inline">\(m_0\)</span> or <span class="math inline">\(m_1\)</span> given access to <span class="math inline">\(sk_f\)</span> and <span class="math inline">\(mpk\)</span> (and CT).</p>
+
+<p>Indistinguishability obfuscation appears, at first sight, unrelated to functional encryption. Its interface has the following specification: consider two functionally equivalent circuits: <span class="math inline">\(C_0\)</span> and <span class="math inline">\(C_1\)</span> , both implementing the same function f. An indistinguishability obfuscator iO takes as input one of them – say <span class="math inline">\(C_b\)</span> – for a bit b sampled uniformly at random. It releases <span class="math inline">\(C'\)</span>, such that it is hard for any computationally bounded adversary to distinguish if <span class="math inline">\(C'\)</span> was obtained from <span class="math inline">\(C_0\)</span> or <span class="math inline">\(C_1\)</span> (the indistinguishability property). We will use the term depleted obfuscator to refer to an iO obfuscator for very restricted sub-classes of P.</p>
+
+<p><strong>Placing our work in the Context of iO Schemes.</strong> This work follows, from a high level, the recipe put forth in: an obfuscator is used to compute a functional ciphertext, and a functional key is issued to decrypt iO&rsquo;s outputs. There are, though, major differences: builds a compact functional encryption (cFE) scheme using generically an exponentially-efficient obfuscator (XiO); the cFE is then used through a sequence of convoluted transforms to build iO. XiO is an obfuscator that is slightly smaller than a lookup table (the trivial obfuscator). Perhaps, at the time, the line of thought therein was focused on provably obtaining iO while focus on the realization of a less demanding primitive - the XiO obfuscator.</p>
+
+<p>The energy is put on building an indistinguishable obfuscator for a very restricted (depleted) class of circuits. We depart from the usage of an XiO and go for a direct construction assuming the existence of: (1) FE with encryption in NC1, universal circuits (Uc), puncturable pseudorandom functions (pPRF) with evaluation in NC1 and affine determinant programs (ADP).</p>
+
+<p>The main idea is to generate a functional key for the Uc. Then, using a different type of obfuscator - the ADP - we can produce functional ciphertexts for messages having their form: &ldquo;<span class="math inline">\(C||inp\)</span>&rdquo; for some binary representation of circuit <span class="math inline">\(C\)</span> and input <span class="math inline">\(inp\)</span>. By the correctness of FE, we get that:</p>
+<p><span class="math display">\[
+    FE.Dec(FE.KGen(msk, Uc), FE.Enc(mpk,C||inp)) = C(inp)~. 
+\]</span></p><p>The ADP (our depleted obfuscator) is used having the master public key of an FE scheme and a (puncturable) PRF key hard-coded. It will produce functional ciphertexts, to be decrypted under the functional key evaluating Uc. A preview of the inner working of our obfuscator is:
+$<span class="math inline">\(
+    iO.Setup(C) := (ADP.\Setup(mpk, C, dk), FE.KGen(msk, Uc) )
+\)</span>$</p>
+<p><span class="math display">\[
+	iO.Eval(inp) := FE.Dec(sk_{Uc}, ADP.Eval(FE.Enc(mpk, C||inp; pPRF(dk, inp))))
+\]</span></p><p>The proof for the obfuscator described above steps through hybridizing over all inputs: considering two functionally equivalent <span class="math inline">\(C_0\)</span> and <span class="math inline">\(C_1\)</span>, we will use the indistinguishability of ADP to switch to a setting where pPRF&rsquo;s key is replaced by one punctured in the hybrid game&rsquo;s input. Then, we use pPRF&rsquo;s security to replace the randomness used to produce the FE ciphertext in the current challenge point by true random coins. Next, we use the indistinguishability of the functional encryption for the current input, to replace the ciphertext encoding <span class="math inline">\(C_0||inp^*\)</span> with <span class="math inline">\(C_1||inp^*\)</span>. Finally we switch back. Clearly, the number of hybrids is exponential in input length.</p>
+
+<p><strong>iO from INDADP-secure Affine Determinant Programs</strong>
+Our construction of iO (preprint) from the INDADP secure affine determinant programs will appear in the proceedings of International Conference on Cryptology and Network Security (CANS), Springer, 2023.</p>
+
+
+      <div style="text-align:center;margin-top:100px;">
+        <a href="/">Go to main</a>
+      </div>
+    </div>
+
+
+    <footer style="text-align:center; height:150px; margin-top:-140px;">
+      <div class="container">
+        <div style="margin-top:30px;padding-top:30px;">
+          <a href="/about" style="color:#ffffff;font-weight:bold;"><span style="font-weight:bold;">Aragon ZK Research</span></a> is a zk research group contributing to <a href="https://aragon.org" target="_blank" style="color:#ffffff;font-weight:bold;">Aragon</a> ecosystem.
+
+          <br><br>
+          <!-- <a href="https://research.aragon.org" target="_blank" style="color:#ffffff;margin:10px;" title="Blog" alt="Blog"><i class="bi bi-file-text-fill" style="font-size: 2rem;"></i></a> -->
+          <a href="https://github.com/aragonzkresearch" target="_blank" style="color:#ffffff;margin:10px;" title="Github" alt="Github"><i class="bi bi-github" style="font-size: 2rem;"></i></a>
+          <a href="https://twitter.com/aragon_zk" target="_blank" style="color:#ffffff;margin:10px;" title="Twitter" alt="Twitter"><i class="bi bi-twitter" style="font-size: 2rem;"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+    </script>
+    <script src="js/external-links.js"></script>
+    <script src="js/theme.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js" integrity="sha384-YNHdsYkH6gMx9y3mRkmcJ2mFUjTd0qNQQvY9VYZgQd7DcN7env35GzlmFaZ23JGp" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+          displayMode: false,
+          // customised options
+          // • auto-render specific keys, e.g.:
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: "\\(", right: "\\)", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\begin{equation}", right: "\\end{equation}", display: true}
+          ],
+          // • rendering keys, e.g.:
+          throwOnError : true
+        });
+      });
+
+    </script>
+  <script>
+    function tagLinks(tagName) {
+      var tags = document.getElementsByTagName(tagName);
+      for (var i=0, hElem; hElem =  tags[i]; i++) {
+        if (hElem.parentNode.className=="row postThumb") {
+          continue;
+        }
+        hElem.id = hElem.innerHTML.toLowerCase().replace(" ", "-");
+        hElem.innerHTML = "<a style='text-decoration:none;color:black;' href='#"+hElem.id+"'>"+hElem.innerHTML+"</a>";
+      }
+    }
+    tagLinks("h2");
+    tagLinks("h3");
+    tagLinks("h4");
+    tagLinks("h5");
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
+
+  </body>
+</html>
+
