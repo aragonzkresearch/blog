@@ -2,7 +2,7 @@
 
 *2023-10-23 by Razvan Rosie*
 
-Links: [**Paper**](https://github.com/aragonzkresearch/blog/blob/main/pdf/CAN23_p27.pdf)
+Links: [**Paper**](https://github.com/aragonzkresearch/blog/blob/main/pdf/CAN23-p27.pdf)
 
 In this blogpost, we propose a construction for indistinguishability obfuscation (iO) for general circuits. The scheme is concocted from four main ingredients: (1) selectively indistinguishably-secure functional encryption for general circuits having its encryption procedure in complexity class NC1; (2) universal circuits; (3) puncturable pseudorandom functions having evaluation in NC1; (4) indistinguishably-secure affine-determinant programs, a notion proposed by works in submission that particularizes iO for specific circuit classes and acts as "depleted" obfuscators. The scheme can be used to build iO for all polynomial-sized circuits in a simplified way. Instantiations can be obtained from sub-exponentially secure learning with errors (LWE).
 
