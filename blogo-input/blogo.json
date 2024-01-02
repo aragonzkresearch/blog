@@ -114,12 +114,6 @@
       "outsideArticle": "https://forum.aragon.org/t/blind-ovote-ovote-with-blind-signatures-for-voter-anonymity/3881"
     },
     {
-      "thumb": "oomp_thumb.md",
-      "md": "oomp.md",
-      "metaimg": "img/twitter-blog-blank.jpg",
-      "metadescr": "One of many proofs are at their heart a membership proof, also know as a ring signature. In other words, whereas a normal digital signature attests to the statement 'I know the private key that corresponds to this public key', ring signatures prove the statement 'I know the private key that corresponds to one of the public keys in this list', without revealing which of the public keys that it is."
-    },
-    {
       "thumb": "simple-soundness_thumb.md",
       "md": "simple-soundness.md",
       "metaimg": "img/twitter-blog-blank.jpg",
